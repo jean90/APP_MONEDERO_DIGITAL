@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui" >
+
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Facelet Title</title>
+            <script>
+                
+                 window.onload = function(){
+                     // capturamos la url
+                    var loc = document.location.href;
+                    // si existe el interrogante
+                    if(loc.indexOf('?')>0)
+                    {
+                        // cogemos la parte de la url que hay despues del interrogante
+                        var getString = loc.split('?')[1];
+                        getString=getString.split('=')[1];
+                        if (getString=="activar") {
+                            alert("Su cuenta ha sido activada correctamente");
+                        }else if(getString=="obsoleto"){
+                            alert("El link se encuentra obsoleto. Su usuario ya se encuentra activo o superó el tiempo máximo para activación de la cuenta.");
+                        }else if(getString=="inscrito"){
+                            alert("REGISTRO EXITOSO! Por favor confirma tu registro accediendo a la URL que hemos enviado a tu email");
+                        }
+                            
+                    }else{
+                        //document.write("parámetro: NULOOOO ");
+                       // alert("ERROR");
+                    }
+                 };
+            </script>
+        </h:head>
+        <h:body>
+            <h:form id="formLogin" prependId="false">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:panelGrid columns="2">
+
+                    <f:facet name="header">
+                        Login
+                    </f:facet>
+
+                    <h:outputLabel  value="Username: "/>
+                    <p:inputText value="#{monederoLogIn.userName}" required="true" />
+
+                    <h:outputLabel  value="Password: "/>
+                    <p:password  value="#{monederoLogIn.password}" required="true" />
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Login" type="submit" action="#{monederoLogIn.login()}"/>   
+                    </f:facet>
+                </p:panelGrid>
+            </h:form>
+            <h:form id="registroForm" >
+                <p:commandLink id="registro" value="Registrarse?" />
+                <p:overlayPanel id="seleccionRegistro" for="registro"  showCloseIcon="true">
+                    <p:panelGrid columns="1" style="margin-bottom:10px" >
+                        <f:facet name="header">
+                            <p:outputLabel for="tipoRegistro" value="Tipo de Registro" />
+                        </f:facet>
+                        <p:selectOneRadio id="tipoRegistro" value="#{seleccionRegistro.seleccion}" >
+                            <f:selectItem itemLabel="Persona Natural" itemValue="Natural"/>
+                            <f:selectItem itemLabel="Empresa" itemValue="Empresa"/>
+                        </p:selectOneRadio>
+                        <p:commandButton id="Aceptar" value="Aceptar" type="submit" action="#{seleccionRegistro.validaSeleccion()}" ajax="true"/>
+                    </p:panelGrid>
+                </p:overlayPanel>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+

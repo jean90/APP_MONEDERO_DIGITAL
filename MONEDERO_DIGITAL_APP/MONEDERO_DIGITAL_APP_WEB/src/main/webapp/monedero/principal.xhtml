@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jslt/functions">
+    <style type="text/css">
+        .monedItem {
+            width:180px;
+            height:75px;
+            text-align:center;
+        }
+    </style>
+    <f:view contentType="text/html">
+        <h:head>
+            <title>MONEDERO DIGITAL - Módulo Cliente Monedero</title>
+        </h:head>
+        <h:body>
+            <h:form>
+                wooo
+                <p:carousel id="basicCarousel" value="#{tablaMonederos.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 25%" >
+                                    <f:facet name="header" >
+                                        Monederos
+                                    </f:facet>
+                                    <h:panelGrid columns="1" style="width:100%" cellpadding="5">  
+
+                                        <h:outputText value="Divisa: #{moned.divisa}" />  
+
+                                        <h:outputText value="Saldo: #{moned.saldo}" />  
+
+                                    </h:panelGrid> 
+                                    <f:facet name="footer" >
+                                        Ñarañaññaa
+                                    </f:facet>
+                                </p:carousel>
+            </h:form>
+        </h:body>
+        <script type="text/javascript">
+                var actual = 'faces/monedero/principal.xhtml';
+                function cambioPagina(pagina) {
+                if (pagina != actual) {
+                $('#frame').attr('src', pagina);
+                actual=pagina;
+                }
+                }
+            </script>
+    </f:view>
+</ui:composition>

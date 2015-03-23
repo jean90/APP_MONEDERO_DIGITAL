@@ -1,0 +1,98 @@
+
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <display-name>Archetype Created Web Application</display-name>
+    <context-param> 
+        <param-name>javax.faces.PROJECT_STAGE</param-name> 
+        <param-value>Development</param-value>       
+    </context-param> 
+ 
+    <context-param> 
+        <param-name>ficheroConfig</param-name> 
+        <param-value>/MONEDERO_CONFIG/monederoIni.properties</param-value>       
+    </context-param> 
+ 
+ 
+
+    <servlet> 
+        <description>Servlet de carga de parametros iniciales</description>
+        <servlet-name>InicioMonederoDigital</servlet-name> 
+        <servlet-class>ud.ing.modi.servlet.InicioMonederoDigital</servlet-class> 
+        <load-on-startup>0</load-on-startup>
+    </servlet> 
+ 
+    <servlet> 
+        <description>Servlet encargado de la activacion de cuentas monedero</description>
+        <servlet-name>ActivacionCuentaServlet</servlet-name> 
+        <servlet-class>ud.ing.modi.servlet.ActivacionCuentaServlet</servlet-class> 
+        <load-on-startup>1</load-on-startup>
+    </servlet> 
+ 
+    <servlet> 
+        <description>Servlet de operaciones JSF</description>
+        <servlet-name>Faces Servlet</servlet-name> 
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class> 
+        <load-on-startup>1</load-on-startup>
+    </servlet> 
+    <servlet-mapping> 
+        <servlet-name>Faces Servlet</servlet-name> 
+        <url-pattern>/faces/*</url-pattern> 
+    </servlet-mapping> 
+    <servlet-mapping> 
+        <servlet-name>ActivacionCuentaServlet</servlet-name> 
+        <url-pattern>/activar</url-pattern> 
+    </servlet-mapping> 
+    <session-config> 
+        <session-timeout> 30 </session-timeout> 
+    </session-config> 
+    <welcome-file-list> 
+        <welcome-file>faces/LogIn/LogIn.xhtml</welcome-file> 
+    </welcome-file-list>
+  
+    <security-constraint>
+        <display-name>AdminSecurityConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>AllAdminOperations</web-resource-name>
+            <url-pattern>/faces/admin/*</url-pattern>        
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+  
+    <security-constraint>
+        <display-name>MonederoSecurityConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>AllMonederoOperations</web-resource-name>
+            <url-pattern>/faces/monedero/*</url-pattern>        
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Monedero</role-name>
+        </auth-constraint>
+    </security-constraint>
+  
+  
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>LdapMonedero</realm-name>  
+        <form-login-config>
+            <form-login-page>/faces/LogIn/LogIn.xhtml</form-login-page>
+            <form-error-page>/faces/LogIn/loginError.xhtml</form-error-page>
+        </form-login-config>      
+    </login-config>
+
+
+    <security-role>
+        <description>Monedero User</description>
+        <role-name>Monedero</role-name>
+    </security-role>
+    <security-role>
+        <description>AdminUser</description>
+        <role-name>Admin</role-name>
+    </security-role>
+
+</web-app>

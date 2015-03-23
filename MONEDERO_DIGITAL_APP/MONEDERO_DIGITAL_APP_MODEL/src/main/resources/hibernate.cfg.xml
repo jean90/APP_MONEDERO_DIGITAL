@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@monedero-server:1521:XE</property>
+    <property name="hibernate.connection.username">USER_MONEDERO</property>
+    <property name="hibernate.connection.password">qwerty03</property>
+    <mapping class="ud.ing.modi.entidades.Persona"/>
+    <mapping class="ud.ing.modi.entidades.TipoDocumento"/>
+    <mapping class="ud.ing.modi.entidades.PendienteRegis"/>
+    <mapping class="ud.ing.modi.entidades.Divisa"/>
+    <mapping class="ud.ing.modi.entidades.Monedero"/>
+    <mapping class="ud.ing.modi.entidades.Cliente"/>
+    <mapping class="ud.ing.modi.entidades.ClienteJuridico"/>
+    <mapping class="ud.ing.modi.entidades.EstadoCliente"/>
+    <mapping class="ud.ing.modi.entidades.ClienteNatural"/>
+    <mapping class="ud.ing.modi.entidades.PendienteAltaRegistro"/>
+  </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jslt/functions">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Facelet Title</title>
+        </h:head>
+        <h:body>
+            <h:form>
+                <p:growl id="growl" sticky="true" showDetail="true"/>
+                <p:wizard flowListener="#{inscripcionPersona.onFlowProcess}">
+                    <p:tab id="personal" title="Datos Personales">
+                        <p:panel header="Quién eres?">
+                            <p:messages />
+                            <h:panelGrid columns="2" columnClasses="label, value" >
+                                <h:outputText value="Nombre:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.nombre}" required="true" label="Nombre" />
+
+                                <h:outputText value="Apellido:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.apellido}" required="true" label="Apellido" />
+
+
+                                <h:outputText value="Tipo de documento:"/>                                    
+                                <h:selectOneMenu id="tipoDoc"  required="true" label="Tipo de documento" value="#{inscripcionPersona.persona.tipoDocumento.codigotipoDocumento}" converterMessage="Debe seleccionar un tipo de documento">
+                                    <f:selectItem itemLabel="-- Selecciona una opción --" itemValue="null"/> 
+                                    <f:selectItems value="#{inscripcionPersona.documentos}" var="doc" itemLabel="#{doc.desDocumento}" itemValue="#{doc.codigotipoDocumento}"/> 
+                                    
+                                </h:selectOneMenu>
+
+                                <h:outputText value="Num. documento" />
+                                <p:inputText value="#{inscripcionPersona.persona.numDocumento}" required="true" label="NumDoc" validatorMessage="Sólo se aceptan valores numéricos" >
+                                    <f:validateRegex pattern="^[0-9]+$" />
+                                </p:inputText>
+
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="ubicacion" title="Contacto" >
+                        <p:panel header="Cómo te contactamos?">
+                            <p:messages />
+                            <h:panelGrid columns="2" columnClasses="label, value" >
+
+                                <h:outputText value="Teléfono fijo:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.numTelFijo}" required="true" label="Telefono" />
+
+                                <h:outputText value="Celular:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.numCelular}" required="true" label="Celular" />
+
+                                <h:outputText value="Dirección:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.direccion}" required="true" label="Direccion" />
+                                
+                                <h:outputText value="E-mail:"/>
+                                <p:inputText value="#{inscripcionPersona.persona.email}" required="true" label="Email" validator="#{inscripcionPersona.validaEmail}"/>
+                                
+                            </h:panelGrid>
+                        </p:panel>                            
+                    </p:tab>
+                    <p:tab id="confCuenta" title="Configuración de cuenta" >
+                        <p:panel header="Cómo quieres acceder al Monedero?">
+                            <p:messages />
+                            <h:panelGrid columns="2" columnClasses="label, value" >
+
+                                <h:outputText value="NickName"/>
+                                <p:inputText id="nick" value="#{inscripcionPersona.nick}" required="true" label="NickName" validator="#{inscripcionPersona.validaUsuLdap}"/>
+                                
+                                <h:outputLabel for="pwd1" value="Password: "/>
+                                <p:password autocomplete="false" id="pwd1" value="#{inscripcionPersona.password}" match="pwd2" label="password1" required="true" />
+
+                                <h:outputLabel for="pwd2" value="Repeat password: "/>
+                                <p:password autocomplete="false" id="pwd2" label="password2" required="true" />                               
+
+                            </h:panelGrid>
+                            
+                        </p:panel>
+
+                    </p:tab>
+                    <p:tab id="confirma" title="Confirmación">
+                        <p:panel header="Confirma tu información">
+                            <h:panelGrid id="confirmacion" columns="3" columnClasses="grid,grid,grid">
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    <h:outputText value="Nombre: " styleClass="outputLabel" />
+                                    <h:outputText value="#{inscripcionPersona.persona.nombre}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Apellido: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.apellido}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Tipo de Documento: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.tipoDocumento.desDocumento}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="No de Documento: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.numDocumento}" styleClass="outputLabel"/>
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    <h:outputText value="Teléfono fijo: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.numTelFijo}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Celular: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.numCelular}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="Dirección: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.direccion}" styleClass="outputLabel"/>
+                                                                        
+                                    <h:outputText value="Email: " />
+                                    <h:outputText value="#{inscripcionPersona.persona.email}" styleClass="outputLabel"/>
+
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    <h:outputText value="Nickname: " />
+                                    <h:outputText value="#{inscripcionPersona.nick}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value=" "/>
+                                    <h:outputText value=" "/>
+                                    <h:outputText value=" "/>
+                                    <h:outputText value=" "/>
+                                    <h:outputText value=" "/>
+                                    <h:outputText value=" "/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            
+                            <h:outputText />
+                            <h:outputText />
+                            
+                            <p:commandButton value="Submit" action="#{inscripcionPersona.save()}" update="growl" process="@this"/>
+                        </p:panel>
+                        </p:tab>
+                </p:wizard>   
+            </h:form>
+        </h:body>
+    </f:view>
+</ui:composition>

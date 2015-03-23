@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <style type="text/css">
+        
+    </style>
+    <div class="post">              
+
+        <f:view contentType="text/html">
+            <h:head>
+                <f:facet name="first">
+                    <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                    <title>Creación Monedero - Módulo Cliente Monedero</title>
+                </f:facet>
+            </h:head>
+                
+            <h:body>
+                <h:form id="form">
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+                    <b><p:outputLabel value="Tipo de Monedero" style="font-size:20px"/></b><br/><br/>
+                    <p:messages />
+                    <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
+                        <p:outputLabel for="divisa" value="Escoja la divisa:" /><br/>
+                        <h:selectOneRadio id="divisa" value="#{controlCreacionMoned.monedero.divisa.codigoDivisa}" layout="grid" style="margin-left: 20px">
+                            <f:selectItems value="#{controlCreacionMoned.divisas}" var="divisa" itemLabel="#{divisa.desDivisa}" itemValue="#{divisa.codigoDivisa}"/> 
+                        </h:selectOneRadio>
+                    </h:panelGrid>
+                    
+                    <p:commandButton value="Crear" update="growl" icon="ui-icon-check" actionListener="#{controlCreacionMoned.save}" style="margin-left: 30px"/>
+                    
+                    <p:dialog modal="true" resizable="false" widgetVar="conf" header="Monedero creado" showEffect="clip">        
+                        <p:panelGrid columns="2" id="display" columnClasses="label,value">
+                            <h:outputText value="Código:" />
+                            <h:outputText value="#{controlCreacionMoned.monedero.codMonedero}" />
+                            
+                            <h:outputText value="Divisa:" />
+                            <h:outputText value="#{controlCreacionMoned.monedero.divisa.desDivisa}" />
+
+                            <h:outputText value="Fecha creación:" />
+                            <h:outputText value="#{controlCreacionMoned.monedero.fechaCreacion}" />
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+            </h:body>
+            <script type="text/javascript">
+                
+            </script>
+        </f:view>
+    </div>
+</ui:composition>
+
