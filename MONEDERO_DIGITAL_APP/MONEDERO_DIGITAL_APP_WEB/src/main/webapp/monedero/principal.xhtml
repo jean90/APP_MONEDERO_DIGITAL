@@ -20,13 +20,13 @@
         <h:body>
             <h:form>
                 wooo
-                <p:carousel id="basicCarousel" value="#{tablaMonederos.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 25%" >
+                <p:carousel id="basicCarousel" value="#{controlConsultaMoned.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 25%" >
                                     <f:facet name="header" >
                                         Monederos
                                     </f:facet>
                                     <h:panelGrid columns="1" style="width:100%" cellpadding="5">  
 
-                                        <h:outputText value="Divisa: #{moned.divisa}" />  
+                                        <h:outputText value="Divisa: #{moned.divisa.desDivisa}" />  
 
                                         <h:outputText value="Saldo: #{moned.saldo}" />  
 

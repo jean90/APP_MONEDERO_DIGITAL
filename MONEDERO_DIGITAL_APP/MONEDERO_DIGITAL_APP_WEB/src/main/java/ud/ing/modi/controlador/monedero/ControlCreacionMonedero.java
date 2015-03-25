@@ -21,9 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.Divisa;
 import ud.ing.modi.entidades.EstadoCliente;
+import ud.ing.modi.entidades.EstadoMonedero;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.TipoDocumento;
+import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.DivisaMapper;
 import ud.ing.modi.mapper.MonederoMapper;
 
@@ -63,6 +65,9 @@ public class ControlCreacionMonedero implements Serializable {
         this.monedero = monedero;
     } 
     
+    /**
+     * Este método se encarga de guardar el nuevo monedero creado por el cliente
+     */
     public void save(){
         MonederoMapper mapeador=new MonederoMapper();
         try {
@@ -71,12 +76,19 @@ public class ControlCreacionMonedero implements Serializable {
             FacesContext contexto= FacesContext.getCurrentInstance();
             ExternalContext contextoExterno = contexto.getExternalContext();
             HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
-            //monedero.setCodCliente(6);
-            //ClienteNatural cliente=request.getUserPrincipal().getName();
-            System.out.println("USUARIO: "+request.getUserPrincipal().getName());
-            monedero.setClienteDueno(new ClienteNatural(new Persona(1, "1014211498", "JEAN", "PENAGOS", "4906771", "3102002149", "CALLE 69 # 96 - 96", null, new TipoDocumento(1, "Cedula de ciudadania")), 6, new Date(2014,11,18), new EstadoCliente(01, "VALIDACION")));
-            monedero.setCodEstado(01);
-            monedero.setCodMonedero("23428");
+            String nick=request.getUserPrincipal().getName();
+            System.out.println("USUARIO: "+nick);
+            
+           // ClienteNatural clienteDueno=(ClienteNatural)new ClienteMapper().obtenerClienteNatural("49");//lolo
+            ClienteNatural clienteDueno=(ClienteNatural)new ClienteMapper().buscarPorNick(nick);
+            //Luego ejecutaría el método del mapper de cliente para traer el cliente y con esto, hacer lo que está debajo..
+            //******************
+            //ClienteNatural clienteDueno=new ClienteNatural(new Persona(1, "1014211498", "JEAN", "PENAGOS", "4906771", "3102002149", "CALLE 69 # 96 - 96", null, new TipoDocumento(1, "Cedula de ciudadania")), 6, new Date(2014,11,18), new EstadoCliente(01, "VALIDACION"));
+            monedero.setClienteDueno(clienteDueno);
+            monedero.setEstado(new EstadoMonedero(1, "Activo"));
+            //El siguiente código debemos definirlo si es como lo dijimos en el diccionario de datos o como una secuencia
+            //Si es secuencia, se debe crear en la bd y definirlo en la java de la entidad
+            //monedero.setCodMonedero(new String());
             monedero.setFechaCreacion(new Date());
             monedero.setSaldo(0);
             mapeador.guardarMonedero(monedero);

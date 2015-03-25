@@ -110,7 +110,7 @@ public class MonederoLogIn {
 
     }
 
-    public void pruebaPendientes() {
+   /* public void pruebaPendientes() {
         PendienteRegis pendiente = new PendienteRegis();
         pendiente.setIdPersona(1);
         pendiente.setFechaSolic(new Date());
@@ -120,7 +120,7 @@ public class MonederoLogIn {
         } catch (Exception ex) {
             Logger.getLogger(MonederoLogIn.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     public String logOut() throws ServletException {
         FacesContext contexto = FacesContext.getCurrentInstance();

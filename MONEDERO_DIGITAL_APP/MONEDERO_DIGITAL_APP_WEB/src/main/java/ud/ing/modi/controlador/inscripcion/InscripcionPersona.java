@@ -148,7 +148,8 @@ public class InscripcionPersona implements Serializable {
         System.out.println("NICK: "+nick+"; PSS: "+password);
         try {
             mapeador.guardarPersona(this.persona);
-            this.pendiente.setIdPersona(this.persona.getIdPersona());
+            //this.pendiente.setIdPersona(this.persona.getIdPersona());
+            this.pendiente.setPersona(persona);
             this.pendiente.setFechaSolic(new Date());
             this.pendiente.setNickname(nick);
             mapPend.guardarPendiente(this.pendiente);

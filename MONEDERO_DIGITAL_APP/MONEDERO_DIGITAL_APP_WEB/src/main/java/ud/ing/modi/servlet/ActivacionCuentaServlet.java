@@ -68,8 +68,8 @@ public class ActivacionCuentaServlet extends HttpServlet {
                 //A continuación se borra de la tabla de pendientes
                 mapeadorPend.borrarPendiente(id);
                 //Posterior se agrega a la tabla de Cliente y ClienteNatural
-                Persona persona=mapeadorPers.obtenerUsuario(Integer.toString(pendiente.getIdPersona()));
-                cliente=new ClienteNatural(persona, new Date(), new EstadoCliente(2, "ACTIVO"));
+                Persona persona=mapeadorPers.obtenerUsuario(Integer.toString(pendiente.getPersona().getIdPersona()));
+                cliente=new ClienteNatural(persona, new Date(), new EstadoCliente(2, "ACTIVO"), pendiente.getNickname());
                 mapeadorClien.guardarClienteNatural(cliente);
                 System.out.println("CUENTA ACTIVADA!");
                 res.sendRedirect(req.getContextPath()+"?caso=activar");

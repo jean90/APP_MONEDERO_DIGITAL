@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,8 +22,11 @@ public class PendienteRegis implements Serializable{
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator ="PENDIENTE_REGIS_SEQ")
     @Column(name="COD_SOLICITUD")    
     private int codSolicitud;
-    @Column(name="ID_PERSONA")
-    private int idPersona;
+    //@Column(name="ID_PERSONA")
+    //private int idPersona;
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="ID_PERSONA")
+    private Persona persona;
     @Column(name="FECHA_SOLIC")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaSolic;
@@ -28,6 +34,7 @@ public class PendienteRegis implements Serializable{
     private String nickname;
 
     public PendienteRegis() {
+        persona=new Persona();
     }
 
     public int getCodSolicitud() {
@@ -38,12 +45,18 @@ public class PendienteRegis implements Serializable{
         this.codSolicitud = codSolicitud;
     }
 
-    public int getIdPersona() {
-        return idPersona;
+    /*public int getIdPersona() {
+    return idPersona;
+    }
+    public void setIdPersona(int idPersona) {
+    this.idPersona = idPersona;
+    }*/
+    public Persona getPersona() {
+        return persona;
     }
 
-    public void setIdPersona(int idPersona) {
-        this.idPersona = idPersona;
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 
     public Date getFechaSolic() {

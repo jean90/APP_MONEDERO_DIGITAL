@@ -40,8 +40,8 @@ public class ClienteJuridico extends Cliente implements Serializable{
         super();
     }
 
-    public ClienteJuridico(int nit, String razonSocial, String direccion, String telefono, Persona representante, int idCliente, Date fechaAlta, EstadoCliente estadoCliente) {
-        super(idCliente, fechaAlta, estadoCliente);
+    public ClienteJuridico(int nit, String razonSocial, String direccion, String telefono, Persona representante, int idCliente, Date fechaAlta, EstadoCliente estadoCliente, String nickname) {
+        super(fechaAlta, estadoCliente, nickname);
         this.nit = nit;
         this.razonSocial = razonSocial;
         this.direccion = direccion;

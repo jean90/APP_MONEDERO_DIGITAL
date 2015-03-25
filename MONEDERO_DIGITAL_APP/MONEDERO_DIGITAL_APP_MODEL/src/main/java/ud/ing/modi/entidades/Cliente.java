@@ -41,14 +41,17 @@ public class Cliente implements Serializable {
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_ESTADO")
     private EstadoCliente estadoCliente;
-
+    @Column(name="NICKNAME")
+    private String nickname;
+    
     public Cliente() {
     }
 
-    public Cliente(int idCliente, Date fechaAlta, EstadoCliente estadoCliente) {
+    public Cliente(Date fechaAlta, EstadoCliente estadoCliente, String nickname) {
         this.idCliente = idCliente;
         this.fechaAlta = fechaAlta;
         this.estadoCliente = estadoCliente;
+        this.nickname=nickname;
     }
 
     public Cliente(Date fechaAlta, EstadoCliente estadoCliente) {
@@ -79,6 +82,14 @@ public class Cliente implements Serializable {
 
     public void setEstadoCliente(EstadoCliente estadoCliente) {
         this.estadoCliente = estadoCliente;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
     
     

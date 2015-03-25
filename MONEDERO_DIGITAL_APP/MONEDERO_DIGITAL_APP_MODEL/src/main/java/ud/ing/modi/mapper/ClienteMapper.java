@@ -7,10 +7,13 @@
 package ud.ing.modi.mapper;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
@@ -45,6 +48,38 @@ public class ClienteMapper {
         try {
             iniciaOperacion();
             cliente = (Cliente) sesion.get(Cliente.class, id);
+        } finally {
+            sesion.close();
+        }
+        return cliente;
+    }
+    
+    public ClienteNatural obtenerClienteNatural(String idCliente){
+        
+        int id = Integer.parseInt(idCliente);
+        ClienteNatural cliente = null;
+        try {
+            iniciaOperacion();
+            cliente = (ClienteNatural) sesion.get(ClienteNatural.class, id);
+        } finally {
+            sesion.close();
+        }
+        return cliente;
+    }
+    
+    /**
+     * Este metodo busca un cliente por el nick que usó para loggearse.
+     * @param nick Es el nickname con el que se loggeó el cliente y con el cual se encuentra registrado en el sistema.
+     * @return Como resultado retorna el objeto cliente que tiene ese nickname asociado.
+     */
+    public Cliente buscarPorNick(String nick){
+        ClienteNatural cliente = null;
+
+        try {
+            iniciaOperacion();
+            cliente= (ClienteNatural) sesion.createCriteria(ClienteNatural.class).add(Restrictions.eq("nickname",nick)).uniqueResult();
+            System.out.println("Cliente hallado -- "+cliente);
+
         } finally {
             sesion.close();
         }
