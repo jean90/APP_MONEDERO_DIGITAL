@@ -18,5 +18,6 @@
     <mapping class="ud.ing.modi.entidades.ClienteNatural"/>
     <mapping class="ud.ing.modi.entidades.PendienteAltaRegistro"/>
     <mapping class="ud.ing.modi.entidades.EstadoMonedero"/>
+    <mapping class="ud.ing.modi.entidades.PagoOnline"/>
   </session-factory>
 </hibernate-configuration>
