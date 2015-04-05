@@ -18,6 +18,8 @@ import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.Persona;
+import ud.ing.modi.entidades.PuntoRecarga;
+import ud.ing.modi.entidades.TiendaOnLine;
 
 /**
  *
@@ -132,4 +134,36 @@ public class ClienteMapper {
         }
     }
     
+    public void guardarTiendaOnline(TiendaOnLine tiendaOnline) throws Exception{
+        try {
+            iniciaOperacion();
+            sesion.save(tiendaOnline.getRepresentante());
+            sesion.save(tiendaOnline);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            sesion.close();
+        }
+    }
+    
+    
+    public void guardarPuntoRecarga(PuntoRecarga puntoRecarga) throws Exception{
+        try {
+            iniciaOperacion();
+            sesion.save(puntoRecarga.getRepresentante());
+            sesion.save(puntoRecarga);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            sesion.close();
+        }
+    }
 }

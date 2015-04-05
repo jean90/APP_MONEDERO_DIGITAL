@@ -19,13 +19,18 @@
                             <p:messages />
                             <h:panelGrid columns="2" columnClasses="label, value">
                                 <h:outputText value="Razón Social*"/>
-                                <p:inputText value="#{inscripcionEmpresa.cJuridico.razonSocial}" required="true" label="Razón Social" />                                
+                                <p:inputText value="#{inscripcionEmpresa.getcJuridico().razonSocial}" required="true" label="Razón Social" />                                
                                 <h:outputText value="Nit*"/>
                                 <p:inputText value="#{inscripcionEmpresa.getcJuridico().nit}" required="true" label="Nit" />                                
                                 <h:outputText value="Dirección*"/>
                                 <p:inputText value="#{inscripcionEmpresa.getcJuridico().direccion}" required="true" label="Dirección" />                                
                                 <h:outputText value="Telefono*"/>
                                 <p:inputText value="#{inscripcionEmpresa.getcJuridico().telefono}" required="true" label="Telefono" />                                
+                                <h:outputText value="Tipo de empresa*"/>
+                                <p:selectOneRadio id="console" value="#{inscripcionEmpresa.tipoCliente}" layout="grid" columns="1">
+                                    <f:selectItem itemLabel="Tienda Online" itemValue="1" />
+                                    <f:selectItem itemLabel="Punto de Recarga" itemValue="2" />            
+                                </p:selectOneRadio>
                             </h:panelGrid>
                         </p:panel>
                     </p:tab>
@@ -78,7 +83,7 @@
                                 <h:outputLabel for="pwd1" value="Password: "/>
                                 <p:password autocomplete="false" id="pwd1" value="#{inscripcionEmpresa.password}" match="pwd2" label="password1" required="true" />
 
-                                <h:outputLabel for="pwd2" value="Repeat password: "/>
+                                <h:outputLabel for="pwd2" value="Repetir password: "/>
                                 <p:password autocomplete="false" id="pwd2" label="password2" required="true" />                               
 
                             </h:panelGrid>
@@ -143,7 +148,7 @@
                                 </h:panelGrid>
                             </p:fieldset>    
                             <p:separator />
-                            <p:commandButton value="Submit" actionListener="#{inscripcionEmpresa.save}" update="growl" process="@this"/>
+                            <p:commandButton value="Submit" action="#{inscripcionEmpresa.save()}" update="growl" process="@this"/>
                         </p:panel>
                         </p:tab>
                 </p:wizard>   

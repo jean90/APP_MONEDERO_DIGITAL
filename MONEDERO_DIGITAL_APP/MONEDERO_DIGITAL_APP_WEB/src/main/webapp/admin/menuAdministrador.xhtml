@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <script type="text/javascript">
+                var actual = 'faces/monedero/principal.xhtml';
+                function cambioPagina(pagina) {
+                    if (pagina != actual) {
+                        $('#frame').attr('src', pagina);
+                        actual = pagina;
+                    }
+                }
+            </script>
+        </h:head>
+        <h:body>
+            <h:form>
+                <p:growl id="messages"/>
+                <p:layout fullPage="true">
+
+                    <p:layoutUnit position="north" size="90" >
+                        <p:menubar>
+                            <p:menuitem value="Inicio" url="" icon="ui-icon-home"/>
+                            <f:facet name="options">
+                                <p:splitButton value="#{request.userPrincipal.name}"  icon="ui-icon-person">
+                                    <p:menuitem value="Cuenta"  icon="ui-icon-gear"></p:menuitem>                                    
+                                </p:splitButton>
+                                <p:commandButton action="#{monederoLogIn.logOut()}" value="Logout" icon="ui-icon-extlink" />
+                            </f:facet>
+                        </p:menubar>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" size="310" >
+                        <p:panelMenu style="width:300px">
+                            <p:submenu label="Consulta de cuentas a activar">
+                                <p:menuitem value="Tiendas Online" icon="ui-icon-cart" url="javascript:cambioPagina('faces/admin/consultaTiendasOnline.xhtml')"/>
+                                            <p:menuitem value="Tiendas Online" icon="ui-icon-contact" url="javascript:cambioPagina('faces/admin/consultaTiendasOnline.xhtml')"/>
+                        </p:submenu>
+                    </p:panelMenu>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" size="100" >
+                    <iframe id="frame" src="faces/monedero/principal.xhtml" style="width: 100%; height: 100%; text-align: center;" seamless='seamless' />
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+    </h:body>
+</f:view>
+</ui:composition>

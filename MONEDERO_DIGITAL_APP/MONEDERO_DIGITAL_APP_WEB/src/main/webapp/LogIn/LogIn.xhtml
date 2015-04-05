@@ -25,6 +25,8 @@
                             alert("El link se encuentra obsoleto. Su usuario ya se encuentra activo o superó el tiempo máximo para activación de la cuenta.");
                         }else if(getString=="inscrito"){
                             alert("REGISTRO EXITOSO! Por favor confirma tu registro accediendo a la URL que hemos enviado a tu email");
+                        }else if(getString=="inscritoEmpresa"){
+                            alert("REGISTRO EXITOSO! Su cuenta será activada una vez se realicen las validaciones en el sistema, usted será notofocado via email");
                         }
                             
                     }else{
@@ -44,10 +46,10 @@
                     </f:facet>
 
                     <h:outputLabel  value="Username: "/>
-                    <p:inputText value="#{monederoLogIn.userName}" required="true" />
+                    <p:inputText id="userName" value="#{monederoLogIn.userName}" required="true" />
 
                     <h:outputLabel  value="Password: "/>
-                    <p:password  value="#{monederoLogIn.password}" required="true" />
+                    <p:password  id="password" value="#{monederoLogIn.password}" required="true" />
 
                     <f:facet name="footer">
                         <p:commandButton value="Login" type="submit" action="#{monederoLogIn.login()}"/>   

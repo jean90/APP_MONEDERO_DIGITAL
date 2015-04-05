@@ -5,10 +5,13 @@
  */
 package ud.ing.modi.controlador.inscripcion;
 
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -22,6 +25,8 @@ import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.EstadoCliente;
 import ud.ing.modi.entidades.PendienteAltaRegistro;
 import ud.ing.modi.entidades.Persona;
+import ud.ing.modi.entidades.PuntoRecarga;
+import ud.ing.modi.entidades.TiendaOnLine;
 import ud.ing.modi.entidades.TipoDocumento;
 import ud.ing.modi.ldap.AccesoLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
@@ -44,9 +49,16 @@ public class InscripcionEmpresa implements Serializable {
     private List<TipoDocumento> listaDocumentos;
     private TipoDocumento documento;
     private EstadoCliente eCliente;
+    private String tipoCliente;
     private String password;
     private String nick;
 
+    public static final String TIENDA_ONLINE = "1";
+    public static final String DES_TIENDA_ONLINE = "TiendaOnline";
+    public static final String PUNTO_RECARGA = "2";
+    public static final String DES_PUNTO_RECARGA = "PuntoRecarga";
+    
+    public static final double SALDO_INICIAL = 0.0;
 
     /**
      * Creates a new instance of InscripcionEmpresa
@@ -112,6 +124,14 @@ public class InscripcionEmpresa implements Serializable {
     public void setNick(String nick) {
         this.nick = nick;
     }
+
+    public String getTipoCliente() {
+        return tipoCliente;
+    }
+
+    public void setTipoCliente(String tipoCliente) {
+        this.tipoCliente = tipoCliente;
+    }
     
     
     
@@ -138,19 +158,65 @@ public class InscripcionEmpresa implements Serializable {
         }
     }
     
-    public void save() throws Exception{
+    public String save(){        
+        String estado="fallo";
+        try {
+            ClienteJuridico cliente = null;
+            if(this.tipoCliente.equals(TIENDA_ONLINE)){
+                cliente = crearTiendaOnline();
+            }else if(this.tipoCliente.equals(PUNTO_RECARGA)){
+                cliente = crearPuntoRecarga();
+            }        
+            PendienteAltaRegistroMapper penAltaMapper = new PendienteAltaRegistroMapper();
+            PendienteAltaRegistro penAlta = new PendienteAltaRegistro();
+            penAlta.setCliente(cliente);
+            penAlta.setFechaSolicitud(new Date()); 
+            penAltaMapper.guardarPendienteAltaRegistro(penAlta);  
+            estado="inscritoEmpresa";
+        }catch (Exception ex) {            
+            Logger.getLogger(InscripcionPersona.class.getName()).log(Level.SEVERE, null, ex);
+            FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en su registro");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        System.out.println("estado de salida despues de la inscripcion: " + estado);
+        return estado;
+    }
+    
+    public PuntoRecarga crearPuntoRecarga() throws Exception{
         EstadoClienteMapper eClienteMapper = new EstadoClienteMapper();
         EstadoCliente eCliente = eClienteMapper.obtenerEstadoCliente("1");
-        this.cJuridico.setEstadoCliente(eCliente);
-        this.cJuridico.setRepresentante(this.representante);
+        PuntoRecarga puntoRecarga = new PuntoRecarga();
+        puntoRecarga.setEstadoCliente(eCliente);
+        puntoRecarga.setRepresentante(this.representante);
+        puntoRecarga.setDireccion(this.cJuridico.getDireccion());
+        puntoRecarga.setFechaAlta(new Date());
+        puntoRecarga.setNickname(nick);
+        puntoRecarga.setNit(this.cJuridico.getNit());
+        puntoRecarga.setRazonSocial(this.cJuridico.getRazonSocial());
+        puntoRecarga.setSaldo(SALDO_INICIAL);
+        puntoRecarga.setTelefono(this.cJuridico.getTelefono());
         ClienteMapper cMapper = new ClienteMapper();
-        cMapper.guardarClienteJuridico(this.cJuridico);
-        PendienteAltaRegistroMapper penAltaMapper = new PendienteAltaRegistroMapper();
-        PendienteAltaRegistro penAlta = new PendienteAltaRegistro();
-        penAlta.setCliente(cJuridico);
-        penAlta.setFechaSolicitud(new Date()); 
-        penAltaMapper.guardarPendienteAltaRegistro(penAlta);        
-        registroLdap();        
+        cMapper.guardarPuntoRecarga(puntoRecarga);
+        registroLdap(PUNTO_RECARGA);
+        return puntoRecarga;
+    }
+    
+    public TiendaOnLine crearTiendaOnline() throws Exception{
+        EstadoClienteMapper eClienteMapper = new EstadoClienteMapper();
+        EstadoCliente eCliente = eClienteMapper.obtenerEstadoCliente("1");
+        TiendaOnLine tiendaOnline = new TiendaOnLine();
+        tiendaOnline.setEstadoCliente(eCliente);
+        tiendaOnline.setRepresentante(this.representante);
+        tiendaOnline.setDireccion(this.cJuridico.getDireccion());
+        tiendaOnline.setFechaAlta(new Date());
+        tiendaOnline.setNickname(nick);
+        tiendaOnline.setNit(this.cJuridico.getNit());
+        tiendaOnline.setRazonSocial(this.cJuridico.getRazonSocial());
+        tiendaOnline.setTelefono(this.cJuridico.getTelefono());
+        ClienteMapper cMapper = new ClienteMapper();
+        cMapper.guardarTiendaOnline(tiendaOnline);
+        registroLdap(TIENDA_ONLINE);
+        return tiendaOnline;
     }
     /*
     Metodo que validala existencia del nickName deseado por el usuario que se encuentra realizando el registro.
@@ -164,9 +230,13 @@ public class InscripcionEmpresa implements Serializable {
     }
     
     
-    public void registroLdap() throws Exception{
+    public void registroLdap(String tipoCliente) throws Exception{
         AccesoLDAP ldap= new AccesoLDAP();
-        ldap.InsertarUsuario(representante, this.nick, this.password, "TiendaOnline");
+        if(tipoCliente.equals(PUNTO_RECARGA)){
+            ldap.InsertarUsuario(representante, this.nick, this.password, DES_PUNTO_RECARGA);
+        }else if(tipoCliente.equals(TIENDA_ONLINE)){
+            ldap.InsertarUsuario(representante, this.nick, this.password, DES_TIENDA_ONLINE);
+        }        
     }
     
     /*

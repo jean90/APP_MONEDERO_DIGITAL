@@ -9,7 +9,7 @@
         <navigation-case>
             <from-action>#{monederoLogIn.login()}</from-action>
             <from-outcome>Admin</from-outcome>
-            <to-view-id>/admin/adminOnly.xhtml</to-view-id>
+            <to-view-id>/admin/menuAdministrador.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-action>#{monederoLogIn.login()}</from-action>
@@ -17,10 +17,21 @@
             <to-view-id>/monedero/monederoOnly.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-action>#{monederoLogIn.login()}</from-action>
+            <from-outcome>PuntoRecarga</from-outcome>
+            <to-view-id>/monedero/monederoOnly.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{monederoLogIn.login()}</from-action>
+            <from-outcome>TiendaOnline</from-outcome>
+            <to-view-id>/monedero/monederoOnly.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>error</from-outcome>
             <to-view-id>/LogIn/LogIn.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    
     <navigation-rule>
         <from-view-id>inscripcion.xhtml</from-view-id>
         <navigation-case>
@@ -35,4 +46,20 @@
             </redirect>
         </navigation-case>
     </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/inscripcionEmpresa.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{inscripcionEmpresa.save()}</from-action>
+            <from-outcome>inscritoEmpresa</from-outcome>
+            <to-view-id>/LogIn/LogIn.xhtml</to-view-id>
+            <redirect>
+                <view-param>
+                    <name>caso</name>
+                    <value>inscritoEmpresa</value>
+                </view-param>
+            </redirect>
+        </navigation-case>
+    </navigation-rule>
+    
 </faces-config>

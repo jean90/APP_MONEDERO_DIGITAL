@@ -75,6 +75,10 @@ public class MonederoLogIn {
                     rol = "Admin";
                 } else if (request.isUserInRole("Monedero")) {
                     rol = "Monedero";
+                } else if (request.isUserInRole("PuntoRecarga")) {
+                    rol = "PuntoRecarga";
+                } else if (request.isUserInRole("TiendaOnline")) {
+                    rol = "TiendaOnline";
                 } else if (request.isUserInRole("") || rol.equals("error")) {
                     request.logout();
                 }
@@ -123,11 +127,12 @@ public class MonederoLogIn {
     }*/
 
     public String logOut() throws ServletException {
+        System.out.println("CERRAR SESION");
         FacesContext contexto = FacesContext.getCurrentInstance();
         ExternalContext contextoExterno = contexto.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
         request.logout();
-        return "logOut";
+        return "/LogIn/LogIn.xhtml";
     }
 
     public void generarEmail() {

@@ -7,6 +7,8 @@
 package ud.ing.modi.entidades;
 
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -19,5 +21,29 @@ import javax.persistence.Table;
 @Table(name="PUNTO_RECARGA")
 @PrimaryKeyJoinColumn (name = "COD_CLIENTE")
 public class PuntoRecarga extends ClienteJuridico implements Serializable{
-    private float saldo;
+    @Column(name="SALDO")
+    private double saldo;
+
+    public PuntoRecarga() {
+       
+    }
+    
+    public PuntoRecarga(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public PuntoRecarga(double saldo, int nit, String razonSocial, String direccion, String telefono, Persona representante, int idCliente, Date fechaAlta, EstadoCliente estadoCliente, String nickname) {
+        super(nit, razonSocial, direccion, telefono, representante, idCliente, fechaAlta, estadoCliente, nickname);
+        this.saldo = saldo;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+    
+    
 }
