@@ -13,131 +13,189 @@
             text-align:center;
         }
     </style>
-        <f:view contentType="text/html">
-            <h:head>
-                <title>MONEDERO DIGITAL - Módulo Cliente Monedero</title>
-                <script>
-                
-                 window.onload = function(){
-                     // capturamos la url
+    <f:view contentType="text/html">
+        <h:head>
+            <title>MONEDERO DIGITAL - Módulo Cliente Monedero</title>
+            <script>
+
+                window.onload = function() {
+                    // capturamos la url
                     var loc = document.location.href;
                     // si existe el interrogante
-                    if(loc.indexOf('?')>0)
+                    if (loc.indexOf('?') > 0)
                     {
                         // cogemos la parte de la url que hay despues del interrogante
                         var getString = loc.split('?')[1];
-                        getString=getString.split('=')[1];
-                        if (getString=="detalle") {
+                        getString = getString.split('=')[1];
+                        if (getString == "detalle") {
                             alert("Consulta detalle");
-                        }else if(getString=="historico"){
+                        } else if (getString == "historico") {
                             alert("Consulta histórico");
-                        }else if(getString=="estado"){
+                        } else if (getString == "estado") {
                             alert("Cambiar estado..");
                         }
-                            
-                    }else{
+
+                    } else {
                         //document.write("parámetro: NULOOOO ");
-                       // alert("ERROR");
+                        // alert("ERROR");
                     }
-                 };
+                };
+
+                function showHistorico() {
+                    document.getElementById("tabla").style.display = 'block';
+                }
+
+                function hideHistorico() {
+                    document.getElementById("tabla").style.display = 'none';
+                }
             </script>
-            </h:head>
-            <h:body>
-                <h:form id="form">
-                    <p:growl id="growl" sticky="true" showDetail="true"/>
-                    <p:messages />
-                        <b><p:outputLabel value="Gestión Monederos" style="font-size:20px"/></b><br/><br/>
-                        <p:outputLabel value="Escoja el monedero a gestionar:" /><br/><br/>
-                                <p:carousel id="basicCarousel" value="#{controlConsultaMoned.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 10%" >
-                                    <f:facet name="header" >
-                                        Detalle Monederos
-                                    </f:facet>
-                                    
-                                        <h:panelGrid columns="1" style="width:100%;height:auto" cellpadding="5" >  
-                                            
-                                            <a style="font-size: 10px"><b>Código:</b> #{moned.codMonedero}</a><br/>
-                                            
-                                            <b>Divisa:</b> #{moned.divisa.desDivisa}<br/>
+        </h:head>
+        <h:body>
+            <h:form id="form">
+                <p:growl id="growl" sticky="true" showDetail="true"/>
+                <p:messages />
+                <b><p:outputLabel value="Gestión Monederos" style="font-size:20px"/></b><br/><br/>
+                <p:outputLabel value="Escoja el monedero a gestionar:" /><br/><br/>
+                <p:carousel id="basicCarousel" value="#{controlConsultaMoned.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 10%" >
+                    <f:facet name="header" >
+                        Detalle Monederos
+                    </f:facet>
 
-                                            <b>Saldo:</b> #{moned.saldo}
+                    <h:panelGrid columns="1" style="width:100%;height:auto" cellpadding="5" >  
 
-                                            <f:facet name="footer" >
-                                                <p:commandButton update=":form:monDetail" oncomplete="PF('monedDialog').show()" icon="ui-icon-search">
-                                                    <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
-                                                </p:commandButton>
-                                                <p:commandButton update=":form:monEdit" oncomplete="PF('monedDialog2').show()" icon="ui-icon-pencil">
-                                                    <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
-                                                </p:commandButton>
-                                            </f:facet>
-                                            
-                                        </h:panelGrid> 
-                                    
-                                    
-                                </p:carousel>
-                        
-                        <!--<b><p:outputLabel value="Detalle Monedero Cod: " style="font-size:20px"/></b><br/><br/>
-                    <p:outputLabel value="kjk" /><br/>-->
-                    
-                    <p:dialog header="Detalle Monedero" widgetVar="monedDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                        <p:outputPanel id="monDetail" style="text-align:center;">
-                            <p:panelGrid  columns="2" rendered="#{not empty controlConsultaMoned.selectedMon}" columnClasses="label,value">
-                                <h:outputText value="Código:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.codMonedero}" />
+                        <a style="font-size: 10px"><b>Código:</b> #{moned.codMonedero}</a><br/>
 
-                                <h:outputText value="Estado:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.estado.desEstado}" />
+                        <b>Divisa:</b> #{moned.divisa.desDivisa}<br/>
 
-                                <h:outputText value="Divisa:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.divisa.desDivisa}" />
+                        <b>Saldo:</b> #{moned.saldo}
 
-                                <h:outputText value="Saldo:" />
-                                <h:outputText value="$#{controlConsultaMoned.selectedMon.saldo}" />
-                                
-                                <h:outputText value="Fecha creación:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.fechaCreacion}" />
-                            
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>
-                   
-                        <p:dialog header="Cambiar estado Monedero" widgetVar="monedDialog2" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                        <p:outputPanel id="monEdit" style="text-align:center;">
-                            <p:panelGrid  columns="2" rendered="#{not empty controlConsultaMoned.selectedMon}" columnClasses="label,value">
-                                <h:outputText value="Código:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.codMonedero}" />
+                        <f:facet name="footer" >
+                            <p:commandButton update=":form:monDetail" oncomplete="hideHistorico();PF('monedDialog').show()" icon="ui-icon-search" process="@this">
+                                <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
+                            </p:commandButton>
+                            <p:commandButton update=":form:monEdit" oncomplete="hideHistorico();PF('monedDialog2').show()" icon="ui-icon-pencil" process="@this">
+                                <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
+                            </p:commandButton>
+                            <p:commandButton update=":form:monHist" oncomplete="showHistorico()" icon="ui-icon-document" action="#{controlConsultaMoned.cargarHistorico}" process="@this">
+                                <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
+                            </p:commandButton>
+                        </f:facet>
 
-                                <h:outputText value="Estado:" />
-                                <h:selectOneMenu id="estadoMon"  required="true" value="#{controlConsultaMoned.selectedMon.estado.codigoEstado}" converterMessage="Debe seleccionar un estado para el monedero"> 
-                                    <f:selectItems value="#{controlConsultaMoned.estados}" var="est" itemLabel="#{est.desEstado}" itemValue="#{est.codigoEstado}"/> 
-                                    
-                                </h:selectOneMenu>
+                    </h:panelGrid> 
 
-                                <h:outputText value="Divisa:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.divisa.desDivisa}" />
 
-                                <h:outputText value="Saldo:" />
-                                <h:outputText value="$#{controlConsultaMoned.selectedMon.saldo}" />
-                                
-                                <h:outputText value="Fecha creación:" />
-                                <h:outputText value="#{controlConsultaMoned.selectedMon.fechaCreacion}" />
-                            
-                                
-                            </p:panelGrid>
-                            <p:commandButton value="Guardar" update="growl" icon="ui-icon-check" actionListener="#{controlConsultaMoned.cambioEst}" style="margin-left: 15px"/>
-                        </p:outputPanel>
-                    </p:dialog>
-                        
-                    
-                 </h:form>
-            </h:body>
-            <script type="text/javascript">
-                var actual = 'faces/principal.xhtml';
-                function cambioPagina(pagina) {
+                </p:carousel>
+
+                <p:dialog header="Detalle Monedero" widgetVar="monedDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="monDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty controlConsultaMoned.selectedMon}" columnClasses="label,value">
+                            <h:outputText value="Código:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.codMonedero}" />
+
+                            <h:outputText value="Estado:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.estado.desEstado}" />
+
+                            <h:outputText value="Divisa:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.divisa.desDivisa}" />
+
+                            <h:outputText value="Saldo:" />
+                            <h:outputText value="$#{controlConsultaMoned.selectedMon.saldo}" />
+
+                            <h:outputText value="Fecha creación:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.fechaCreacion}" />
+
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+
+                <p:dialog header="Cambiar estado Monedero" widgetVar="monedDialog2" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="monEdit" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty controlConsultaMoned.selectedMon}" columnClasses="label,value">
+                            <h:outputText value="Código:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.codMonedero}" />
+
+                            <h:outputText value="Estado:" />
+                            <h:selectOneMenu id="estadoMon"  required="true" value="#{controlConsultaMoned.selectedMon.estado.codigoEstado}" converterMessage="Debe seleccionar un estado para el monedero"> 
+                                <f:selectItems value="#{controlConsultaMoned.estados}" var="est" itemLabel="#{est.desEstado}" itemValue="#{est.codigoEstado}"/> 
+
+                            </h:selectOneMenu>
+
+                            <h:outputText value="Divisa:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.divisa.desDivisa}" />
+
+                            <h:outputText value="Saldo:" />
+                            <h:outputText value="$#{controlConsultaMoned.selectedMon.saldo}" />
+
+                            <h:outputText value="Fecha creación:" />
+                            <h:outputText value="#{controlConsultaMoned.selectedMon.fechaCreacion}" />
+
+
+                        </p:panelGrid>
+                        <p:commandButton value="Guardar" update="growl" icon="ui-icon-check" actionListener="#{controlConsultaMoned.cambioEst}" style="margin-left: 15px"/>
+                    </p:outputPanel>
+                </p:dialog>
+
+
+                <!-- Lo sgte es la sección de la tabla de histórico -->
+                <div id="tabla" style="display: none;">
+                    <p:dataTable id="monHist" var="mov" value="#{controlConsultaMoned.movimientos}" widgetVar="monedDialog3" 
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 paginator="true" rows="10" style="margin-bottom:20px" emptyMessage="No se encontraron movimientos para este monedero.">
+
+                        <f:facet name="{Exporters}">
+                            <h:commandLink>
+                                <p:graphicImage name="faces/images/pdf.png" width="24"/>
+                                <p:dataExporter type="pdf" target="monHist" fileName="Historico_Movimientos"/>
+                            </h:commandLink>
+
+                        </f:facet>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Código Pago" />
+                            </f:facet>
+                            <h:outputText value="#{mov.codPago}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Fecha Pago"/>
+                            </f:facet>
+                            <h:outputText value="#{mov.fechaPago}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Cód Compra Comercio" />
+                            </f:facet>
+                            <h:outputText value="#{mov.codCompra}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Valor Pago" />
+                            </f:facet>
+                            <h:outputText value="#{mov.valorPago}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Monedero Origen" />
+                            </f:facet>
+                            <h:outputText value="#{mov.monOrigen.codMonedero}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </h:body>
+        <script type="text/javascript">
+            var actual = 'faces/principal.xhtml';
+            function cambioPagina(pagina) {
                 if (pagina != actual) {
-                $('#frame').attr('src', pagina);
-                actual=pagina;
+                    $('#frame').attr('src', pagina);
+                    actual = pagina;
                 }
-                }
-            </script>
-        </f:view>
+            }
+        </script>
+    </f:view>
 </ui:composition>

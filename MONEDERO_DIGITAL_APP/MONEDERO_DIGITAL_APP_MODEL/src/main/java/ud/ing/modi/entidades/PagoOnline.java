@@ -45,4 +45,60 @@ public class PagoOnline implements Serializable{
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_MON_DESTINO")
     private Monedero monDestino;
+
+    public PagoOnline() {
+        this.monOrigen=new Monedero();
+        this.monDestino=new Monedero();
+    }
+
+    public int getCodPago() {
+        return codPago;
+    }
+
+    public void setCodPago(int codPago) {
+        this.codPago = codPago;
+    }
+
+    public float getValorPago() {
+        return valorPago;
+    }
+
+    public void setValorPago(float valorPago) {
+        this.valorPago = valorPago;
+    }
+
+    public Date getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    public String getCodCompra() {
+        return codCompra;
+    }
+
+    public void setCodCompra(String codCompra) {
+        this.codCompra = codCompra;
+    }
+
+    public Monedero getMonOrigen() {
+        return monOrigen;
+    }
+
+    public void setMonOrigen(Monedero monOrigen) {
+        this.monOrigen = monOrigen;
+    }
+
+    public Monedero getMonDestino() {
+        return monDestino;
+    }
+
+    public void setMonDestino(Monedero monDestino) {
+        this.monDestino = monDestino;
+    }
+    
+    
+    
 }

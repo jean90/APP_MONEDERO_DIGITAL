@@ -17,13 +17,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.EstadoMonedero;
 import ud.ing.modi.entidades.Monedero;
+import ud.ing.modi.entidades.PagoOnline;
 import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.EstadoMonederoMapper;
 import ud.ing.modi.mapper.MonederoMapper;
+import ud.ing.modi.mapper.PagoOnlineMapper;
 
 /**
  *
@@ -35,6 +38,7 @@ public class ControlConsultaMonederos implements Serializable{
     
     private List<Monedero> monederos = new ArrayList<Monedero>(); 
     private List<EstadoMonedero> estados = new ArrayList<EstadoMonedero>();
+    private List<PagoOnline> movimientos = new ArrayList<PagoOnline>();
     private Monedero selectedMon;
 
     public ControlConsultaMonederos() {
@@ -84,7 +88,15 @@ public class ControlConsultaMonederos implements Serializable{
     public void setSelectedMon(Monedero selectedMon) {
         this.selectedMon = selectedMon;
     }
-    
+
+    public List<PagoOnline> getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(List<PagoOnline> movimientos) {
+        this.movimientos = movimientos;
+    }
+       
     /**
      * Este método cambia el estado del monedero seleccionado de acuerdo a lo escogido por el cliente
      */
@@ -111,6 +123,15 @@ public class ControlConsultaMonederos implements Serializable{
                 this.selectedMon.setEstado(this.estados.get(i));
             }
         }
+    }
+    
+    /**
+     * Este método carga el histórico de movimientos asociados al monedero seleccionado.
+     */
+    public void cargarHistorico(){
+        System.out.println("Cargando histórico ....");
+        PagoOnlineMapper mapPagos= new PagoOnlineMapper();
+        this.movimientos=mapPagos.obtenerPagos(selectedMon);
     }
     
 }
