@@ -8,8 +8,8 @@
                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
     <style type="text/css">
         .monedItem {
-            width:180px;
-            height:75px;
+            width:250px;
+            height:150px;
             text-align:center;
         }
     </style>
@@ -58,12 +58,12 @@
 
                                 </p:submenu>
                                 <p:submenu label="Gestionar cuenta" >  
-                                            <p:menuitem value="Modificar datos personales" url="http://www.primefaces.org" icon="ui-icon-home" />  
-                                            <p:menuitem value="Crear contraseña transaccional" url="http://www.primefaces.org/documentation.html" icon="ui-icon-document" />  
-                                            <p:menuitem value="Cambiar contraseña transaccional" url="http://www.primefaces.org/downloads.html" icon="ui-icon-arrowthick-1-s" />                       
+                                            <p:menuitem value="Modificar datos personales" url="javascript:cambioPagina('faces/monedero/modifDatosPers.xhtml')" icon="ui-icon-home" />  
+                                            <p:menuitem value="Crear contraseña transaccional" url="javascript:cambioPagina('faces/monedero/creacionPssTx.xhtml')" icon="ui-icon-document" />  
+                                            <p:menuitem value="Cambiar contraseña transaccional" url="javascript:cambioPagina('faces/monedero/modifPssTx.xhtml')" icon="ui-icon-arrowthick-1-s" />                       
                                 </p:submenu>
                                 <p:submenu label="Cambiar contraseña de acceso">  
-
+                                            <p:menuitem value="Cambiar contraseña de acceso" icon="ui-icon-home" url="javascript:cambioPagina('faces/monedero/modifPssAcceso.xhtml')" />  
                                 </p:submenu>
                             </p:panelMenu>
                         

@@ -35,18 +35,23 @@ public class AccesoLDAP {
     }
 
     public void InsertarUsuario(Persona persona, String uid, String password, String role) throws Exception {
+            ConexionLdap conn = null;
         try {
             String grupo = role;//MODIFICAR ESTO*********
+            conn = new ConexionLdap();
             LDAPEntry usuarioLdap = cargarDatos(persona, uid, password);
-            ConexionLdap conn = new ConexionLdap();
             conn.abrirConexionLdap();
             conn.getLc().add(usuarioLdap);
             cargarMemberUid(grupo, uid, conn);
-            conn.cerrarConexionLdap();
         } catch (LDAPException e) {
             System.out.println("fallo al insertar");
             e.printStackTrace();
             throw e;
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }   
         }
     }
 
@@ -63,6 +68,9 @@ public class AccesoLDAP {
         setAtr.add(new LDAPAttribute("sn", persona.getApellido()));
         setAtr.add(new LDAPAttribute("givenName", persona.getNombre()));
         setAtr.add(new LDAPAttribute("userPassword", password));
+        setAtr.add(new LDAPAttribute("pssTx", "none"));
+        setAtr.add(new LDAPAttribute("numFallosPassTx", "0"));
+        setAtr.add(new LDAPAttribute("estadoPassTx", "SIN_ASIGNAR"));
         String dn = "uid=" + uid + ",ou=Users,dc=monederodigital,dc=com,dc=co";
         LDAPEntry entrada = new LDAPEntry(dn, setAtr);
         return entrada;
@@ -80,15 +88,15 @@ public class AccesoLDAP {
         LDAPSearchResults resultado = null;
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro = "(uid=" + usuario + ")";
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             resultado = conn.getLc().search(this.baseBusqueda, salida, filtro, null, false);
             System.out.println("RTADO **" + resultado.hasMore());
             if (resultado.getCount() > 0) {
                 return true;
             }
-            conn.cerrarConexionLdap();
 
            //Aqu� se pintan los atributos del resultado
           /* while(resultado.hasMore()){
@@ -116,6 +124,11 @@ public class AccesoLDAP {
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
             System.out.println("ERROR AC�AAAAA" + ex.getMessage());
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }   
         }
         return false;
     }
@@ -126,36 +139,56 @@ public class AccesoLDAP {
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro = "(uid=" + usuario + ")";
         System.out.println("USUARIO AL BUSCAR:" + filtro);
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             resultado = conn.getLc().search(this.baseBusqueda, salida, filtro, null, false);
             if (resultado.hasMore()) {
                 existeUsuario = true;
             }
-            conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }   
         }
         System.out.println("USU EXISTE: " + existeUsuario);
         return existeUsuario;
     }
 
+    /**
+     * Este método valida el password de acceso de un cliente contra el ldap.
+     * @param usuario Es el usuario del cual se validará el password.
+     * @param password Es el password a validar.
+     * @return Retorna como resultado true si el password coincide, false si no lo hace.
+     */
     public boolean validarPassword(String usuario, String password) {
         boolean passOK = false;
         String dn = "uid=" + usuario + "," + baseBusqueda;
+            ConexionLdap conLdap=null;
         try {
-
-            LDAPConnection conLdap = new LDAPConnection();
-            conLdap.bind(LDAPConnection.LDAP_V3, dn, password.getBytes("UTF8"));
-            LDAPAttribute atributo = new LDAPAttribute("userPassword", password);
-            passOK = conLdap.compare(dn, atributo);
-
-        } catch (LDAPException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            /*LDAPConnection conLdap = new LDAPConnection();
+            conLdap.bind(LDAPConnection.LDAP_V3, dn, password.getBytes("UTF8"));*/
+            conLdap = new ConexionLdap();
+            conLdap.abrirConexionLdap(usuario, password);
+            //conLdap.getLc().bind(LDAPConnection.LDAP_V3, dn, password.getBytes("UTF8"));
+            //conLdap.ConexionUser(usuario, password);
+            passOK=conLdap.getLc().isConnected();
+            
+        } /*catch (LDAPException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error 1 al validar el password "+e);
         } catch (UnsupportedEncodingException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error 2 al validar el password "+e);
+        }*/ finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conLdap!=null&&conLdap.getLc().isConnectionAlive()) {
+                conLdap.cerrarConexionLdap();     
+            }
         }
+            System.out.println("Password validada: "+passOK);
         return passOK;
     }
 
@@ -165,17 +198,22 @@ public class AccesoLDAP {
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro = "(uid=" + usuario + ")";
         System.out.println("USUARIO AL BUSCAR:" + filtro);
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             resultado = conn.getLc().search(this.baseBusqueda, salida, filtro, null, false);
             while (resultado.hasMore()) {
                 LDAPEntry entradaLdap = resultado.next();
                 estadoCuenta = entradaLdap.getAttribute("estadoCuenta").getStringValue();
             }
-            conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }
         }
         return estadoCuenta;
     }
@@ -186,17 +224,22 @@ public class AccesoLDAP {
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro = "(uid=" + usuario + ")";
         System.out.println("USUARIO AL BUSCAR:" + filtro);
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             resultado = conn.getLc().search(this.baseBusqueda, salida, filtro, null, false);
             while (resultado.hasMore()) {
                 LDAPEntry entradaLdap = resultado.next();
                 numIntentosConexion = entradaLdap.getAttribute("intentosConexion").getStringValue();
             }
-            conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }   
         }
         return numIntentosConexion;
     }
@@ -204,27 +247,64 @@ public class AccesoLDAP {
     public void modificarEstadoCuenta(String usuario, String estadoCuenta) {
         String dn = "uid=" + usuario + "," + this.baseBusqueda;
         LDAPModification entrada = new LDAPModification(LDAPModification.REPLACE, new LDAPAttribute("estadoCuenta", estadoCuenta));
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             conn.getLc().modify(dn, entrada);
-            conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }  
         }
     }
 
     public void modificarIntentosConexion(String usuario, String intentosConexion) {
         String dn = "uid=" + usuario + "," + this.baseBusqueda;
         LDAPModification entrada = new LDAPModification(LDAPModification.REPLACE, new LDAPAttribute("intentosConexion", intentosConexion));
+            ConexionLdap conn = null;
         try {
-            ConexionLdap conn = new ConexionLdap();
+            conn = new ConexionLdap();
             conn.abrirConexionLdap();
             conn.getLc().modify(dn, entrada);
             conn.getLc().modify(dn, entrada);
-            conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }  
+        }
+    }
+    
+    /**
+     * Este método permite modificar la constraseña de acceso del usuario en el ldap
+     * @param usuario Es el usuario al cual se asignará la contraseña
+     * @param pssTx Es la contraseña que se asignará al usuario
+     */
+    public void modificarPssAcceso(String usuario, String pssAcceso) throws LDAPException {
+        String dn = "uid=" + usuario + "," + this.baseBusqueda;
+        //Para que lo siguiente funciona debemos crear el campo en el ldap*******
+        LDAPModification modifPss = new LDAPModification(LDAPModification.REPLACE, new LDAPAttribute("userPassword", pssAcceso));
+        
+            ConexionLdap conn = null;
+        try {
+            conn = new ConexionLdap();
+            conn.abrirConexionLdap();
+            conn.getLc().modify(dn, modifPss);
+        } catch (LDAPException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error en modificarPssAcceso "+ex);
+            System.out.println("ERROR COD -------- "+ex.getResultCode());
+            throw ex;
+        }finally{
+            //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
+            if (conn!=null&&conn.getLc().isConnectionAlive()) {
+                conn.cerrarConexionLdap();     
+            }
         }
     }
 }

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <style type="text/css">
+
+    </style>
+    <div class="post">              
+
+        <f:view contentType="text/html">
+            <h:head>
+                <f:facet name="first">
+                    <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                    <title>Modificación Contraseña Acceso - Módulo Cliente Monedero</title>
+                </f:facet>
+            </h:head>
+
+            <h:body>
+                <h:form id="form">
+                    <p:growl id="growl" sticky="true" showDetail="true" rendered="#{not facesContext.validationFailed}"/>
+                    <b><p:outputLabel value="Modificación contraseña de acceso" style="font-size:20px"/></b><br/><br/>
+                    
+                    <p:panel>
+                        <p:messages id="m1" for="pwd0" />
+                        <p:messages id="m2" for="pwd1" />
+                        <p:messages id="m3" for="pwd2" />
+                        <h:panelGrid columns="2" columnClasses="label, value" >
+                            <h:outputLabel for="pwd0" value="Password Actual: "/>
+                            <p:password autocomplete="false" id="pwd0" value="#{operaPssAcceso.passActual}" label="password0" required="true" requiredMessage="Debe ingresar el password actual" />
+
+                            <h:outputLabel for="pwd1" value="Nuevo Password: "/>
+                            <p:password autocomplete="false" id="pwd1" value="#{operaPssAcceso.passNueva}" match="pwd2" label="password1" required="true" requiredMessage="Debe ingresar un nuevo password" validatorMessage="El nuevo password debe coincidir con su confirmación"/>
+
+                            <h:outputLabel for="pwd2" value="Confirme el nuevo password: "/>
+                            <p:password autocomplete="false" id="pwd2" label="password2" required="true" requiredMessage="Debe ingresar la confirmación del nuevo password" />   
+                        </h:panelGrid>
+                    </p:panel>
+                    <br/>
+                    <p:commandButton value="Crear" update="form" icon="ui-icon-check" actionListener="#{operaPssAcceso.modificar}" style="margin-left: 30px" onclick="javascript:mantenerDatos()" oncomplete="javascript:cargarDatos()"/>
+
+
+                </h:form>
+            </h:body>
+            <script type="text/javascript">
+                var pssAct;
+                var pssNew;
+                var pssConf;
+                function mantenerDatos(){
+                    pssAct=document.getElementById("form:pwd0").value;
+                    pssNew=document.getElementById("form:pwd1").value;
+                    pssConf=document.getElementById("form:pwd2").value;
+                }
+                
+                function cargarDatos(){
+                    document.getElementById("form:pwd0").value=pssAct;
+                    document.getElementById("form:pwd1").value=pssNew;
+                    document.getElementById("form:pwd2").value=pssConf;
+                }
+            </script>
+        </f:view>
+    </div>
+</ui:composition>
+

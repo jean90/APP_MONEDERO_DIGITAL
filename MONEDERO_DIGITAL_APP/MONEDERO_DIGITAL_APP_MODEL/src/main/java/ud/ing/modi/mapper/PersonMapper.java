@@ -62,5 +62,25 @@ public class PersonMapper {
             sesion.close();
         }
     }
+    
+    /**
+     * Este método actualiza una persona en el momento en que el cliente natural decidió actualizar sus datos.
+     * @param persona Es la persona que se va a actualizar.
+     * @throws Exception 
+     */
+    public void actualizarPersona(Persona persona) throws Exception {
+        try {
+            iniciaOperacion();
+            sesion.update(persona);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            sesion.close();
+        }
+    }
 
 }
