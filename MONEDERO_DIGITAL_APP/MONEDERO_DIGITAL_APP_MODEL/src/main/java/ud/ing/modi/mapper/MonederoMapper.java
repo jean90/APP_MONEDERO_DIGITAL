@@ -15,7 +15,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.criterion.Restrictions;
+import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteNatural;
+import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.Monedero;
 
 
@@ -23,52 +25,35 @@ import ud.ing.modi.entidades.Monedero;
  *
  * @author Lufe
  */
-public class MonederoMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class MonederoMapper extends Mapper{
     
     public void guardarMonedero(Monedero monedero) throws Exception {
         try {
             iniciaOperacion();
-            sesion.save(monedero);
-            tx.commit();
+            getSesion().save(monedero);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
     public void actualizarMonedero(Monedero monedero) throws Exception {
         try {
             iniciaOperacion();
-            sesion.update(monedero);
-            tx.commit();
+            getSesion().update(monedero);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
@@ -78,7 +63,7 @@ public class MonederoMapper {
      * @return Como respuesta se retorna la lista de monederos del cliente
      * @throws HibernateException 
      */
-    public List<Monedero> listarMonederos(ClienteNatural clienteDueno) throws HibernateException {
+    public List<Monedero> listarMonederos(Cliente clienteDueno) throws HibernateException {
         List<Monedero> monederos = null;
        // Query consulta=null;
         //String query="SELECT * FROM MONEDERO";
@@ -87,16 +72,37 @@ public class MonederoMapper {
             iniciaOperacion();
            // consulta = sesion.createQuery("FROM MONEDERO");
     //        SQLQuery sqlquery=sesion.createSQLQuery(query);
-            monederos= sesion.createCriteria(Monedero.class).add(Restrictions.eq("clienteDueno",clienteDueno)).list();
+            
+                monederos= getSesion().createCriteria(Monedero.class).add(Restrictions.eq("clienteDueno",clienteDueno)).list();
+            
          //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
   //          sqlquery.addEntity(Monedero.class);
             //monederos= consulta.list();
   //          monederos= sqlquery.list();
             System.out.println("Monederos hallados: "+monederos);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return monederos;
+    }
+    
+    /**
+     * Este método busca un monedero desde el criterio indicado.
+     * @param codMonedero Es el código del monedero que se desea encontrar.
+     * @return Retorna como resultado el objeto del monedero que cumple el criterio.
+     */
+    public Monedero buscarMonedero(String codMonedero){
+        int codMon = Integer.parseInt(codMonedero);
+        Monedero monedero=null;
+        try {
+            iniciaOperacion();
+            monedero= (Monedero) getSesion().get(Monedero.class, codMon);
+            
+            System.out.println("Monedero hallado: "+monedero);
+        } finally {
+            getSesion().close();
+        }
+        return monedero;
     }
     
     
