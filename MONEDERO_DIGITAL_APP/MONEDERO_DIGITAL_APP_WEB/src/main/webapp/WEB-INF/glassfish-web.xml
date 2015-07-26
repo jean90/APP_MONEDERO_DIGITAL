@@ -15,4 +15,8 @@
     <role-name>Monedero</role-name>
     <group-name>Monedero</group-name>
   </security-role-mapping>
+  <security-role-mapping>
+    <role-name>TiendaOnline</role-name>
+    <group-name>TiendaOnline</group-name>
+  </security-role-mapping>
 </glassfish-web-app>
