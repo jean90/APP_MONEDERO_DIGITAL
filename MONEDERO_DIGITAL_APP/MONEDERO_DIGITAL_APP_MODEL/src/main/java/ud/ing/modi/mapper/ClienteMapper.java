@@ -6,18 +6,11 @@
 
 package ud.ing.modi.mapper;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
+
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
-import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.PuntoRecarga;
 import ud.ing.modi.entidades.TiendaOnLine;
 
@@ -25,33 +18,16 @@ import ud.ing.modi.entidades.TiendaOnLine;
  *
  * @author Administrador
  */
-public class ClienteMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class ClienteMapper extends Mapper{
     
     public Cliente obtenerCliente(String idCliente){
         int id = Integer.parseInt(idCliente);
         Cliente cliente = null;
         try {
             iniciaOperacion();
-            cliente = (Cliente) sesion.get(Cliente.class, id);
+            cliente = (Cliente) getSesion().get(Cliente.class, id);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return cliente;
     }
@@ -62,9 +38,9 @@ public class ClienteMapper {
         ClienteNatural cliente = null;
         try {
             iniciaOperacion();
-            cliente = (ClienteNatural) sesion.get(ClienteNatural.class, id);
+            cliente = (ClienteNatural) getSesion().get(ClienteNatural.class, id);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return cliente;
     }
@@ -75,15 +51,15 @@ public class ClienteMapper {
      * @return Como resultado retorna el objeto cliente que tiene ese nickname asociado.
      */
     public Cliente buscarPorNick(String nick){
-        ClienteNatural cliente = null;
+        Cliente cliente = null;
 
         try {
             iniciaOperacion();
-            cliente= (ClienteNatural) sesion.createCriteria(ClienteNatural.class).add(Restrictions.eq("nickname",nick)).uniqueResult();
+            cliente= (Cliente) getSesion().createCriteria(Cliente.class).add(Restrictions.eq("nickname",nick)).uniqueResult();
             System.out.println("Cliente hallado -- "+cliente);
 
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return cliente;
     }
@@ -91,62 +67,62 @@ public class ClienteMapper {
     public void guardarCliente(Cliente cliente) throws Exception{
          try {
             iniciaOperacion();
-            sesion.save(cliente);
-            tx.commit();
+            getSesion().save(cliente);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
     public void guardarClienteJuridico(ClienteJuridico cJuridico) throws Exception{
         try {
             iniciaOperacion();
-            sesion.save(cJuridico.getRepresentante());
-            sesion.save(cJuridico);
-            tx.commit();
+            getSesion().save(cJuridico.getRepresentante());
+            getSesion().save(cJuridico);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
     public void guardarClienteNatural(ClienteNatural cNatural) throws Exception{
         try {
             iniciaOperacion();
-            sesion.save(cNatural);
-            tx.commit();
+            getSesion().save(cNatural);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
     public void guardarTiendaOnline(TiendaOnLine tiendaOnline) throws Exception{
         try {
             iniciaOperacion();
-            sesion.save(tiendaOnline.getRepresentante());
-            sesion.save(tiendaOnline);
-            tx.commit();
+            getSesion().save(tiendaOnline.getRepresentante());
+            getSesion().save(tiendaOnline);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
@@ -154,16 +130,31 @@ public class ClienteMapper {
     public void guardarPuntoRecarga(PuntoRecarga puntoRecarga) throws Exception{
         try {
             iniciaOperacion();
-            sesion.save(puntoRecarga.getRepresentante());
-            sesion.save(puntoRecarga);
-            tx.commit();
+            getSesion().save(puntoRecarga.getRepresentante());
+            getSesion().save(puntoRecarga);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
+        }
+    }
+    
+    public void actualizarCliente(Cliente cliente) throws Exception {
+        try {
+            iniciaOperacion();
+            getSesion().update(cliente);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
         }
     }
 }
