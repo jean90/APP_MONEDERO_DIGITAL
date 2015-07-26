@@ -4,8 +4,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-                xmlns:o="http://omnifaces.org/ui">
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
     <style type="text/css">
 
@@ -16,42 +15,48 @@
             <h:head>
                 <f:facet name="first">
                     <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
-                    <title>Creación Contraseña Transaccional - Módulo Cliente Monedero</title>
+                    <title>Modificación Contraseña Transaccional</title>
                 </f:facet>
             </h:head>
 
             <h:body>
                 <h:form id="form">
                     <p:growl id="growl" sticky="true" showDetail="true" rendered="#{not facesContext.validationFailed}"/>
-                    <b><p:outputLabel value="Creación contraseña transaccional" style="font-size:20px"/></b><br/><br/>
+                    <b><p:outputLabel value="Modificación contraseña transaccional" style="font-size:20px"/></b><br/><br/>
+                    
                     <p:panel>
-                        <!--<o:messages for="pwd1 pwd2" style="background-color: red;"/>-->
-                        <p:messages for="pwd1" />
-                        <p:messages for="pwd2" />
-                        
-                        <h:panelGrid id="grid" columns="2" columnClasses="label, value" >
-                            <h:outputLabel for="pwd1" value="Password: "/>
+                        <p:messages id="m1" for="pwd0" />
+                        <p:messages id="m2" for="pwd1" />
+                        <p:messages id="m3" for="pwd2" />
+                        <h:panelGrid columns="2" columnClasses="label, value" >
+                            <h:outputLabel for="pwd0" value="Password Actual: "/>
+                            <p:password autocomplete="false" id="pwd0" value="#{operaPssTx.passActual}" label="password0" required="true" requiredMessage="Debe ingresar el password actual" />
+
+                            <h:outputLabel for="pwd1" value="Nuevo Password: "/>
                             <p:password autocomplete="false" id="pwd1" value="#{operaPssTx.passNueva}" match="pwd2" label="password1" required="true" requiredMessage="Debe ingresar un nuevo password" validatorMessage="El nuevo password debe coincidir con su confirmación"/>
 
-                            <h:outputLabel for="pwd2" value="Confirme password: "/>
+                            <h:outputLabel for="pwd2" value="Confirme el nuevo password: "/>
                             <p:password autocomplete="false" id="pwd2" label="password2" required="true" requiredMessage="Debe ingresar la confirmación del nuevo password" />   
                         </h:panelGrid>
                     </p:panel>
                     <br/>
-                    <p:commandButton value="Crear" update="form" icon="ui-icon-check" actionListener="#{operaPssTx.crear}" style="margin-left: 30px" onclick="javascript:mantenerDatos()" oncomplete="javascript:cargarDatos()"/>
+                    <p:commandButton value="Guardar" update="form" icon="ui-icon-check" actionListener="#{operaPssTx.modificar}" style="margin-left: 30px" onclick="javascript:mantenerDatos()" oncomplete="javascript:cargarDatos()"/>
 
 
                 </h:form>
             </h:body>
             <script type="text/javascript">
+                var pssAct;
                 var pssNew;
                 var pssConf;
                 function mantenerDatos(){
+                    pssAct=document.getElementById("form:pwd0").value;
                     pssNew=document.getElementById("form:pwd1").value;
                     pssConf=document.getElementById("form:pwd2").value;
                 }
                 
                 function cargarDatos(){
+                    document.getElementById("form:pwd0").value=pssAct;
                     document.getElementById("form:pwd1").value=pssNew;
                     document.getElementById("form:pwd2").value=pssConf;
                 }

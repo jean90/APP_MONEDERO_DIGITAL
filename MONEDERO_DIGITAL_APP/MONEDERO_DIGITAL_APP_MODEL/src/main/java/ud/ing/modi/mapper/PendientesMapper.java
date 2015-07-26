@@ -8,38 +8,20 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import ud.ing.modi.entidades.PendienteRegis;
 
 
-public class PendientesMapper {
-    
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-    
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class PendientesMapper extends Mapper{
     
     public void guardarPendiente(PendienteRegis pendiente) throws Exception {
         try {
             iniciaOperacion();
-            sesion.save(pendiente);
-            tx.commit();
+            getSesion().save(pendiente);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
@@ -55,11 +37,11 @@ public class PendientesMapper {
         PendienteRegis pendiente = null;
         try {
             iniciaOperacion();
-            pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
+            pendiente = (PendienteRegis) getSesion().get(PendienteRegis.class, codSol);
             //nick = pendiente.getNickname();
             //return pendiente!=null;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return pendiente;
     }
@@ -75,9 +57,9 @@ public class PendientesMapper {
         PendienteRegis pendiente = null;
         try {
             iniciaOperacion();
-            pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
+            pendiente = (PendienteRegis) getSesion().get(PendienteRegis.class, codSol);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return pendiente;
     }
@@ -91,15 +73,15 @@ public class PendientesMapper {
             PendienteRegis pendiente=this.cargarPendiente(codPendiente);
             iniciaOperacion();
             System.out.println("Eliminando de Pendientes..");
-            sesion.delete(pendiente);
-            tx.commit();
+            getSesion().delete(pendiente);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     

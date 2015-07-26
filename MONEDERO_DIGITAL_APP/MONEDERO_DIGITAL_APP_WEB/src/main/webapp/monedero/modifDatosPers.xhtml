@@ -42,7 +42,7 @@
                     <br/>
 
                     <p:panel id="panDatos" header="Datos de contacto">
-                        <p:messages id="msg" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:messages id="msg" showDetail="true" autoUpdate="false" closable="true" />
                         <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
                             <h:outputText value="Teléfono fijo:"/>
                             <p:inputText value="#{controlEdicionDatos.personaAEditar.numTelFijo}" required="true" label="Telefono" valueChangeListener="#{controlEdicionDatos.modifTel}">
@@ -69,12 +69,12 @@
                             </p:inputText>
                         </h:panelGrid>
 
-                        <p:commandButton id="submit" value="Submit" update=":form:dataDetail" onsuccess="PF('datosDialog').show()" process="@all" validateClient="true" disabled="#{!controlEdicionDatos.datosVal}"/>
+                        <p:commandButton id="submit" value="Submit" update=":form:detalle" onsuccess="PF('datosDialog').show()" process="@all" validateClient="true" disabled="#{!controlEdicionDatos.datosVal}"/>
                     </p:panel>
 
                     <p:dialog header="Datos modificados" widgetVar="datosDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                         <p:outputPanel id="dataDetail" style="text-align:center;">
-                            <p:panelGrid  columns="2" rendered="#{not empty controlEdicionDatos.personaAEditar}" columnClasses="label,value">
+                            <p:panelGrid id="detalle" columns="2" rendered="#{not empty controlEdicionDatos.personaAEditar}" columnClasses="label,value">
                                 <h:outputText value="Teléfono fijo:" />
                                 <h:outputText id="tel" value="#{controlEdicionDatos.personaAEditar.numTelFijo}" />
 
@@ -88,6 +88,10 @@
                                 <h:outputText id="email" value="#{controlEdicionDatos.personaAEditar.email}" />
 
                             </p:panelGrid>
+                            <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
+                                <p:outputLabel for="password" value="Ingrese la contraseña transaccional:" /><br/>
+                                <p:password autocomplete="false" id="password" value="#{controlEdicionDatos.passTx}" label="password1" required="true" requiredMessage="Debe ingresar una contraseña transaccional"/>
+                            </h:panelGrid>
                             <br/>
                             <p:commandButton value="Guardar" update="growl" icon="ui-icon-check" actionListener="#{controlEdicionDatos.save}" style="margin-left: 15px"/>
                         </p:outputPanel>

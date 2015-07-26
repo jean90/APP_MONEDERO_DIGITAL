@@ -10,6 +10,11 @@
         <param-value>WEB-INF/beans.xml</param-value>
     </context-param>
   
+    <context-param> 
+        <param-name>ficheroConfig</param-name> 
+        <param-value>/MONEDERO_CONFIG/monederoIni.properties</param-value>       
+    </context-param> 
+    
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
@@ -22,6 +27,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
  
+    <servlet> 
+        <servlet-name>InicioMonederoDigital</servlet-name> 
+        <servlet-class>ud.ing.modi.servlet.InicioMonederoDigital</servlet-class> 
+        <load-on-startup>0</load-on-startup>
+    </servlet> 
+    
     <servlet-mapping>
         <servlet-name>cxf</servlet-name>
         <url-pattern>/*</url-pattern>

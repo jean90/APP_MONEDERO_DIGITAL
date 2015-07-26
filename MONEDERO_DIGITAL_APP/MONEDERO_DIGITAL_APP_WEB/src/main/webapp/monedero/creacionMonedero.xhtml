@@ -22,7 +22,7 @@
             <h:body>
                 <h:form id="form">
                     <p:growl id="growl" sticky="true" showDetail="true"/>
-                    <b><p:outputLabel value="Tipo de Monedero" style="font-size:20px"/></b><br/><br/>
+                    <b><p:outputLabel value="Creación de Monedero" style="font-size:20px"/></b><br/><br/>
                     <p:messages />
                     <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
                         <p:outputLabel for="divisa" value="Escoja la divisa:" /><br/>
@@ -30,6 +30,12 @@
                             <f:selectItems value="#{controlCreacionMoned.divisas}" var="divisa" itemLabel="#{divisa.desDivisa}" itemValue="#{divisa.codigoDivisa}"/> 
                         </h:selectOneRadio>
                     </h:panelGrid>
+                    
+                   <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
+                        <p:outputLabel for="password" value="Ingrese la contraseña transaccional:" /><br/>
+                        <p:password autocomplete="false" id="password" value="#{controlCreacionMoned.passTx}" label="password1" required="true" requiredMessage="Debe ingresar una contraseña transaccional"/>
+                    </h:panelGrid>
+                   
                     
                     <p:commandButton value="Crear" update="growl" icon="ui-icon-check" actionListener="#{controlCreacionMoned.save}" style="margin-left: 30px"/>
                     

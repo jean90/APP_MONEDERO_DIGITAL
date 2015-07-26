@@ -16,7 +16,11 @@ import javax.jws.WebService;
 public interface PagoCompras {
 
     String validarDatosCompra(@WebParam(name = "codMonedero") String codMonedero,
+            @WebParam(name = "nickCliente") String nickCliente);
+    
+    
+    String pagarCompra(@WebParam(name = "codMonedero") String codMonedero,
             @WebParam(name = "codTienda") String codTienda, @WebParam(name = "codCompra") String codCompra,
-            @WebParam(name = "valorCompra") String valorCompra, @WebParam(name = "usuCliente") String usuCliente);
+            @WebParam(name = "valorCompra") String valorCompra, @WebParam(name = "nickCliente") String nickCliente);
     
 }

@@ -15,7 +15,7 @@
     </style>
     <f:view contentType="text/html">
         <h:head>
-            <title>MONEDERO DIGITAL - Módulo Cliente Monedero</title>
+            <title>MONEDERO DIGITAL - Módulo Tienda Online</title>
             <script>
 
                 window.onload = function() {
@@ -55,11 +55,11 @@
                 <p:growl id="growl" sticky="true" showDetail="true"/>
                 <p:messages />
                 <p:graphicImage name="images/pdf.png" width="24"/>
-                <b><p:outputLabel value="Gestión Monederos" style="font-size:20px"/></b><br/><br/>
-                <p:outputLabel value="Escoja el monedero a gestionar:" /><br/><br/>
+                <b><p:outputLabel value="Gestión Monedero" style="font-size:20px"/></b><br/><br/>
+                <p:outputLabel value="Escoja la tarea a realizar sobre el monedero:" /><br/><br/>
                 <p:carousel id="basicCarousel" value="#{controlConsultaMoned.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 10%" >
                     <f:facet name="header" >
-                        Detalle Monederos
+                        Detalle Monedero
                     </f:facet>
 
                     <h:panelGrid columns="1" style="width:100%;height:auto" cellpadding="5" >  

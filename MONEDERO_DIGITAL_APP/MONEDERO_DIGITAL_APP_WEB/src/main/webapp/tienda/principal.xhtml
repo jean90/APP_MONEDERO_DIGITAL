@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jslt/functions">
+    <style type="text/css">
+        .monedItem {
+            width: 250px;
+            height: 90px;
+        }
+    </style>
+    <f:view contentType="text/html">
+        <h:head>
+            <title>MONEDERO DIGITAL - Módulo Tienda Online</title>
+        </h:head>
+        <h:body>
+            <h:form>
+                
+                <!--<p:carousel id="basicCarousel" value="#{controlConsultaMoned.monederos}" var="moned" itemStyleClass="monedItem" style="margin-left: 25%" >
+                                    <f:facet name="header" >
+                                        Monederos
+                                    </f:facet>
+                                    <h:panelGrid columns="1" style="width:120px" cellpadding="5">  
+
+                                        <h:outputText value="Divisa: #{moned.divisa.desDivisa}" />  
+
+                                        <h:outputText value="Saldo: #{moned.saldo}" />  
+
+                                    </h:panelGrid> 
+                                    <f:facet name="footer" >
+                                        Ñarañaññaa
+                                    </f:facet>
+                                </p:carousel>-->
+                
+                <!--<p:carousel value="#{controlConsultaMoned.monederos}" headerText="Monedero" var="moned" itemStyleClass="monedItem" numVisible="1" easing="easeOutBounce" style="margin-left: 37%" styleClass="carouselAdvanced">
+                    <p:panelGrid columns="2" style="width:100%" columnClasses="label,value">
+                        
+                        <h:outputText value="Divisa:" />
+                        <h:outputText value="#{moned.divisa.desDivisa}" />
+
+                        <h:outputText value="Saldo:" />
+                        <h:outputText value="#{moned.saldo}" />
+
+                    </p:panelGrid>
+                </p:carousel>-->
+                
+                <p:dataGrid var="moned" value="#{controlConsultaMoned.monederos}" columns="1" layout="grid" rows="1" paginator="false" style="text-align: center" >
+                    <p:panel header="#{moned.codMonedero}" style="width:240px" >
+                        <p:panelGrid columns="2" style="width:100%" columnClasses="label,value">
+                        
+                            <h:outputText value="Divisa:" />
+                            <h:outputText value="#{moned.divisa.desDivisa}" />
+
+                            <h:outputText value="Saldo:" />
+                            <h:outputText value="#{moned.saldo}" />
+
+                        </p:panelGrid>
+                    </p:panel>
+                </p:dataGrid>
+
+            </h:form>
+        </h:body>
+        <script type="text/javascript">
+                var actual = 'faces/monedero/principal.xhtml';
+                function cambioPagina(pagina) {
+                if (pagina != actual) {
+                $('#frame').attr('src', pagina);
+                actual=pagina;
+                }
+                }
+            </script>
+    </f:view>
+</ui:composition>

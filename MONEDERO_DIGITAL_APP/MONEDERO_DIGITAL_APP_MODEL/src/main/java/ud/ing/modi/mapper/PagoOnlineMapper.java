@@ -8,11 +8,6 @@ package ud.ing.modi.mapper;
 
 import java.util.List;
 import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PagoOnline;
@@ -22,24 +17,7 @@ import ud.ing.modi.entidades.PagoOnline;
  *
  * @author Lufe
  */
-public class PagoOnlineMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-    
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-    
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class PagoOnlineMapper extends Mapper{
 
     /**
      * Este método trae la lista de los pagos realizados por el cliente utilizando el monedero seleccionado.
@@ -52,11 +30,27 @@ public class PagoOnlineMapper {
         System.out.println("MONEDERO: "+monedOrigen);
         try {
             iniciaOperacion();
-            pagos= sesion.createCriteria(PagoOnline.class).add(Restrictions.eq("monOrigen",monedOrigen)).list();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monOrigen",monedOrigen)).list();
             System.out.println("Movimientos hallados: "+pagos);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return pagos;
+    }
+    
+    
+    public void registrarPago(PagoOnline pago) throws Exception{
+        try {
+            iniciaOperacion();
+            getSesion().save(pago);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
+        }
     }
 }

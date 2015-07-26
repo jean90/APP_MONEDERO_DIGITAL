@@ -18,9 +18,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
+import ud.ing.modi.controlador.monedero.OperacionTransaccional;
 import ud.ing.modi.email.EmailActivacionCuenta;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.Persona;
+import ud.ing.modi.ldap.TransaccionalLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.PersonMapper;
 
@@ -30,11 +32,11 @@ import ud.ing.modi.mapper.PersonMapper;
  */
 @ManagedBean(name = "controlEdicionDatos")
 @ViewScoped
-public class ControlEdicionDatos  implements Serializable{
+public class ControlEdicionDatosPers extends OperacionTransaccional implements Serializable{
     private Persona personaAEditar;
     private boolean datosVal;
     
-    public ControlEdicionDatos() {
+    public ControlEdicionDatosPers() {
         cargarPersona();
         this.datosVal=true;
     }
@@ -83,12 +85,23 @@ public class ControlEdicionDatos  implements Serializable{
     
     public void save(){
         PersonMapper mapeador = new PersonMapper();
+        TransaccionalLDAP ldap = new TransaccionalLDAP();
+        String nick = traerUsu();
         try {
-            mapeador.actualizarPersona(personaAEditar);
-            FacesMessage msg = new FacesMessage("Actualización exitosa ", personaAEditar.getNombre());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (this.validarEstadoPss(nick)) {
+                if (this.validaPss(ldap, nick)) {
+                    inicializarIntentosTx(nick);
+                    mapeador.actualizarPersona(personaAEditar);
+                    FacesMessage msg = new FacesMessage("Actualización exitosa ", personaAEditar.getNombre());
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                }else{
+                    FacesMessage msg = new FacesMessage("Contraseña transaccional errónea", null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    validarBloqueoPss(nick);
+                }
+            }
         } catch (Exception ex) {
-            Logger.getLogger(ControlEdicionDatos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlEdicionDatosPers.class.getName()).log(Level.SEVERE, null, ex);
             FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en su actualización de datos");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }

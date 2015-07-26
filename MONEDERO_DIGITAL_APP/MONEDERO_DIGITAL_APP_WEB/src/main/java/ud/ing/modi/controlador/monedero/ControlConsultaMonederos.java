@@ -19,10 +19,13 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import ud.ing.modi.entidades.Cliente;
+import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.EstadoMonedero;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PagoOnline;
+import ud.ing.modi.ldap.TransaccionalLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.EstadoMonederoMapper;
 import ud.ing.modi.mapper.MonederoMapper;
@@ -34,12 +37,13 @@ import ud.ing.modi.mapper.PagoOnlineMapper;
  */
 @ManagedBean(name = "controlConsultaMoned")
 @ViewScoped
-public class ControlConsultaMonederos implements Serializable{
+public class ControlConsultaMonederos extends OperacionTransaccional implements Serializable{
     
     private List<Monedero> monederos = new ArrayList<Monedero>(); 
     private List<EstadoMonedero> estados = new ArrayList<EstadoMonedero>();
     private List<PagoOnline> movimientos = new ArrayList<PagoOnline>();
     private Monedero selectedMon;
+    private String passTx;
 
     public ControlConsultaMonederos() {
         this.traerEstados();
@@ -69,7 +73,14 @@ public class ControlConsultaMonederos implements Serializable{
         HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
         String nick=request.getUserPrincipal().getName();
         System.out.println("USUARIO: "+nick);
-        ClienteNatural clienteDueno=(ClienteNatural)new ClienteMapper().buscarPorNick(nick);
+        Cliente clienteDueno=null;
+        if (request.isUserInRole("Monedero")) {
+            clienteDueno=(ClienteNatural)new ClienteMapper().buscarPorNick(nick);
+            
+        }else if(request.isUserInRole("TiendaOnline")){
+            clienteDueno=(ClienteJuridico)new ClienteMapper().buscarPorNick(nick);
+            
+        }
         this.monederos=monMap.listarMonederos(clienteDueno);
     }
 
@@ -96,18 +107,32 @@ public class ControlConsultaMonederos implements Serializable{
     public void setMovimientos(List<PagoOnline> movimientos) {
         this.movimientos = movimientos;
     }
+    
+    
        
     /**
      * Este método cambia el estado del monedero seleccionado de acuerdo a lo escogido por el cliente
      */
     public void cambioEst(){
         MonederoMapper mapeador=new MonederoMapper();
+        TransaccionalLDAP ldap = new TransaccionalLDAP();
+        String nick = traerUsu();
         try {
-            this.asignarEst();
-            
-            mapeador.actualizarMonedero(selectedMon);
-            FacesMessage msg = new FacesMessage("Monedero actualizado con éxito", "Código: " + selectedMon.getCodMonedero()+"Estado: "+selectedMon.getEstado().getDesEstado());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (validarEstadoPss(nick)) {
+                if (this.validaPss(ldap, nick)) {
+                    inicializarIntentosTx(nick);
+                    this.asignarEst();
+
+                    mapeador.actualizarMonedero(selectedMon);
+                    FacesMessage msg = new FacesMessage("Monedero actualizado con éxito", "Código: " + selectedMon.getCodMonedero()+"Estado: "+selectedMon.getEstado().getDesEstado());
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    
+                }else{
+                    FacesMessage msg = new FacesMessage("Contraseña transaccional errónea", null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    validarBloqueoPss(nick);
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(ControlCreacionMonedero.class.getName()).log(Level.SEVERE, null, ex);
             FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en la actualización del monedero");
@@ -133,5 +158,6 @@ public class ControlConsultaMonederos implements Serializable{
         PagoOnlineMapper mapPagos= new PagoOnlineMapper();
         this.movimientos=mapPagos.obtenerPagos(selectedMon);
     }
+    
     
 }

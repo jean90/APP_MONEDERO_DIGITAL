@@ -16,34 +16,16 @@ import ud.ing.modi.entidades.Persona;
  *
  * @author Administrador
  */
-public class PersonMapper {
-
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class PersonMapper extends Mapper{
 
     public Persona obtenerUsuario(String idUsuario) throws HibernateException {
         int id = Integer.parseInt(idUsuario);
         Persona persona = null;
         try {
             iniciaOperacion();
-            persona = (Persona) sesion.get(Persona.class, id);
+            persona = (Persona) getSesion().get(Persona.class, id);
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return persona;
     }
@@ -51,15 +33,15 @@ public class PersonMapper {
     public void guardarPersona(Persona persona) throws Exception {
         try {
             iniciaOperacion();
-            sesion.save(persona);
-            tx.commit();
+            getSesion().save(persona);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
     
@@ -71,15 +53,15 @@ public class PersonMapper {
     public void actualizarPersona(Persona persona) throws Exception {
         try {
             iniciaOperacion();
-            sesion.update(persona);
-            tx.commit();
+            getSesion().update(persona);
+            getTx().commit();
         } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
+            if (getTx() != null) {
+                getTx().rollback();
             }
             throw e;
         } finally {
-            sesion.close();
+            getSesion().close();
         }
     }
 

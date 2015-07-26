@@ -21,24 +21,7 @@ import ud.ing.modi.entidades.TipoDocumento;
  *
  * @author Lufe
  */
-public class DocumentoMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-    
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-    
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class DocumentoMapper extends Mapper{
     
     public List<TipoDocumento> obtenerDocs() throws HibernateException {
         List<TipoDocumento> tipoDoc = null;
@@ -46,12 +29,12 @@ public class DocumentoMapper {
         System.out.println("QUERY: "+query);
         try {
             iniciaOperacion();
-            SQLQuery sqlquery=sesion.createSQLQuery(query);
+            SQLQuery sqlquery=getSesion().createSQLQuery(query);
          //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
             sqlquery.addEntity(TipoDocumento.class);
             tipoDoc= sqlquery.list();
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return tipoDoc;
     }

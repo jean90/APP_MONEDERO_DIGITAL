@@ -68,12 +68,17 @@
     <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>12.1.0.1</version>
+            <version>11.2.0.3</version>
     </dependency>
       <dependency>
           <groupId>unknown.binary</groupId>
           <artifactId>ojdbc7</artifactId>
           <version>SNAPSHOT</version>
       </dependency>
+      <dependency>
+            <groupId>com.novell.ldap</groupId>
+            <artifactId>jldap</artifactId>
+            <version>2009-10-07</version>
+        </dependency>
   </dependencies>
 </project>

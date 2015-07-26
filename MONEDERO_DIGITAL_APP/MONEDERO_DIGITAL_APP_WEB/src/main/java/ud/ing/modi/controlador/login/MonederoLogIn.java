@@ -71,6 +71,12 @@ public class MonederoLogIn {
             if (validarEstadoCuenta(userName)) {
                 request.login(userName, password);
                 inicializarIntentosConexion(userName);
+                //System.out.println("ENTRA A LOGIN validada la cuenta");
+                //System.out.println("pinto .. "+request.getRemoteUser()+" - "+request.getUserPrincipal());
+                /*String[] roles=((GenericPrincipal)request.getUserPrincipal()).getRoles();
+                for (int i = 0; i < roles.length; i++) {
+                    System.out.println(roles[i]+" + ");
+                }*/
                 if (request.isUserInRole("Admin")) {
                     rol = "Admin";
                 } else if (request.isUserInRole("Monedero")) {
@@ -80,6 +86,7 @@ public class MonederoLogIn {
                 } else if (request.isUserInRole("TiendaOnline")) {
                     rol = "TiendaOnline";
                 } else if (request.isUserInRole("") || rol.equals("error")) {
+                    System.out.println("SIN ROL -------------");
                     request.logout();
                 }
             } 
@@ -150,14 +157,17 @@ public class MonederoLogIn {
         boolean estadoCuentaActivo = false;
         String estadoCuenta;
         AccesoLDAP ldap = new AccesoLDAP();
+       // System.out.println("GRUPOS**************** "+ldap.getGrupos());
         estadoCuenta = ldap.getEstadoCuenta(usuario);
-        System.out.println("estado Cuenta = " + estadoCuenta);
+       // System.out.println("estado Cuenta = " + estadoCuenta);
         if (estadoCuenta.equals(AccesoLDAP.CUENTA_ACTIVA)) {
             estadoCuentaActivo = true;
         } else if (estadoCuenta.equals(AccesoLDAP.CUENTA_BLOQUEDA)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CUENTA BLOQUEADA", "Verifique sus datos"));
         } else if (estadoCuenta.equals(AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CUENTA DE USUARIO SE ENCUENTRA PENDIENTE DE ACTIVACION", "Verifique sus datos"));
+        } else if (estadoCuenta.equals(AccesoLDAP.CUENTA_CANCELADA)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CUENTA DE USUARIO SE ENCUENTRA CANCELADA", "Ya no puede acceder con esta cuenta"));
         }
         return estadoCuentaActivo;
     }

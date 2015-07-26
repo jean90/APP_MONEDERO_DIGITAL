@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <style type="text/css">
+
+    </style>
+    <div class="post">              
+
+        <f:view contentType="text/html">
+            <h:head>
+                <f:facet name="first">
+                    <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                    <title>Edición Datos Empresa - Módulo Tienda Online</title>
+                </f:facet>
+            </h:head>
+
+            <h:body>
+                <h:form id="form">
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+                    <p:messages id="msg" showDetail="true" autoUpdate="false" closable="true" />
+                    <br/>
+                    <p:commandButton id="submit" value="Guardar cambios" update=":form:detalle" onsuccess="PF('datosDialog').show()" process="@all" validateClient="true" disabled="#{!controlEdicionDatosEmp.datosVal}" style="margin-left: 40%"/>
+                    <br/>
+                    <h:panelGrid id="datosprim" columns="2" cellpadding="60px">
+
+                        <p:fieldset legend="Datos Empresa" style="margin-bottom:20px;min-width: 100%">
+                            <h:panelGrid columns="2" style="margin-bottom:10px">
+                                <h:outputText value="Razón social Empresa:                      " />
+                                <h:outputText value="#{controlEdicionDatosEmp.tiendaAEditar.razonSocial}" styleClass="outputLabel" style="column-fill: auto"/>
+                                
+                                <h:outputText value="Número de NIT: " />
+                                <h:outputText value="#{controlEdicionDatosEmp.tiendaAEditar.nit}" styleClass="outputLabel"/>
+
+                            </h:panelGrid>
+                            
+                        </p:fieldset>
+
+
+                        <p:fieldset legend="Datos contacto" style="margin-bottom:20px;min-width: 100%" >
+                                <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px">
+                                    <h:outputText value="Teléfono fijo:"/>
+                                    <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.telefono}" required="true" label="Telefono" valueChangeListener="#{controlEdicionDatosEmp.modifTel}">
+                                        <f:ajax event="change" execute="@this" render="telEmp"/>
+                                    </p:inputText>
+
+                                    <h:outputText value="Dirección:"/>
+                                    <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.direccion}" required="true" label="Direccion" valueChangeListener="#{controlEdicionDatosEmp.modifDir}" >
+                                        <f:ajax event="change" execute="@this" render="dirEmp"/>
+                                    </p:inputText>
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                    </h:panelGrid>
+                       
+                    <h:panelGrid id="datosCambio" columns="3" columnClasses="grid,grid,grid">                           
+                        <p:fieldset legend="Datos Cuenta Bancaria" style="margin-bottom:0px">
+                            <h:panelGrid columns="2" style="margin-bottom:0px; margin-left: 15px" >
+                                <h:outputText value="Banco donde tiene la cuenta:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.banco}" required="true" label="Banco" valueChangeListener="#{controlEdicionDatosEmp.modifBanco}">
+                                    <f:ajax event="change" execute="@this" render="ctaBan"/>
+                                </p:inputText>
+
+                                <h:outputText value="Tipo de cuenta bancaria:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria}" required="true" label="TipoCta" valueChangeListener="#{controlEdicionDatosEmp.modifTipoCta}">
+                                    <f:ajax event="change" execute="@this" render="ctaBan"/>
+                                </p:inputText>
+
+                                <h:outputText value="Número de cuenta:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.numCuentaBancaria}" required="true" label="NumCta" valueChangeListener="#{controlEdicionDatosEmp.modifNumCta}" >
+                                    <f:ajax event="change" execute="@this" render="ctaBan"/>
+                                </p:inputText>
+
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p:fieldset legend="Datos Representante Legal" style="margin-bottom:0px">
+                            <h:panelGrid columns="2" style="margin-bottom:0px; margin-left: 15px" >
+                                <h:outputText value="Dirección Representante:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.representante.direccion}" required="true" label="DirRepr" valueChangeListener="#{controlEdicionDatosEmp.modifDirRepr}">
+                                    <f:ajax event="change" execute="@this" render="dirRep"/>
+                                </p:inputText>
+
+                                <h:outputText value="Teléfono fijo Representante:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.representante.numTelFijo}" required="true" label="TelRepr" valueChangeListener="#{controlEdicionDatosEmp.modifTelRepr}" >
+                                    <f:ajax event="change" execute="@this" render="telRep"/>
+                                </p:inputText>
+
+                                <h:outputText value="Teléfono celular Representante:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.representante.numCelular}" required="true" label="CelRepr" valueChangeListener="#{controlEdicionDatosEmp.modifCelRepr}" >
+                                    <f:ajax event="change" execute="@this" render="celRep"/>
+                                </p:inputText>
+
+                                <h:outputText value="Correo electrónico Representante:"/>
+                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.representante.email}" required="true" label="EmailRepr"  validator="#{controlEdicionDatosEmp.validaEmail}" valueChangeListener="#{controlEdicionDatosEmp.modifEmailRepr}" >
+                                    <f:ajax event="change" execute="@this" render="datosCambio"/>
+                                    <f:ajax event="change" execute="@this" render="email"/>
+                                    <p:ajax event="keyup" update="msg"/>
+                                    <p:ajax event="keyup" update="submit"/>
+                                </p:inputText>
+
+                            </h:panelGrid>
+                         </p:fieldset>
+
+                    </h:panelGrid>
+                        
+                    <!--</p:panel>-->
+                    
+                    
+
+                    <p:dialog header="Datos modificados" widgetVar="datosDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="dataDetail" style="text-align:center;">
+                            <p:panelGrid id="detalle" columns="2" rendered="#{not empty controlEdicionDatosEmp.tiendaAEditar}" columnClasses="label,value">
+                                <h:outputText value="Teléfono empresa:" />
+                                <h:outputText id="telEmp" value="#{controlEdicionDatosEmp.tiendaAEditar.telefono}" />
+
+                                <h:outputText value="Dirección empresa:" />
+                                <h:outputText id="dirEmp" value="#{controlEdicionDatosEmp.tiendaAEditar.direccion}" />
+
+                                <h:outputText value="Cuenta bancaria:" />
+                                <h:outputText id="ctaBan" value="#{controlEdicionDatosEmp.tiendaAEditar.banco} - #{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria} - #{controlEdicionDatosEmp.tiendaAEditar.numCuentaBancaria}" />
+
+                                <h:outputText value="Dirección representante:" />
+                                <h:outputText id="dirRep" value="#{controlEdicionDatosEmp.tiendaAEditar.representante.direccion}" />
+                                
+                                <h:outputText value="Teléfono representante:" />
+                                <h:outputText id="telRep" value="#{controlEdicionDatosEmp.tiendaAEditar.representante.numTelFijo}" />
+                                
+                                <h:outputText value="Celular representante:" />
+                                <h:outputText id="celRep" value="#{controlEdicionDatosEmp.tiendaAEditar.representante.numCelular}" />
+                                
+                                <h:outputText value="Email representante:" />
+                                <h:outputText id="email" value="#{controlEdicionDatosEmp.tiendaAEditar.representante.email}" />
+
+                            </p:panelGrid>
+                            <h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 15px" cellpadding="5">
+                                <p:outputLabel for="password" value="Ingrese la contraseña transaccional:" /><br/>
+                                <p:password autocomplete="false" id="password" value="#{controlEdicionDatosEmp.passTx}" label="password1" required="true" requiredMessage="Debe ingresar una contraseña transaccional"/>
+                            </h:panelGrid>
+                            <br/>
+                            <p:commandButton value="Guardar" update="growl" icon="ui-icon-check" actionListener="#{controlEdicionDatosEmp.save}" style="margin-left: 15px"/>
+                        </p:outputPanel>
+                    </p:dialog>
+                    
+                </h:form>
+            </h:body>
+            <script type="text/javascript">
+
+            </script>
+        </f:view>
+    </div>
+</ui:composition>
+

@@ -8,16 +8,8 @@ package ud.ing.modi.mapper;
 
 import java.util.List;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Cliente;
-import ud.ing.modi.entidades.ClienteNatural;
-import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.Monedero;
 
 
@@ -105,5 +97,68 @@ public class MonederoMapper extends Mapper{
         return monedero;
     }
     
+    /**
+     * Este método halla el monedero que le pertenece al cliente indicado.
+     * @param clienteDueno Es el cliente dueño del monedero a buscar.
+     * @return Retorna como resultado el monedero del cliente indicado.
+     */
+    public Monedero buscarPorDueno(Cliente clienteDueno){
+        
+        Monedero monedero=null;
+        try {
+            iniciaOperacion();
+            monedero= (Monedero) getSesion().createCriteria(Monedero.class).add(Restrictions.eq("clienteDueno",clienteDueno)).uniqueResult();
+            
+            System.out.println("Monedero hallado: "+monedero);
+        } finally {
+            getSesion().close();
+        }
+        return monedero;
+    }
+
+    /**
+     * Este método permite abonar el valor pago de una compra realizado por un cliente monedero a una tienda.
+     * @param valorAbono Es el valor de la compra que está siendo pagada.
+     * @param monedero Es el monedero de la tienda a la cual se le abonará el pago.
+     * @throws Exception 
+     */
+    public void abonarPago(float valorAbono, Monedero monedero) throws Exception{
+        float newSaldo=monedero.getSaldo()+valorAbono;
+        monedero.setSaldo(newSaldo);
+        try {
+            iniciaOperacion();
+            getSesion().update(monedero);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
+        }
+    }
     
+    /**
+     * Este método permite abonar el valor pago de una compra realizado por un cliente monedero a una tienda.
+     * @param valorDebito Es el valor de la compra que está siendo pagada.
+     * @param monedero Es el monedero del cliente comprador del cual se le debitará el pago.
+     * @throws Exception 
+     */
+    public void debitarPago(float valorDebito, Monedero monedero) throws Exception{
+        float newSaldo=monedero.getSaldo()-valorDebito;
+        monedero.setSaldo(newSaldo);
+        try {
+            iniciaOperacion();
+            getSesion().update(monedero);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
+        }
+    }
 }
