@@ -16,7 +16,10 @@
         <param-value>/MONEDERO_CONFIG/monederoIni.properties</param-value>       
     </context-param> 
  
- 
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>start</param-value>
+    </context-param>
 
     <servlet> 
         <description>Servlet de carga de parametros iniciales</description>

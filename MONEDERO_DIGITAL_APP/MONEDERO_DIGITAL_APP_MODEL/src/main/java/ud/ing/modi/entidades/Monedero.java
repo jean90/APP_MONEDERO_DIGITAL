@@ -53,7 +53,7 @@ public class Monedero implements Serializable{
     //private int codCliente;//este debe cambiar para apuntar al objeto cliente
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_CLIENTE_DUENO")
-    private ClienteNatural clienteDueno;
+    private Cliente clienteDueno;
 
     public Monedero() {
         divisa=new Divisa();
@@ -126,11 +126,11 @@ public class Monedero implements Serializable{
     public void setCodCliente(int codCliente) {
     this.codCliente = codCliente;
     }*/
-    public ClienteNatural getClienteDueno() {
+    public Cliente getClienteDueno() {
         return clienteDueno;
     }
 
-    public void setClienteDueno(ClienteNatural clienteDueno) {
+    public void setClienteDueno(Cliente clienteDueno) {
         this.clienteDueno = clienteDueno;
     }
 

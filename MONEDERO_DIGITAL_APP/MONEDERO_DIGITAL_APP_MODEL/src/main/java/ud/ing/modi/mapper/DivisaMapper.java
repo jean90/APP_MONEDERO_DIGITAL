@@ -20,24 +20,7 @@ import ud.ing.modi.entidades.Divisa;
  *
  * @author Lufe
  */
-public class DivisaMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-    
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-    
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class DivisaMapper extends Mapper{
 
     public List<Divisa> obtenerDivisas() throws HibernateException {
         List<Divisa> tipoDivs = null;
@@ -45,12 +28,12 @@ public class DivisaMapper {
         System.out.println("QUERY: "+query);
         try {
             iniciaOperacion();
-            SQLQuery sqlquery=sesion.createSQLQuery(query);
+            SQLQuery sqlquery=getSesion().createSQLQuery(query);
          //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
             sqlquery.addEntity(Divisa.class);
             tipoDivs= sqlquery.list();
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return tipoDivs;
     }

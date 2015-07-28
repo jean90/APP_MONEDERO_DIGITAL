@@ -19,24 +19,7 @@ import ud.ing.modi.entidades.EstadoMonedero;
  *
  * @author Lufe
  */
-public class EstadoMonederoMapper {
-    private static final SessionFactory sessionFactory;
-    private Session sesion;
-    private Transaction tx;
-    
-    static {
-        try {
-            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-    }
-    
-    private void iniciaOperacion() throws HibernateException {
-        sesion = this.sessionFactory.openSession();
-        tx = sesion.beginTransaction();
-    }
+public class EstadoMonederoMapper extends Mapper{
 
     public List<EstadoMonedero> obtenerEstados() throws HibernateException {
         List<EstadoMonedero> tipoMons = null;
@@ -44,12 +27,12 @@ public class EstadoMonederoMapper {
         System.out.println("QUERY: "+query);
         try {
             iniciaOperacion();
-            SQLQuery sqlquery=sesion.createSQLQuery(query);
+            SQLQuery sqlquery=getSesion().createSQLQuery(query);
          //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
             sqlquery.addEntity(EstadoMonedero.class);
             tipoMons= sqlquery.list();
         } finally {
-            sesion.close();
+            getSesion().close();
         }
         return tipoMons;
     }

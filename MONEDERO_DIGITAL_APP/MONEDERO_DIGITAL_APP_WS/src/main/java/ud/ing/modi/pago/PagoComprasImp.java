@@ -86,6 +86,7 @@ public class PagoComprasImp implements PagoCompras {
             pago.setValorPago(Float.parseFloat(valorCompra));
             pago.setMonOrigen(monederoComprador);
             monederoTienda=mapMonedero.buscarPorDueno(tienda);
+            pago.setMonDestino(monederoTienda);
             
             if (monederoTienda!=null) {
                 System.out.println("Monedero hallado: "+monederoTienda.getCodMonedero());
@@ -107,7 +108,7 @@ public class PagoComprasImp implements PagoCompras {
         }
         }catch(Exception e)
         {
-            mensajeRta="ERROR: Ha ocurrido un error durante el proceso de pago";
+            mensajeRta="ERROR: Ha ocurrido un error durante el proceso de pago - "+e.getMessage();
         }
         //6. Notificar vía email
         return mensajeRta;
