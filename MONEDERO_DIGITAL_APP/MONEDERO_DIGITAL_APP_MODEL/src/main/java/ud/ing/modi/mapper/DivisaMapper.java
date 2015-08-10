@@ -37,4 +37,10 @@ public class DivisaMapper extends Mapper{
         }
         return tipoDivs;
     }
+    public Divisa obtenerDivisaById(int codDivisa){
+        Divisa divisa=null;
+        iniciaOperacion();
+        divisa = (Divisa)getSesion().get(Divisa.class, codDivisa);
+        return divisa;
+    }
 }

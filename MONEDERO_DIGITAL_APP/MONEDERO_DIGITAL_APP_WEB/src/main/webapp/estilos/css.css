@@ -1,0 +1,37 @@
+body {
+    background-color: #eee;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+
+.bodyIframe {
+    min-height: 700px;
+}
+
+iframe {
+    border: none;
+    background-color: white;
+}
+
+.divContenido{
+    background-color: white;
+}
+
+.centroVertical{
+    position: relative;
+    top: 25%;
+    bottom: auto;
+    right: auto;
+    left: auto;
+}
+
+.centroHorizontal{    
+    margin: auto;
+}
+    
+.pull-left {
+  float: left !important;
+}
+.pull-right {
+  float: right !important;
+}

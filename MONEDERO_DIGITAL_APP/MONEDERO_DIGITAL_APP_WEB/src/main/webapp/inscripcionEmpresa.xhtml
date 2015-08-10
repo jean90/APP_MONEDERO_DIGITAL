@@ -9,11 +9,25 @@
     <f:view contentType="text/html">
         <h:head>
             <title>Monedero Digital - Inscripción de Empresas</title>
+            <script>
+                function mostrarInfoBancaria(){
+                    var tipoEmpresaSeleccionado = document.getElementById('form:tipoEmpresaHidden').value;                    
+                    if(tipoEmpresaSeleccionado==='1'){
+                        
+                        document.getElementById('form:InfoBancariaPnl').style.display='block';           
+            //$('#form:InfoBancariaPnl').css('display:block');
+                    }else{
+                        
+                        document.getElementById('form:InfoBancariaPnl').style.display='none';  
+            //$('#form:InfoBancariaPnl').css('display:none');
+                    }
+                }
+            </script>
         </h:head>
         <h:body>
-            <h:form>
+            <h:form id="form">
                 <p:growl id="growl" sticky="true" showDetail="true"/>
-                <p:wizard flowListener="#{inscripcionEmpresa.onFlowProcess}">
+                <p:wizard flowListener="#{inscripcionEmpresa.onFlowProcess}" >
                     <p:tab id="empresarial" title="Datos de la Empresa">
                         <p:panel header="Información empresarial:">
                             <p:messages />
@@ -27,12 +41,63 @@
                                 <h:outputText value="Telefono*"/>
                                 <p:inputText value="#{inscripcionEmpresa.getcJuridico().telefono}" required="true" label="Telefono" />                                
                                 <h:outputText value="Tipo de empresa*"/>
-                                <p:selectOneRadio id="console" value="#{inscripcionEmpresa.tipoCliente}" layout="grid" columns="1">
+                                <p:selectOneRadio id="tipoEmpresa" value="#{inscripcionEmpresa.tipoCliente}" layout="grid" columns="1" >
                                     <f:selectItem itemLabel="Tienda Online" itemValue="1" />
-                                    <f:selectItem itemLabel="Punto de Recarga" itemValue="2" />            
-                                </p:selectOneRadio>
-                            </h:panelGrid>
+                                    <f:selectItem itemLabel="Punto de Recarga" itemValue="2" />                                       
+                                    <!--p:ajax event="change" process="@this" update=":form:tipoEmpresaHidden" oncomplete="mostrarInfoBancaria()"></p:ajax-->                                    
+                                </p:selectOneRadio>                                 
+                            </h:panelGrid>  
+                            
+                            <!--h:panelGrid id="InfoBancariaPnl" columns="2" columnClasses="label, value" style="display: none">
+                                
+                                <h:outputText value="Tipo de cuenta*"/>
+                                <h:selectOneMenu id="tipoCuenta"  required="false" label="Tipo de cuenta" value="#{inscripcionEmpresa.tipoCuentaBancaria}" converter="TipoCuentaConverter">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{inscripcionEmpresa.listaTiposCuentas}" var="tipoCuenta" itemLabel="#{tipoCuenta.desTipoCuenta}" itemValue="#{tipoCuenta}"/>                                     
+                                </h:selectOneMenu>
+                                
+                                <h:outputText value="Banco*"/>
+                                <h:selectOneMenu id="entidadFinancieraId"  required="false" label="Banco" value="#{inscripcionEmpresa.entidadFinanciera}" converter="EntidadFinancieraConverter">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{inscripcionEmpresa.listaEntidades}" var="entidad" itemLabel="#{entidad.desEntidad}" itemValue="#{entidad}"/>                                     
+                                </h:selectOneMenu>                                
+                                
+                                
+                                <h:outputText value="No. de cuenta*"/>
+                                <p:inputText value="#{inscripcionEmpresa.numCuentaBancaria}" required="false" label="No. de cuenta" />                               
+                                
+                            </h:panelGrid-->
                         </p:panel>
+                    </p:tab>
+                    
+                    <p:tab id="infBanco" title="Información Bancaria">
+                        <p:panel header="Datos de cuenta bancaria asociada a la cuenta">
+                            <p:messages closable="true"/>
+                            <h:panelGrid columns="2" columnClasses="label, value">
+                                <h:outputText value="Tipo de cuenta*"/>
+                                <h:selectOneMenu id="tipoCuenta"  required="true" label="Tipo de cuenta" value="#{inscripcionEmpresa.tipoCuentaBancaria}" converter="TipoCuentaConverter">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{inscripcionEmpresa.listaTiposCuentas}" var="tipoCuenta" itemLabel="#{tipoCuenta.desTipoCuenta}" itemValue="#{tipoCuenta}"/>
+                                   
+                                </h:selectOneMenu>
+                                
+                                <h:outputText value="Banco*"/>
+                                <h:selectOneMenu id="entidadFinancieraId"  required="true" label="Banco" value="#{inscripcionEmpresa.entidadFinanciera}" converter="EntidadFinancieraConverter">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{inscripcionEmpresa.listaEntidades}" var="entidad" itemLabel="#{entidad.desEntidad}" itemValue="#{entidad}"/>                                     
+                                </h:selectOneMenu>                                
+                                
+                                
+                                <h:outputText value="No. de cuenta*"/>
+                                <p:inputText value="#{inscripcionEmpresa.numCuentaBancaria}" required="true" label="No. de cuenta" />
+                                
+                                <h:outputText value="Divisa*"/>
+                                <h:selectOneMenu id="divisa"  required="true" label="Divisa" value="#{inscripcionEmpresa.divisa}" converter="DivisaConverter">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{inscripcionEmpresa.listaDivisas}" var="divisa" itemLabel="#{divisa.desDivisa}" itemValue="#{divisa}"/>                                     
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </p:panel>                        
                     </p:tab>
                     
                     <p:tab id="personal" title="Información del Representante Legal">
@@ -70,7 +135,8 @@
 
                             </h:panelGrid>
                         </p:panel>
-                    </p:tab>
+                    </p:tab>                  
+                    
                     
                     <p:tab id="confCuenta" title="Configuración de cuenta" >
                         <p:panel header="Cómo quieres acceder al Monedero?">

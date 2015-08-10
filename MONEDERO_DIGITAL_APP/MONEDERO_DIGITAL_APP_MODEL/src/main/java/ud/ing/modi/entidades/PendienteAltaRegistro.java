@@ -35,7 +35,7 @@ public class PendienteAltaRegistro implements Serializable{
     private int codSolicitud;
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_CLIENTE")
-    private Cliente cliente;
+    private ClienteJuridico cliente;
     @Column(name="FECHA_SOLICITUD")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaSolicitud;
@@ -44,7 +44,7 @@ public class PendienteAltaRegistro implements Serializable{
     public PendienteAltaRegistro() {
     }
     
-    public PendienteAltaRegistro(int cod_solicitud, Cliente cliente, Date fecha_solicitud) {
+    public PendienteAltaRegistro(int cod_solicitud, ClienteJuridico cliente, Date fecha_solicitud) {
         this.codSolicitud = cod_solicitud;
         this.cliente = cliente;
         this.fechaSolicitud = fecha_solicitud;
@@ -58,11 +58,11 @@ public class PendienteAltaRegistro implements Serializable{
         this.codSolicitud = cod_solicitud;
     }
 
-    public Cliente getCliente() {
+    public ClienteJuridico getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(ClienteJuridico cliente) {
         this.cliente = cliente;
     }
 
@@ -74,4 +74,20 @@ public class PendienteAltaRegistro implements Serializable{
         this.fechaSolicitud = fecha_solicitud;
     }
     
+    /*
+    Metodo encargado de la activacion de la cuenta del cliente seleccionado,
+    tanto del boorado del registro en la tabla pendiente como la creacion del 
+    registro en el LDAP.
+    */
+    public void activarCliente(){
+        
+    }
+    
+    
+    /*
+    Metodo encargado de el rechazo de la cuenta del cliente.
+    */
+    public void rechazarActivacion(){
+    
+    }
 }

@@ -36,4 +36,16 @@ public class EstadoMonederoMapper extends Mapper{
         }
         return tipoMons;
     }
+    
+    public EstadoMonedero obtenerEstadoMonederById(String idEstadoMoendero){
+        int id = Integer.parseInt(idEstadoMoendero);
+        EstadoMonedero estadoMonedero = null;
+        try {
+            iniciaOperacion();
+            estadoMonedero = (EstadoMonedero) getSesion().get(EstadoMonedero.class, id);
+        } finally {
+            getSesion().close();
+        }
+        return estadoMonedero;
+    }
 }

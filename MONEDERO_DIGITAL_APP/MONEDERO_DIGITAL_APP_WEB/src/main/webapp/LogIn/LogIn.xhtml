@@ -7,72 +7,80 @@
 
     <f:view contentType="text/html">
         <h:head>
-            <title>Facelet Title</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Modenero Digital - Inicio</title>
+            <link rel="stylesheet" type="text/css" href="estilos/css.css"></link>
             <script>
-                
-                 window.onload = function(){
-                     // capturamos la url
+                window.onload = function() {
+                    // capturamos la url
                     var loc = document.location.href;
                     // si existe el interrogante
-                    if(loc.indexOf('?')>0)
+                    if (loc.indexOf('?') > 0)
                     {
                         // cogemos la parte de la url que hay despues del interrogante
                         var getString = loc.split('?')[1];
-                        getString=getString.split('=')[1];
-                        if (getString=="activar") {
+                        getString = getString.split('=')[1];
+                        if (getString == "activar") {
                             alert("Su cuenta ha sido activada correctamente");
-                        }else if(getString=="obsoleto"){
+                        } else if (getString == "obsoleto") {
                             alert("El link se encuentra obsoleto. Su usuario ya se encuentra activo o superó el tiempo máximo para activación de la cuenta.");
-                        }else if(getString=="inscrito"){
+                        } else if (getString == "inscrito") {
                             alert("REGISTRO EXITOSO! Por favor confirma tu registro accediendo a la URL que hemos enviado a tu email");
-                        }else if(getString=="inscritoEmpresa"){
+                        } else if (getString == "inscritoEmpresa") {
                             alert("REGISTRO EXITOSO! Su cuenta será activada una vez se realicen las validaciones en el sistema, usted será notofocado via email");
-                        }else if(getString=="cancelada"){
+                        } else if (getString == "cancelada") {
                             alert("Su cuenta ha sido cancelada. Ya no puede acceder a ella.");
                         }
-                            
-                    }else{
+
+                    } else {
                         //document.write("parámetro: NULOOOO ");
-                       // alert("ERROR");
+                        // alert("ERROR");
                     }
-                 };
+                };
             </script>
         </h:head>
         <h:body>
-            <h:form id="formLogin" prependId="false">
-                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                <p:panelGrid columns="2">
+            <div class="ui-grid ui-grid-responsive">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"></div>
+                    <div class="ui-grid-col-4 ">
+                        <p:panel header="Monedero Digital" styleClass="centroVertical">
+                            <h:form id="formLogin" prependId="false">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                <p:panelGrid columns="2" styleClass="centroHorizontal">
+                                    <f:facet name="header">
+                                        Log-in
+                                    </f:facet>
+                                    <h:outputLabel  value="Username: "/>
+                                    <p:inputText id="userName" value="#{monederoLogIn.userName}" required="true" />
 
-                    <f:facet name="header">
-                        Login
-                    </f:facet>
-
-                    <h:outputLabel  value="Username: "/>
-                    <p:inputText id="userName" value="#{monederoLogIn.userName}" required="true" />
-
-                    <h:outputLabel  value="Password: "/>
-                    <p:password  id="password" value="#{monederoLogIn.password}" required="true" />
-
-                    <f:facet name="footer">
-                        <p:commandButton value="Login" type="submit" action="#{monederoLogIn.login()}"/>   
-                    </f:facet>
-                </p:panelGrid>
-            </h:form>
-            <h:form id="registroForm" >
-                <p:commandLink id="registro" value="Registrarse?" />
-                <p:overlayPanel id="seleccionRegistro" for="registro"  showCloseIcon="true">
-                    <p:panelGrid columns="1" style="margin-bottom:10px" >
-                        <f:facet name="header">
-                            <p:outputLabel for="tipoRegistro" value="Tipo de Registro" />
-                        </f:facet>
-                        <p:selectOneRadio id="tipoRegistro" value="#{seleccionRegistro.seleccion}" >
-                            <f:selectItem itemLabel="Persona Natural" itemValue="Natural"/>
-                            <f:selectItem itemLabel="Empresa" itemValue="Empresa"/>
-                        </p:selectOneRadio>
-                        <p:commandButton id="Aceptar" value="Aceptar" type="submit" action="#{seleccionRegistro.validaSeleccion()}" ajax="true"/>
-                    </p:panelGrid>
-                </p:overlayPanel>
-            </h:form>
+                                    <h:outputLabel  value="Password: "/>
+                                    <p:password  id="password" value="#{monederoLogIn.password}" required="true" />
+                                    <f:facet name="footer">
+                                        <p:commandButton value="Login" type="submit" action="#{monederoLogIn.login()}" styleClass="pull-right"/>   
+                                    </f:facet>
+                                </p:panelGrid>
+                            </h:form>
+                            <br></br>
+                            <h:form id="registroForm" >
+                                <p:commandLink id="registro" value="Registrarse?" />
+                                <p:overlayPanel id="seleccionRegistro" for="registro"  showCloseIcon="true">
+                                    <p:panelGrid columns="1" style="margin-bottom:10px" >
+                                        <f:facet name="header">
+                                            <p:outputLabel for="tipoRegistro" value="Tipo de Registro" />
+                                        </f:facet>
+                                        <p:selectOneRadio id="tipoRegistro" value="#{seleccionRegistro.seleccion}" >
+                                            <f:selectItem itemLabel="Persona Natural" itemValue="Natural"/>
+                                            <f:selectItem itemLabel="Empresa" itemValue="Empresa"/>
+                                        </p:selectOneRadio>
+                                        <p:commandButton id="Aceptar" value="Aceptar" type="submit" action="#{seleccionRegistro.validaSeleccion()}" ajax="true"/>
+                                    </p:panelGrid>
+                                </p:overlayPanel>
+                            </h:form>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
         </h:body>
     </f:view>
 </html>

@@ -21,19 +21,25 @@ import javax.faces.validator.ValidatorException;
 import org.primefaces.event.FlowEvent;
 import ud.ing.modi.config.Config;
 import ud.ing.modi.email.EmailActivacionCuenta;
+import ud.ing.modi.email.EmailCreacionCuentaEmpresa;
 import ud.ing.modi.entidades.ClienteJuridico;
+import ud.ing.modi.entidades.Divisa;
+import ud.ing.modi.entidades.EntidadFinanciera;
 import ud.ing.modi.entidades.EstadoCliente;
 import ud.ing.modi.entidades.PendienteAltaRegistro;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.PuntoRecarga;
 import ud.ing.modi.entidades.TiendaOnLine;
+import ud.ing.modi.entidades.TipoCuentaBancaria;
 import ud.ing.modi.entidades.TipoDocumento;
 import ud.ing.modi.ldap.AccesoLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
+import ud.ing.modi.mapper.DivisaMapper;
 import ud.ing.modi.mapper.DocumentoMapper;
+import ud.ing.modi.mapper.EntidadFinancieraMapper;
 import ud.ing.modi.mapper.EstadoClienteMapper;
 import ud.ing.modi.mapper.PendienteAltaRegistroMapper;
-import ud.ing.modi.utilidades.Cifrado;
+import ud.ing.modi.mapper.TipoCuentaMapper;
 
 /**
  *
@@ -46,8 +52,15 @@ public class InscripcionEmpresa implements Serializable {
     
     private ClienteJuridico cJuridico;
     private Persona representante;
-    private List<TipoDocumento> listaDocumentos;
+    private List<TipoDocumento> listaDocumentos;    
     private TipoDocumento documento;
+    private List<EntidadFinanciera> listaEntidades;
+    private EntidadFinanciera entidadFinanciera;
+    private List<TipoCuentaBancaria> listaTiposCuentas;
+    private TipoCuentaBancaria tipoCuentaBancaria;
+    private List<Divisa> listaDivisas;
+    private Divisa divisa;
+    private String numCuentaBancaria;
     private EstadoCliente eCliente;
     private String tipoCliente;
     private String password;
@@ -67,6 +80,9 @@ public class InscripcionEmpresa implements Serializable {
         cJuridico=new ClienteJuridico();
         representante=new Persona();
         traerDocs();
+        obtenerEntidadesFinancieras();
+        obtenerTiposCuentasBancarias();
+        obtenerDivisas();
     }    
 
     public ClienteJuridico getcJuridico() {
@@ -133,15 +149,83 @@ public class InscripcionEmpresa implements Serializable {
         this.tipoCliente = tipoCliente;
     }
     
+    public List<EntidadFinanciera> getListaEntidades() {
+        return listaEntidades;
+    }
+
+    public void setListaEntidades(List<EntidadFinanciera> listaEstidades) {
+        this.listaEntidades = listaEstidades;
+    }
+
+    public EntidadFinanciera getEntidadFinanciera() {
+        return entidadFinanciera;
+    }
+
+    public void setEntidadFinanciera(EntidadFinanciera entidadFinanciera) {
+        this.entidadFinanciera = entidadFinanciera;
+    }
+
+    public List<TipoCuentaBancaria> getListaTiposCuentas() {
+        return listaTiposCuentas;
+    }
+
+    public void setListaTiposCuentas(List<TipoCuentaBancaria> listaTiposCuentas) {
+        this.listaTiposCuentas = listaTiposCuentas;
+    }
+
+    public TipoCuentaBancaria getTipoCuentaBancaria() {
+        return tipoCuentaBancaria;
+    }
+
+    public void setTipoCuentaBancaria(TipoCuentaBancaria tipoCuentaBancaria) {
+        this.tipoCuentaBancaria = tipoCuentaBancaria;
+    }
+
+    public String getNumCuentaBancaria() {
+        return numCuentaBancaria;
+    }
+
+    public void setNumCuentaBancaria(String numCuentaBancaria) {
+        this.numCuentaBancaria = numCuentaBancaria;
+    }
+
+    public List<Divisa> getListaDivisas() {
+        return listaDivisas;
+    }
+
+    public void setListaDivisas(List<Divisa> listaDivisas) {
+        this.listaDivisas = listaDivisas;
+    }
+
+    public Divisa getDivisa() {
+        return divisa;
+    }
+
+    public void setDivisa(Divisa divisa) {
+        this.divisa = divisa;
+    }
+    
     
     
     public String onFlowProcess(FlowEvent event) {
-        String evento = event.getNewStep();
-        System.out.println("Evento: " + evento);
-        if (evento.equals("confirma")) {
+        
+        String eventoViejo = event.getOldStep();
+        String eventoNuevo = event.getNewStep();    
+
+        if(eventoViejo.equals("empresarial")&&eventoNuevo.equals("infBanco")){            
+            if (this.tipoCliente.equals(PUNTO_RECARGA)){
+                eventoNuevo = "personal";
+            }            
+        }else if(eventoViejo.equals("personal")&&eventoNuevo.equals("infBanco")){
+            if (this.tipoCliente.equals(PUNTO_RECARGA)){
+                eventoNuevo = "empresarial";
+            }
+        }else if (eventoNuevo.equals("confirma")) {
             this.asignarDoc();
         }
-        return evento;
+        System.out.println(eventoViejo);
+        System.out.println(eventoNuevo);
+        return eventoNuevo;
     }
 
     private void traerDocs() {
@@ -149,6 +233,21 @@ public class InscripcionEmpresa implements Serializable {
         this.listaDocumentos = mapDoc.obtenerDocs();
     }
 
+    public void obtenerEntidadesFinancieras(){
+        EntidadFinancieraMapper eMapper = new EntidadFinancieraMapper();
+        listaEntidades = eMapper.obtenerEntidadesFinaciera();
+    }
+    
+    public void obtenerTiposCuentasBancarias(){
+        TipoCuentaMapper tMapper = new TipoCuentaMapper();
+        listaTiposCuentas = tMapper.obtenerTiposCuentasBancarias();
+    }
+    
+    public void obtenerDivisas(){
+        DivisaMapper dMapper = new DivisaMapper();
+        this.listaDivisas = dMapper.obtenerDivisas();
+    }
+    
     public void asignarDoc() {
         for (int i = 0; i < this.listaDocumentos.size(); i++) {
             if (this.listaDocumentos.get(i).getCodigotipoDocumento() == this.representante.getTipoDocumento().getCodigotipoDocumento()) {
@@ -173,6 +272,7 @@ public class InscripcionEmpresa implements Serializable {
             penAlta.setFechaSolicitud(new Date()); 
             penAltaMapper.guardarPendienteAltaRegistro(penAlta);  
             estado="inscritoEmpresa";
+            generarEmail();
         }catch (Exception ex) {            
             Logger.getLogger(InscripcionPersona.class.getName()).log(Level.SEVERE, null, ex);
             FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en su registro");
@@ -213,6 +313,10 @@ public class InscripcionEmpresa implements Serializable {
         tiendaOnline.setNit(this.cJuridico.getNit());
         tiendaOnline.setRazonSocial(this.cJuridico.getRazonSocial());
         tiendaOnline.setTelefono(this.cJuridico.getTelefono());
+        tiendaOnline.setNumCuentaBancaria(numCuentaBancaria);
+        tiendaOnline.setBanco(entidadFinanciera);
+        tiendaOnline.setTipoCuentaBancaria(tipoCuentaBancaria);
+        tiendaOnline.setDivisa(divisa);
         ClienteMapper cMapper = new ClienteMapper();
         cMapper.guardarTiendaOnline(tiendaOnline);
         registroLdap(TIENDA_ONLINE);
@@ -225,8 +329,8 @@ public class InscripcionEmpresa implements Serializable {
         AccesoLDAP ldap=new AccesoLDAP();
         System.out.println("Buscando usuario "+arg2.toString()+" en el ldap");
         if (ldap.buscarUsuario((String)arg2)) {
-         throw new ValidatorException(new FacesMessage("Nickname no disponible"));
-      }
+            throw new ValidatorException(new FacesMessage("Nickname no disponible"));
+        }
     }
     
     
@@ -244,20 +348,30 @@ public class InscripcionEmpresa implements Serializable {
     de la empresa que se registrò enel sistema de monedero digital.
     */    
     public void generarEmail(){
-        //HashMap datos=new HashMap();
-        //datos.put("nombre", this.persona.getNombre());
-        //datos.put("apellido", this.persona.getApellido());
-        //String codSolicit=Integer.toString(this.getPendiente().getCodSolicitud());
-        //Cifrado cifra=new Cifrado();
-        //cifra.addKey(Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
-        //codSolicit=cifra.encriptar(codSolicit);
-        //datos.put("url", Config.getConfig().getPropiedad("MONEDERO_URL")+"activar?id="+codSolicit);
-        //EmailActivacionCuenta email= new EmailActivacionCuenta(this.persona.getEmail());
-        //email.ensamblarMensaje(datos);
-        //email.enviarMensaje();
-        //System.out.println("MENSAJE DESCIFRADO: "+cifra.desencriptar(codSolicit));
-        //String mensaje = ConstructorEmail.construirMensaje(datos,template);       
-       
+        HashMap datos=new HashMap();
+        datos.put("nombre", this.representante.getNombre());
+        datos.put("apellido", this.representante.getApellido());
+        datos.put("razonSocial", this.cJuridico.getRazonSocial());       
+        EmailCreacionCuentaEmpresa email = new EmailCreacionCuentaEmpresa(this.representante.getEmail());
+        email.ensamblarMensaje(datos);
+        email.enviarMensaje();
     }
+    
+    public boolean validaTipoEmpresa(){
+        System.out.println("INICIO validaTipoEmpresa()");
+        boolean respuesta = false;
+        if(this.tipoCliente!=null&&!this.tipoCliente.equals("")){
+            System.out.println("valor tipoCliente" + this.tipoCliente);
+            if(tipoCliente.equals(TIENDA_ONLINE)){
+                respuesta=true;
+            }
+        }
+        System.out.println("FIN validaTipoEmpresa()");
+        return respuesta;
+    }
+    
+
+
+    
     
 }

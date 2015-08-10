@@ -61,8 +61,7 @@ public class TipoCuentaBancaria implements Serializable {
         if (this.codTipoCuenta == null ? other.codTipoCuenta != null : !this.codTipoCuenta.equals(other.codTipoCuenta)) return false;
         
         if (this.desTipoCuenta == null ? other.desTipoCuenta != null : !this.desTipoCuenta.equals(other.desTipoCuenta)) return false;
-        
-        
+                
         return  true;
         
     }

@@ -50,5 +50,26 @@ public class EntidadFinanciera implements Serializable {
         this.desEntidad = desEntidad;
     }
 
-    
+     @Override
+    public boolean equals(Object object){
+                
+        if (object == this) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        
+        EntidadFinanciera other = (EntidadFinanciera) object;
+        if (this.codEntidad == null ? other.codEntidad != null : !this.codEntidad.equals(other.codEntidad)) return false;
+        
+        if (this.desEntidad == null ? other.desEntidad != null : !this.desEntidad.equals(other.desEntidad)) return false;
+                
+        return  true;
+        
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + (this.codEntidad != null ? this.codEntidad.hashCode() : 0);
+        hash = 67 * hash + (this.desEntidad != null ? this.desEntidad.hashCode() : 0);
+        return hash;
+    }
 }

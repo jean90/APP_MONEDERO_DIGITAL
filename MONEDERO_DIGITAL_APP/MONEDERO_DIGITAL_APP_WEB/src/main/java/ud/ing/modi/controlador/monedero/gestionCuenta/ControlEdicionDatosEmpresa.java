@@ -76,11 +76,11 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
     
     public void modifBanco(ValueChangeEvent e){
         System.out.println("Modificando banco!!!");
-        this.tiendaAEditar.setBanco(e.getNewValue().toString());
+        //this.tiendaAEditar.setBanco(e.getNewValue().toString());
     }
     
     public void modifTipoCta(ValueChangeEvent e){
-        this.tiendaAEditar.setTipoCuentaBancaria(e.getNewValue().toString());
+        //this.tiendaAEditar.setTipoCuentaBancaria(e.getNewValue().toString());
     }
     
     public void modifNumCta(ValueChangeEvent e){

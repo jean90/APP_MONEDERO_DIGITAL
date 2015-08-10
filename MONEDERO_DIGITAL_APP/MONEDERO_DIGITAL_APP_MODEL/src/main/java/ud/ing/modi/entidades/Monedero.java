@@ -58,10 +58,10 @@ public class Monedero implements Serializable{
     public Monedero() {
         divisa=new Divisa();
         estado=new EstadoMonedero();
-        clienteDueno=new ClienteNatural();
+        clienteDueno=new Cliente();
     }
 
-    public Monedero(int codMonedero, Divisa divisa, Date fechaCreacion, float saldo, EstadoMonedero estado, ClienteNatural clienteDueno) {
+    public Monedero(int codMonedero, Divisa divisa, Date fechaCreacion, float saldo, EstadoMonedero estado, Cliente clienteDueno) {
         this.codMonedero = codMonedero;
         this.divisa = divisa;
         this.fechaCreacion = fechaCreacion;

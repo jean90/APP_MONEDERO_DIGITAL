@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+    <f:view id="TiendaOnlinePendientesAlta" contentType="text/html">
+        <h:head>
+             <script>
+                function denegarPeticion() {
+                    PF('DetalleTiendaDialog').hide();
+                    PF('denegarDialog').hide();
+                }
+            </script>
+        </h:head>
+        <h:body>
+            <h:form id="form">
+                <!--p:layout style="margin: 0 auto">
+                    <p:layoutUnit position="center"-->
+                        <p:dataTable id="puntoRecargaTable" var="puntoRecarga" value="#{consultaRegistrosPendientesPuntosRecarga.puntoRecargaList}" style="text-align: center;" 
+                                     selectionMode="single" 
+                                     selection="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada}" 
+                                     rowKey="#{puntoRecarga.idCliente}">
+                            <f:facet name="header">
+                                Lista de Puntos de Recarga Pendietes de Alta
+                            </f:facet>
+                            <p:column headerText="Código de Cliente" >
+                                <h:outputText value="#{puntoRecarga.idCliente}" ></h:outputText>
+                            </p:column>
+                            <p:column headerText="Nit" >
+                                <h:outputText value="#{puntoRecarga.nit}" ></h:outputText>
+                            </p:column>
+                            <p:column headerText="Razon Social" >
+                                <h:outputText value="#{puntoRecarga.razonSocial}" ></h:outputText>
+                            </p:column>
+                            <p:column headerText="Representante legal" >
+                                <h:outputText value="#{puntoRecarga.representante.nombre}" ></h:outputText>
+                                <h:outputText value="#{puntoRecarga.representante.apellido}" ></h:outputText>
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="puntoRecargaTable"  value="Ver Detalle" update=":form:DetallePtoRecarga" icon="ui-icon-search" oncomplete="PF('DetallePtoRecargaDialog').show()" />
+                            </f:facet>
+                        </p:dataTable>                        
+                    <!--/p:layoutUnit>                    
+                </p:layout-->
+                
+                <p:dialog header="Detalle de la selección" widgetVar="DetallePtoRecargaDialog"
+                          modal="true" showEffect="fade" hideEffect="fade"  resizable="false" width="50%">
+                    <p:outputPanel id="DetallePtoRecarga" style="text-align:center;">
+                        <p:panel rendered="#{not empty consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada}" >
+                            <p:fieldset legend="Información de la empresa:" toggleable="true" toggleSpeed="500">
+                                <h:panelGrid columns="2" columnClasses="label, value" style="text-align: left">
+                                    <h:outputText value="Razón Social: " styleClass="outputLabel" />
+                                    <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.razonSocial}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Nit: " />
+                                    <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.nit}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Dirección: " />
+                                    <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.direccion}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="No de Documento: " />
+                                    <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.telefono}" styleClass="outputLabel"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <br/>
+                            <p:fieldset legend="Información del Representante Legal:" toggleable="true" toggleSpeed="500">
+                                <h:panelGrid id="confirmacion" columns="3" columnClasses="grid,grid,grid" style="text-align: left">
+                                    <h:panelGrid columns="2" columnClasses="label, value">
+                                        <h:outputText value="Nombre: " styleClass="outputLabel" />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.nombre}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="Apellido: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.apellido}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="Tipo de Documento: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.tipoDocumento.desDocumento}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="No de Documento: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.numDocumento}" styleClass="outputLabel"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" columnClasses="label, value">
+                                        <h:outputText value="Teléfono fijo: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.numTelFijo}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="Celular: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.numCelular}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="Dirección: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.direccion}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="Email: " />
+                                        <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.representante.email}" styleClass="outputLabel"/>
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+
+                            </p:fieldset>
+                            <br/>
+                            <p:fieldset legend="Información de la cuenta:" toggleable="true" toggleSpeed="500">
+                                <h:panelGrid columns="2" columnClasses="label, value" style="text-align: left">
+                                    <h:outputText value="Nickname: " />
+                                    <h:outputText value="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.nickname}" styleClass="outputLabel"/>
+                                </h:panelGrid>
+                            </p:fieldset>    
+                            <br/>
+                            <p:commandButton type="button" value="Denegar" onclick="PF('denegarDialog').show()"/>
+                            <p:commandButton type="button" value="Activar" update=":form:activarCuentaDialog" onclick="PF('activarDialog').show()" />
+                        </p:panel>
+                    </p:outputPanel>
+                </p:dialog>              
+                
+                <p:confirmDialog message="¿confirma que desea rechazar la petición?" header="Denegar Petición" severity="info"
+                                 widgetVar="denegarDialog">
+                    <center>
+                    <p:commandButton value="No" onclick="PF('denegarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.denegarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                     update=":form:puntoRecargaTable" oncomplete="PF('denegarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
+                    </center>
+                </p:confirmDialog>
+
+                <p:confirmDialog id="activarCuentaDialog" message="¿confirma que desea aceptar la petición para la activación de la cuenta del punto de recarga
+                                 #{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.razonSocial}?" 
+                                 header="Aceptar Petición" severity="info" widgetVar="activarDialog">
+                    <center>
+                    <p:commandButton value="No" onclick="PF('activarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.activarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                     update=":form:puntoRecargaTable" oncomplete="PF('activarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
+                    </center>
+                </p:confirmDialog>
+                
+            </h:form>
+        </h:body>
+    </f:view>
+</ui:composition>
