@@ -1,5 +1,3 @@
-
-
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
@@ -88,6 +86,18 @@
             <role-name>TiendaOnline</role-name>
         </auth-constraint>
     </security-constraint>
+    
+    
+    <security-constraint>
+        <display-name>PuntoRecargaSecurityConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>AllPuntoRecargaOperations</web-resource-name>
+            <url-pattern>/faces/puntoRecarga/*</url-pattern>        
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>PuntoRecarga</role-name>
+        </auth-constraint>
+    </security-constraint>
   
   
     <login-config>
@@ -109,8 +119,12 @@
         <role-name>Admin</role-name>
     </security-role>
     <security-role>
-        <description>TiendaOnline</description>
+        <description>TiendaOnline User</description>
         <role-name>TiendaOnline</role-name>
+    </security-role>
+    <security-role>
+        <description>PuntoRecarga User</description>
+        <role-name>PuntoRecarga</role-name>
     </security-role>
 
 </web-app>
