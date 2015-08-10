@@ -8,12 +8,14 @@
                 xmlns:fn="http://java.sun.com/jsp/jslt/functions">
     <style type="text/css">
         .monedItem {
-            width: 250px;
-            height: 90px;
+            width: 200px;
+            height: 120%;
+            text-align:center;
         }
     </style>
     <f:view contentType="text/html">
         <h:head>
+            <link rel="stylesheet" type="text/css" href="estilos/css.css"></link>
             <title>MONEDERO DIGITAL - Módulo Tienda Online</title>
         </h:head>
         <h:body>
@@ -47,9 +49,9 @@
                     </p:panelGrid>
                 </p:carousel>-->
                 
-                <p:dataGrid var="moned" value="#{controlConsultaMoned.monederos}" columns="1" layout="grid" rows="1" paginator="false" style="text-align: center" >
-                    <p:panel header="#{moned.codMonedero}" style="width:240px" >
-                        <p:panelGrid columns="2" style="width:100%" columnClasses="label,value">
+                <p:dataGrid var="moned" value="#{controlConsultaMoned.monederos}" columns="1" layout="grid" rows="1" paginator="false" style="text-align:center;height:120%;" styleClass="centroHorizontal">
+                    <p:panel header="Cod Moned: #{moned.codMonedero}" style="width:240px;alignment-adjust: middle" >
+                        <p:panelGrid columns="2" style="width:100%;height:100%;" columnClasses="label,value">
                         
                             <h:outputText value="Divisa:" />
                             <h:outputText value="#{moned.divisa.desDivisa}" />
@@ -64,7 +66,7 @@
             </h:form>
         </h:body>
         <script type="text/javascript">
-                var actual = 'faces/monedero/principal.xhtml';
+                var actual = 'faces/tienda/principal.xhtml';
                 function cambioPagina(pagina) {
                 if (pagina != actual) {
                 $('#frame').attr('src', pagina);
