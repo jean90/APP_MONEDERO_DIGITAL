@@ -64,6 +64,20 @@ public class ClienteMapper extends Mapper{
         return cliente;
     }
     
+    public PuntoRecarga buscarPtoRecargaPorNick(String nick){
+        PuntoRecarga cliente = null;
+
+        try {
+            iniciaOperacion();
+            cliente= (PuntoRecarga) getSesion().createCriteria(PuntoRecarga.class).add(Restrictions.eq("nickname",nick)).uniqueResult();
+            System.out.println("Cliente hallado -- "+cliente);
+
+        } finally {
+            getSesion().close();
+        }
+        return cliente;
+    }
+    
     public void guardarCliente(Cliente cliente) throws Exception{
          try {
             iniciaOperacion();

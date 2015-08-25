@@ -14,10 +14,8 @@
             <script type="text/javascript">
                 var actual = 'faces/monedero/principal.xhtml';
                 function cambioPagina(pagina) {
-                    if (pagina !== actual) {
-                        $('#frame').attr('src', pagina);                        
-                        actual = pagina;
-                    }
+                    $('#frame').attr('src', pagina);
+                    actual = pagina;
                 }
             </script>
         </h:head>
@@ -30,7 +28,7 @@
                         <div class="ui-grid-col-2"></div>
                         <div class="ui-grid-col-8">
                             <p:menubar>
-                                <p:menuitem value="Inicio" url="javascript:cambioPagina('faces/admin/resumenTareasAdmin.xhtml')" icon="ui-icon-home"/>
+                                <p:menuitem value="Inicio" url="javascript:cambioPagina('faces/puntoRecarga/recargaMonedero.xhtml')" icon="ui-icon-home"/>
                                 <f:facet name="options">
                                     <p:splitButton value="#{request.userPrincipal.name}"  icon="ui-icon-person">
                                         <p:menuitem value="Cuenta"  icon="ui-icon-gear"></p:menuitem>                                    
@@ -45,16 +43,15 @@
                         <div class="ui-grid-col-2" >
                             <p:panel style="min-height: 700px">
                                 <p:panelMenu>
-                                    <p:submenu label="Consulta de cuentas a activar">
-                                        <p:menuitem value="Tiendas Online" icon="ui-icon-cart" url="javascript:cambioPagina('faces/admin/consultaTiendasOnline.xhtml')"/>
-                                        <p:menuitem value="Puntos de Recarga" icon="ui-icon-contact" url="javascript:cambioPagina('faces/admin/consultaPuntosRecarga.xhtml')"/>
+                                    <p:submenu label="Acciones">
+                                        <p:menuitem value="Realizar Recarga" icon="ui-icon-cart" url="javascript:cambioPagina('faces/puntoRecarga/recargaMonedero.xhtml')"/>                                        
                                     </p:submenu>
                                 </p:panelMenu>                                
                             </p:panel> 
                         </div>
                         <div class="ui-grid-col-6">
                             <p:panel style="min-height: 700px">
-                                <iframe id="frame" src="faces/admin/resumenTareasAdmin.xhtml" style="width: 100%; height: 680px;" />
+                                <iframe id="frame" src="faces/puntoRecarga/recargaMonedero.xhtml" style="width: 100%; height: 680px;" />
                             </p:panel>                            
                         </div>
                     </div>

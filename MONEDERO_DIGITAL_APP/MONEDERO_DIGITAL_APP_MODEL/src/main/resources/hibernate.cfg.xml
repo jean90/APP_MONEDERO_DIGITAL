@@ -23,5 +23,6 @@
     <mapping class="ud.ing.modi.entidades.PagoOnline"/>
     <mapping class="ud.ing.modi.entidades.EntidadFinanciera"/>
     <mapping class="ud.ing.modi.entidades.TipoCuentaBancaria"/>
+    <mapping class="ud.ing.modi.entidades.Recarga"/>
   </session-factory>
 </hibernate-configuration>

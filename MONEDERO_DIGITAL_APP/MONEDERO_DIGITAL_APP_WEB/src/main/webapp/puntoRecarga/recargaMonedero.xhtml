@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <f:view id="PtoRecargaMonederoRecarga" contentType="text/html">
+        <h:head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Modenero Digital - Inicio</title>
+            <link rel="stylesheet" type="text/css" href="estilos/css.css"></link>
+        </h:head>
+        <h:body>
+            <h:form id="recargaForm">
+                
+                <p:messages id="messagesForm" showDetail="true" autoUpdate="true" closable="true" />
+                <p:panel header="Recarga Monedero" id="datosRecarga" rendered="#{recargaMonedero.realizoRecarga!=true}">
+                    <h:panelGrid columns="2" styleClass="centroHorizontal" >
+                        <h:outputLabel  value="Cod. Monedero "/>
+                        <p:inputText id="codMonedero" value="#{recargaMonedero.codMonedero}" required="true" />
+
+                        <h:outputLabel  value="Valor "/>
+                        <p:inputText id="valorRecarga" value="#{recargaMonedero.valorRecarga}" required="true" />
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Recargar" type="submit" styleClass="pull-right" process="datosRecarga" 
+                                             action="#{recargaMonedero.confirmarRecarga()}"
+                                             oncomplete="PF('ConfirmacionRecargaDialog').show()" update=":recargaForm:DetalleRecarga" />   
+                        </f:facet>
+                    </h:panelGrid>
+                </p:panel>
+                <p:dialog header="Confirmación de recarga" widgetVar="ConfirmacionRecargaDialog"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="50%">
+                    <p:messages id="messagesPassTx" showDetail="true" autoUpdate="true" closable="true"/>
+                    <p:outputPanel id="DetalleRecarga" style="text-align:center;">
+                        <p:panel>
+                            <p:fieldset legend="Información de la recarga:" toggleable="true" toggleSpeed="500">
+                                <h:panelGrid columns="2" columnClasses="label, value" style="text-align: left">
+                                    <h:outputText value="Cod. Monedero: " styleClass="outputLabel" />
+                                    <h:outputText value="#{recargaMonedero.codMonedero}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Cliente Dueño " />
+                                    <h:outputText value="#{recargaMonedero.monedero.clienteDueno.nickname}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="Valor Recarga: " />
+                                    <h:outputText value="#{recargaMonedero.valorRecarga}" styleClass="outputLabel"/>                                    
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </p:panel>
+                        <p:panel header="Ingreso Clave Transaccional">
+                            <h:panelGrid columns="2" columnClasses="label, value" style="text-align: left">
+                                <h:outputText value="Clave Tx: " styleClass="outputLabel" />
+                                <p:password value="#{recargaMonedero.claveTx}" styleClass="outputLabel"/>
+                                <f:facet name="footer">
+                                    <p:commandButton value="Recargar" type="submit" styleClass="pull-right" action="#{recargaMonedero.realizarRecarga()}" oncomplete="PF('ConfirmacionRecargaDialog').hide()" update=":recargaForm:DetalleConfirmacionRecarga" ajax="false"/>                                       
+                                </f:facet>
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:outputPanel>
+                </p:dialog>                
+                <p:fieldset id="DetalleConfirmacionRecarga" legend="Confirmación de Recarga" style="margin-bottom:20px" rendered="#{recargaMonedero.realizoRecarga==true}">
+                    <h:panelGrid columns="2" cellpadding="5">                        
+                        <h:outputLabel  value="Cod. Monedero "/>
+                        <h:outputLabel  value="#{recargaMonedero.codMonedero}" />
+
+                        <h:outputLabel  value="Valor:"/>
+                        <h:outputLabel  value="#{recargaMonedero.valorRecarga}" />
+
+                        <h:outputLabel  value="Usuario:"/>
+                        <h:outputLabel  value="#{recargaMonedero.monedero.clienteDueno.nickname}" />
+
+                        <h:outputLabel  value="Cod. Recarga:"/>
+                        <h:outputLabel  value="#{recargaMonedero.recarga.codRecarga}" />                    
+
+                        <h:outputLabel  value="Fecha de Operación:"/>
+                        <h:outputLabel  value="#{recargaMonedero.recarga.fechaRecarga}" />
+                    </h:panelGrid>
+                    
+                    <p:commandButton id="recargaNuevaBtn" value="Recarga Nueva" action="#{recargaMonedero.inicializar()}" styleClass="pull-right" ajax="false"/>                        
+                    
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </f:view>
+</ui:composition>
+
