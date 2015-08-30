@@ -7,6 +7,7 @@
 package ud.ing.modi.controlador.monedero.gestionCuenta;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -22,12 +23,16 @@ import ud.ing.modi.controlador.monedero.OperacionTransaccional;
 import ud.ing.modi.email.EmailActivacionCuenta;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
+import ud.ing.modi.entidades.EntidadFinanciera;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.TiendaOnLine;
+import ud.ing.modi.entidades.TipoCuentaBancaria;
 import ud.ing.modi.ldap.TransaccionalLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
+import ud.ing.modi.mapper.EntidadFinancieraMapper;
 import ud.ing.modi.mapper.PersonMapper;
 import ud.ing.modi.mapper.TiendaMapper;
+import ud.ing.modi.mapper.TipoCuentaMapper;
 
 /**
  *
@@ -38,10 +43,14 @@ import ud.ing.modi.mapper.TiendaMapper;
 public class ControlEdicionDatosEmpresa extends OperacionTransaccional implements Serializable{
     private TiendaOnLine tiendaAEditar;
     private boolean datosVal;
+    private List<EntidadFinanciera> listaEntidades;
+    private List<TipoCuentaBancaria> listaTiposCuentas;
     
     public ControlEdicionDatosEmpresa() {
         cargarEmpresa();
         this.datosVal=true;
+        obtenerEntidadesFinancieras();
+        obtenerTiposCuentasBancarias();
     }
 
     public TiendaOnLine getTiendaAEditar() {
@@ -59,6 +68,23 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
     public void setDatosVal(boolean datosVal) {
         this.datosVal = datosVal;
     }
+
+    public List<EntidadFinanciera> getListaEntidades() {
+        return listaEntidades;
+    }
+
+    public void setListaEntidades(List<EntidadFinanciera> listaEntidades) {
+        this.listaEntidades = listaEntidades;
+    }
+
+    public List<TipoCuentaBancaria> getListaTiposCuentas() {
+        return listaTiposCuentas;
+    }
+
+    public void setListaTiposCuentas(List<TipoCuentaBancaria> listaTiposCuentas) {
+        this.listaTiposCuentas = listaTiposCuentas;
+    }
+    
     
     public void cargarEmpresa(){
         String nick=this.traerUsu();
@@ -75,11 +101,14 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
     }
     
     public void modifBanco(ValueChangeEvent e){
-        System.out.println("Modificando banco!!!");
+        System.out.println("Modificando banco!!!"+ ((EntidadFinanciera)e.getNewValue()).getDesEntidad());
+        this.tiendaAEditar.setBanco((EntidadFinanciera)e.getNewValue());
         //this.tiendaAEditar.setBanco(e.getNewValue().toString());
     }
     
     public void modifTipoCta(ValueChangeEvent e){
+        System.out.println("Modificando tipo cuenta!!!"+ ((TipoCuentaBancaria)e.getNewValue()).getDesTipoCuenta());
+        this.tiendaAEditar.setTipoCuentaBancaria((TipoCuentaBancaria)e.getNewValue());
         //this.tiendaAEditar.setTipoCuentaBancaria(e.getNewValue().toString());
     }
     
@@ -148,5 +177,14 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
       }
     }
     
+    public void obtenerEntidadesFinancieras(){
+        EntidadFinancieraMapper eMapper = new EntidadFinancieraMapper();
+        listaEntidades = eMapper.obtenerEntidadesFinaciera();
+    }
+    
+    public void obtenerTiposCuentasBancarias(){
+        TipoCuentaMapper tMapper = new TipoCuentaMapper();
+        listaTiposCuentas = tMapper.obtenerTiposCuentasBancarias();
+    }
     
 }

@@ -63,14 +63,17 @@
                         <p:fieldset legend="Datos Cuenta Bancaria" style="margin-bottom:0px">
                             <h:panelGrid columns="2" style="margin-bottom:0px; margin-left: 15px" >
                                 <h:outputText value="Banco donde tiene la cuenta:"/>
-                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.banco.desEntidad}" required="true" label="Banco" valueChangeListener="#{controlEdicionDatosEmp.modifBanco}">
-                                    <f:ajax event="change" execute="@this" render="ctaBan"/>
-                                </p:inputText>
+                                <h:selectOneMenu id="entidadFinancieraId"  required="true" label="Banco" value="#{controlEdicionDatosEmp.tiendaAEditar.banco}" converter="EntidadFinancieraConverter" valueChangeListener="#{controlEdicionDatosEmp.modifBanco}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{controlEdicionDatosEmp.listaEntidades}" var="entidad" itemLabel="#{entidad.desEntidad}" itemValue="#{entidad}"/>                                     
+                                </h:selectOneMenu> 
 
                                 <h:outputText value="Tipo de cuenta bancaria:"/>
-                                <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria.desTipoCuenta}" required="true" label="TipoCta" valueChangeListener="#{controlEdicionDatosEmp.modifTipoCta}">
-                                    <f:ajax event="change" execute="@this" render="ctaBan"/>
-                                </p:inputText>
+                                <h:selectOneMenu id="tipoCuenta"  required="true" label="Tipo de cuenta" value="#{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria}" converter="TipoCuentaConverter" valueChangeListener="#{controlEdicionDatosEmp.modifTipoCta}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{controlEdicionDatosEmp.listaTiposCuentas}" var="tipoCuenta" itemLabel="#{tipoCuenta.desTipoCuenta}" itemValue="#{tipoCuenta}"/>
+                                   <f:ajax event="change" execute="@this" render="ctaBan"/>
+                                </h:selectOneMenu>
 
                                 <h:outputText value="Número de cuenta:"/>
                                 <p:inputText value="#{controlEdicionDatosEmp.tiendaAEditar.numCuentaBancaria}" required="true" label="NumCta" valueChangeListener="#{controlEdicionDatosEmp.modifNumCta}" >
@@ -124,7 +127,7 @@
                                 <h:outputText id="dirEmp" value="#{controlEdicionDatosEmp.tiendaAEditar.direccion}" />
 
                                 <h:outputText value="Cuenta bancaria:" />
-                                <h:outputText id="ctaBan" value="#{controlEdicionDatosEmp.tiendaAEditar.banco} - #{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria} - #{controlEdicionDatosEmp.tiendaAEditar.numCuentaBancaria}" />
+                                <h:outputText id="ctaBan" value="#{controlEdicionDatosEmp.tiendaAEditar.banco.desEntidad} - #{controlEdicionDatosEmp.tiendaAEditar.tipoCuentaBancaria.desTipoCuenta} - #{controlEdicionDatosEmp.tiendaAEditar.numCuentaBancaria}" />
 
                                 <h:outputText value="Dirección representante:" />
                                 <h:outputText id="dirRep" value="#{controlEdicionDatosEmp.tiendaAEditar.representante.direccion}" />

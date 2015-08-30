@@ -25,11 +25,14 @@ import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.EstadoMonedero;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PagoOnline;
+import ud.ing.modi.entidades.Recarga;
+import ud.ing.modi.entidades.TiendaOnLine;
 import ud.ing.modi.ldap.TransaccionalLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.EstadoMonederoMapper;
 import ud.ing.modi.mapper.MonederoMapper;
 import ud.ing.modi.mapper.PagoOnlineMapper;
+import ud.ing.modi.mapper.RecargaMapper;
 
 /**
  *
@@ -41,7 +44,10 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     
     private List<Monedero> monederos = new ArrayList<Monedero>(); 
     private List<EstadoMonedero> estados = new ArrayList<EstadoMonedero>();
-    private List<PagoOnline> movimientos = new ArrayList<PagoOnline>();
+    private List<PagoOnline> pagos = new ArrayList<PagoOnline>();
+    private List<Recarga> recargas = new ArrayList<Recarga>();
+    private List<Movimiento> movimientos = new ArrayList<Movimiento>();
+    
     private Monedero selectedMon;
     private String passTx;
 
@@ -100,12 +106,28 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
         this.selectedMon = selectedMon;
     }
 
-    public List<PagoOnline> getMovimientos() {
+    public List<PagoOnline> getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(List<PagoOnline> pagos) {
+        this.pagos = pagos;
+    }
+
+    public List<Movimiento> getMovimientos() {
         return movimientos;
     }
 
-    public void setMovimientos(List<PagoOnline> movimientos) {
+    public void setMovimientos(List<Movimiento> movimientos) {
         this.movimientos = movimientos;
+    }
+
+    public List<Recarga> getRecargas() {
+        return recargas;
+    }
+
+    public void setRecargas(List<Recarga> recargas) {
+        this.recargas = recargas;
     }
     
     
@@ -151,13 +173,45 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     }
     
     /**
-     * Este método carga el histórico de movimientos asociados al monedero seleccionado.
+     * Este método carga el histórico de pagos asociados al monedero seleccionado.
      */
     public void cargarHistorico(){
         System.out.println("Cargando histórico ....");
         PagoOnlineMapper mapPagos= new PagoOnlineMapper();
-        this.movimientos=mapPagos.obtenerPagos(selectedMon);
+        this.pagos=mapPagos.obtenerPagos(selectedMon);
+        
+        for (int i = 0; i < pagos.size(); i++) {
+            PagoOnline pago=pagos.get(i);
+            Movimiento mov=new Movimiento("Pago Compra", Integer.toString(pago.getCodPago()), pago.getFechaPago(), Float.toString(pago.getValorPago()), "Cod Compra: "+pago.getCodCompra()+"\n Tienda: "+((TiendaOnLine)pago.getMonDestino().getClienteDueno()).getRazonSocial());
+            this.movimientos.add(mov);
+        }
+        
+        RecargaMapper mapRecargas=new RecargaMapper();
+        this.recargas=mapRecargas.buscarRecargaPorMonedero(selectedMon);
+        
+        for (int i = 0; i < recargas.size(); i++) {
+            Recarga recarga=recargas.get(i);
+            Movimiento mov=new Movimiento("Recarga ", Integer.toString(recarga.getCodRecarga()), recarga.getFechaRecarga(), Double.toString(recarga.getValorRecarga()), "Punto de recarga: "+recarga.getPuntoRecarga().getRazonSocial());
+            this.movimientos.add(mov);
+        }
+        
+        this.ordenarMovs();
     }
     
-    
+    /**
+     * Este método ordena la lista de movimientos por fecha de ejecución.
+     */
+    public void ordenarMovs(){
+        
+         int i, j;
+         Movimiento aux;
+         for(i=0;i<movimientos.size()-1;i++)
+              for(j=0;j<movimientos.size()-i-1;j++)
+                   if(movimientos.get(j+1).getFechaMov().after(movimientos.get(j).getFechaMov())){
+                      aux=movimientos.get(j+1);
+                      movimientos.set(j+1,movimientos.get(j));
+                      movimientos.set(j,aux);
+                   }
+
+    }
 }

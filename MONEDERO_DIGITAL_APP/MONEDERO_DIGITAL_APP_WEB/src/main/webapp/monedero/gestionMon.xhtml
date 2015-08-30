@@ -140,7 +140,8 @@
                     </p:outputPanel>
                 </p:dialog>
 
-
+                <br/><br/>
+                
                 <!-- Lo sgte es la sección de la tabla de histórico -->
                 <div id="tabla" style="display: none;">
                     <p:dataTable id="monHist" var="mov" value="#{controlConsultaMoned.movimientos}" widgetVar="monedDialog3" 
@@ -154,40 +155,41 @@
                             </h:commandLink>
                         </f:facet>
 
-                        <p:column>
+                        <p:column style="width: auto">
                             <f:facet name="header">
-                                <h:outputText value="Código Pago" />
+                                <h:outputText value="Tipo Mov" style="font-size: 15px" />
                             </f:facet>
-                            <h:outputText value="#{mov.codPago}" />
+                            <h:outputText value="#{mov.tipoMov}" style="font-size: 12px" />
+                        </p:column>
+                        
+                        <p:column style="width: auto">
+                            <f:facet name="header">
+                                <h:outputText value="Código Mov" style="font-size: 15px" />
+                            </f:facet>
+                            <h:outputText value="#{mov.codMov}" style="font-size: 12px" />
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Fecha Pago"/>
+                                <h:outputText value="Fecha Mov" style="font-size: 15px" />
                             </f:facet>
-                            <h:outputText value="#{mov.fechaPago}" />
+                            <h:outputText value="#{mov.fechaMov}" style="font-size: 12px" />
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Cód Compra Comercio" />
+                                <h:outputText value="Valor Mov" style="font-size: 15px" />
                             </f:facet>
-                            <h:outputText value="#{mov.codCompra}" />
+                            <h:outputText value="#{mov.valorMov}" style="font-size: 12px" />
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Valor Pago" />
+                                <h:outputText value="Otros datos" style="font-size: 15px" />
                             </f:facet>
-                            <h:outputText value="#{mov.valorPago}" />
+                            <h:outputText value="#{mov.otrosDatos}" style="font-size: 12px" />
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Monedero Origen" />
-                            </f:facet>
-                            <h:outputText value="#{mov.monOrigen.codMonedero}" />
-                        </p:column>
                     </p:dataTable>
 
                 </div>

@@ -6,6 +6,9 @@
 
 package ud.ing.modi.mapper;
 
+import java.util.List;
+import org.hibernate.criterion.Restrictions;
+import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.Recarga;
 
 /**
@@ -27,6 +30,24 @@ public class RecargaMapper extends Mapper{
         } finally {
             getSesion().close();
         }
+    }
+    
+    /**
+     * Este método carga la lista de recargas realizadas a un monedero en específico.
+     * @param monedDestino Es el monedero al cual se le realizaron las recargas.
+     * @return Retorna como resultado la lista de recargas hechas al monedero.
+     */
+    public List<Recarga> buscarRecargaPorMonedero(Monedero monedDestino){
+        List<Recarga> recargas = null;
+        System.out.println("MONEDERO: "+monedDestino);
+        try {
+            iniciaOperacion();
+            recargas= getSesion().createCriteria(Recarga.class).add(Restrictions.eq("monedero",monedDestino)).list();
+            System.out.println("Movimientos hallados: "+recargas);
+        } finally {
+            getSesion().close();
+        }
+        return recargas;
     }
     
     

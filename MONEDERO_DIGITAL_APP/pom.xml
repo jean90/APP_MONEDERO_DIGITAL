@@ -37,5 +37,6 @@
     <module>MONEDERO_DIGITAL_APP_MODEL</module>
     <module>MONEDERO_DIGITAL_APP_WEB</module>
     <module>MONEDERO_DIGITAL_APP_WS</module>
+    <module>MONEDERO_DIGITAL_APP_CLIENTE</module>
   </modules>
 </project>
