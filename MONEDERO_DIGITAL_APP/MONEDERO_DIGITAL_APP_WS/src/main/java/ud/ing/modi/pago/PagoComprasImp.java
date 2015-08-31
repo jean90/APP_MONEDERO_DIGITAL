@@ -6,8 +6,6 @@
 package ud.ing.modi.pago;
 
 import java.util.Date;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import ud.ing.modi.entidades.Cliente;
