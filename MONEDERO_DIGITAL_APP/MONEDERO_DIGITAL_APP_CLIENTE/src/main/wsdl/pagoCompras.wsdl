@@ -12,6 +12,7 @@
       <xs:element minOccurs="0" name="codCompra" type="xs:string"/>
       <xs:element minOccurs="0" name="valorCompra" type="xs:string"/>
       <xs:element minOccurs="0" name="nickCliente" type="xs:string"/>
+      <xs:element minOccurs="0" name="pssTx" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 <xs:complexType name="pagarCompraResponse">
@@ -85,7 +86,7 @@
   </wsdl:binding>
   <wsdl:service name="PagoComprasImpService">
     <wsdl:port binding="tns:PagoComprasImpServiceSoapBinding" name="PagoComprasImpPort">
-      <soap:address location="http://192.168.1.17:8080/MONEDERO_DIGITAL_APP_WS/pagoCompras"/>
+      <soap:address location="http://monedero-ws:8080/MONEDERO_DIGITAL_APP_WS/pagoCompras"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

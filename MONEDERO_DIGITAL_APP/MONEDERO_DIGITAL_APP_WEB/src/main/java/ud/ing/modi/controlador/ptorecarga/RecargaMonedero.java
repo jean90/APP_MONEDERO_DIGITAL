@@ -15,7 +15,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
-import ud.ing.modi.controlador.monedero.OperacionTransaccional;
+import ud.ing.modi.tx.OperacionTransaccional;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PuntoRecarga;
 import ud.ing.modi.entidades.Recarga;

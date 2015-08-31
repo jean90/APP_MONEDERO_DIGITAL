@@ -19,7 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
-import ud.ing.modi.controlador.monedero.OperacionTransaccional;
+import ud.ing.modi.tx.OperacionTransaccional;
 import ud.ing.modi.email.EmailActivacionCuenta;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
@@ -138,7 +138,7 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
         String nick = traerUsu();
         PersonMapper mapPerson=new PersonMapper();
         try {
-            if (this.validarEstadoPss(nick)) {
+            if (this.validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_ACTIVA)) {
                 if (this.validaPss(ldap, nick)) {
                     inicializarIntentosTx(nick);
                     mapeador.actualizarTienda(this.tiendaAEditar);
@@ -148,8 +148,14 @@ public class ControlEdicionDatosEmpresa extends OperacionTransaccional implement
                 }else{
                     FacesMessage msg = new FacesMessage("Contraseña transaccional errónea", null);
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    validarBloqueoPss(nick);
+                    if (validarBloqueoPss(nick)) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "Ha superado el número de intentos erróneos de clave transaccional"));
+                    }
                 }
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_BLOQUEADA)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "No puede realizar esta operación en tanto no sea desbloqueada"));
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_SIN_ASIGNAR)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD TRANSACCIONAL SE ENCUENTRA PENDIENTE DE ASIGNACION", "Asigne un password desde el submenú Gestionar cuenta - Crear contraseña transaccional"));
             }
         } catch (Exception ex) {
             Logger.getLogger(ControlEdicionDatosEmpresa.class.getName()).log(Level.SEVERE, null, ex);

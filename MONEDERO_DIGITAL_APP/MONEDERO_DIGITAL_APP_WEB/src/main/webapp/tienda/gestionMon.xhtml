@@ -78,7 +78,7 @@
                             <p:commandButton update=":form:monEdit" oncomplete="hideHistorico();PF('monedDialog2').show()" icon="ui-icon-pencil" process="@this">
                                 <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
                             </p:commandButton>
-                            <p:commandButton update=":form:monHist" oncomplete="showHistorico()" icon="ui-icon-document" action="#{controlConsultaMoned.cargarHistorico}" process="@this">
+                            <p:commandButton update=":form:monHist" oncomplete="showHistorico()" icon="ui-icon-document" action="#{controlConsultaMoned.cargarPagos}" process="@this">
                                 <f:setPropertyActionListener value="#{moned}" target="#{controlConsultaMoned.selectedMon}" />
                             </p:commandButton>
                         </f:facet>

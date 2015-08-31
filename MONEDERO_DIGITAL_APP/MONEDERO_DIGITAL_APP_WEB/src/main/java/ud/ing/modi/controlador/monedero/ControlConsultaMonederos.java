@@ -33,6 +33,7 @@ import ud.ing.modi.mapper.EstadoMonederoMapper;
 import ud.ing.modi.mapper.MonederoMapper;
 import ud.ing.modi.mapper.PagoOnlineMapper;
 import ud.ing.modi.mapper.RecargaMapper;
+import ud.ing.modi.tx.OperacionTransaccional;
 
 /**
  *
@@ -140,7 +141,7 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
         TransaccionalLDAP ldap = new TransaccionalLDAP();
         String nick = traerUsu();
         try {
-            if (validarEstadoPss(nick)) {
+            if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_ACTIVA)) {
                 if (this.validaPss(ldap, nick)) {
                     inicializarIntentosTx(nick);
                     this.asignarEst();
@@ -152,8 +153,14 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
                 }else{
                     FacesMessage msg = new FacesMessage("Contraseña transaccional errónea", null);
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    validarBloqueoPss(nick);
+                    if (validarBloqueoPss(nick)) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "Ha superado el número de intentos erróneos de clave transaccional"));
+                    }
                 }
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_BLOQUEADA)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "No puede realizar esta operación en tanto no sea desbloqueada"));
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_SIN_ASIGNAR)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD TRANSACCIONAL SE ENCUENTRA PENDIENTE DE ASIGNACION", "Asigne un password desde el submenú Gestionar cuenta - Crear contraseña transaccional"));
             }
         } catch (Exception ex) {
             Logger.getLogger(ControlCreacionMonedero.class.getName()).log(Level.SEVERE, null, ex);
@@ -173,7 +180,7 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     }
     
     /**
-     * Este método carga el histórico de pagos asociados al monedero seleccionado.
+     * Este método carga el histórico de movimientos asociados al monedero seleccionado.
      */
     public void cargarHistorico(){
         System.out.println("Cargando histórico ....");
@@ -199,6 +206,17 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     }
     
     /**
+     * Este método carga el histórico de pagos realizados al monedero de la tienda.
+     */
+    public void cargarPagos(){
+        System.out.println("Cargando histórico de pagos ....");
+        PagoOnlineMapper mapPagos= new PagoOnlineMapper();
+        this.pagos=mapPagos.obtenerPagosATienda(selectedMon);
+        
+        this.ordenarPagos();
+    }
+    
+    /**
      * Este método ordena la lista de movimientos por fecha de ejecución.
      */
     public void ordenarMovs(){
@@ -211,6 +229,23 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
                       aux=movimientos.get(j+1);
                       movimientos.set(j+1,movimientos.get(j));
                       movimientos.set(j,aux);
+                   }
+
+    }
+    
+    /**
+     * Este método ordena la lista de movimientos por fecha de ejecución.
+     */
+    public void ordenarPagos(){
+        
+         int i, j;
+         PagoOnline aux;
+         for(i=0;i<this.pagos.size()-1;i++)
+              for(j=0;j<pagos.size()-i-1;j++)
+                   if(pagos.get(j+1).getFechaPago().after(pagos.get(j).getFechaPago())){
+                      aux=pagos.get(j+1);
+                      pagos.set(j+1,pagos.get(j));
+                      pagos.set(j,aux);
                    }
 
     }

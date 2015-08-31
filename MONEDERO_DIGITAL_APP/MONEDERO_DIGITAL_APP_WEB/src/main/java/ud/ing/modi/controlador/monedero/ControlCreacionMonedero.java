@@ -24,6 +24,7 @@ import ud.ing.modi.ldap.TransaccionalLDAP;
 import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.DivisaMapper;
 import ud.ing.modi.mapper.MonederoMapper;
+import ud.ing.modi.tx.OperacionTransaccional;
 
 /**
  *
@@ -71,7 +72,7 @@ public class ControlCreacionMonedero extends OperacionTransaccional implements S
         TransaccionalLDAP ldap = new TransaccionalLDAP();
         String nick = traerUsu();
         try {
-            if (this.validarEstadoPss(nick)) {
+            if (this.validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_ACTIVA)) {
                 if (this.validaPss(ldap, nick)) {
                     inicializarIntentosTx(nick);
                     this.asignarDiv();
@@ -92,8 +93,14 @@ public class ControlCreacionMonedero extends OperacionTransaccional implements S
                 }else{
                     FacesMessage msg = new FacesMessage("Contraseña transaccional errónea", null);
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    validarBloqueoPss(nick);
+                    if (validarBloqueoPss(nick)) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "Ha superado el número de intentos erróneos de clave transaccional"));
+                    }
                 }
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_BLOQUEADA)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "No puede realizar esta operación en tanto no sea desbloqueada"));
+            }else if (validarEstadoPss(nick).equals(TransaccionalLDAP.PSS_SIN_ASIGNAR)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD TRANSACCIONAL SE ENCUENTRA PENDIENTE DE ASIGNACION", "Asigne un password desde el submenú Gestionar cuenta - Crear contraseña transaccional"));
             }
         } catch (Exception ex) {
             Logger.getLogger(ControlCreacionMonedero.class.getName()).log(Level.SEVERE, null, ex);

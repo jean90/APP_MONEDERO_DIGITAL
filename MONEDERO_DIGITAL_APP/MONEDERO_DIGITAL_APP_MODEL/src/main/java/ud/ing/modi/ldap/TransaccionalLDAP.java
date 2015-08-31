@@ -22,9 +22,9 @@ import java.util.logging.Logger;
  */
 public class TransaccionalLDAP {
     private final String baseBusqueda = "ou=Users,dc=monederodigital,dc=com,dc=co";
-    public static final String  CUENTA_ACTIVA= "ACTIVA";
-    public static final String  CUENTA_BLOQUEDA= "BLOQUEADA";
-    public static final String  CUENTA_SIN_ASIGNAR= "SIN_ASIGNAR";
+    public static final String  PSS_ACTIVA= "ACTIVA";
+    public static final String  PSS_BLOQUEADA= "BLOQUEADA";
+    public static final String  PSS_SIN_ASIGNAR= "SIN_ASIGNAR";
     public static final int  NUM_INTENTOS_TX_MAX= 3;//Validar si finalmente quedan 3***********
 
     public TransaccionalLDAP() {
@@ -47,7 +47,7 @@ public class TransaccionalLDAP {
             conn.getLc().modify(dn, modifEst);
             conn.cerrarConexionLdap();
         } catch (LDAPException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null,ex);
         }
     }
     
@@ -109,7 +109,7 @@ public class TransaccionalLDAP {
                 estadoPssTx = entradaLdap.getAttribute("estadoPassTx").getStringValue();
             }
         } catch (LDAPException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null,ex);
         }finally{
             //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
             if (conn!=null&&conn.getLc().isConnectionAlive()) {
@@ -140,7 +140,7 @@ public class TransaccionalLDAP {
                 numIntentosTx = entradaLdap.getAttribute("numFallosPassTx").getStringValue();
             }
         } catch (LDAPException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null,ex);
         }finally{
             //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
             if (conn!=null&&conn.getLc().isConnectionAlive()) {
@@ -165,7 +165,7 @@ public class TransaccionalLDAP {
             conn.getLc().modify(dn, entrada);
             conn.getLc().modify(dn, entrada);
         } catch (LDAPException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null,ex);
         }finally{
             //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
             if (conn!=null&&conn.getLc().isConnectionAlive()) {
@@ -188,7 +188,7 @@ public class TransaccionalLDAP {
             conn.abrirConexionLdap();
             conn.getLc().modify(dn, entrada);
         } catch (LDAPException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null,ex);
         }finally{
             //Para evitar que si conn no se pudo abrir caiga en error al intentar cerrar la conexión
             if (conn!=null&&conn.getLc().isConnectionAlive()) {

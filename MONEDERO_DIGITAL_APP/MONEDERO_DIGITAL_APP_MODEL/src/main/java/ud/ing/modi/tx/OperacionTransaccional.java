@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ud.ing.modi.controlador.monedero;
+package ud.ing.modi.tx;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -62,29 +62,32 @@ public class OperacionTransaccional {
     /**
      * Este método valida el estado del password transaccional del usuario.
      * @param usuario Es el usuario del cual se validará el password transaccional
-     * @return Retorna como resultado true si el password se validó correctamente o false si no lo fue
+     * @return Retorna como resultado el estado del password transaccional
      */
-    public boolean validarEstadoPss(String usuario) {
+    public String validarEstadoPss(String usuario) {
         boolean estadoPssActivo = false;
         String estadoPssTx;
         TransaccionalLDAP ldap = new TransaccionalLDAP();
+        System.out.println("estadoooooooo");
         estadoPssTx = ldap.getEstadoPssTx(usuario);
         System.out.println("estado Cuenta = " + estadoPssTx);
-        if (estadoPssTx.equals(TransaccionalLDAP.CUENTA_ACTIVA)) {
+        /*if (estadoPssTx.equals(TransaccionalLDAP.PSS_ACTIVA)) {
             estadoPssActivo = true;
-        } else if (estadoPssTx.equals(TransaccionalLDAP.CUENTA_BLOQUEDA)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "No puede realizar esta operación en tanto no sea desbloqueada"));
-        } else if (estadoPssTx.equals(TransaccionalLDAP.CUENTA_SIN_ASIGNAR)) {
+        } else if (estadoPssTx.equals(TransaccionalLDAP.PSS_BLOQUEADA)) {
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "No puede realizar esta operación en tanto no sea desbloqueada"));
+        } else if (estadoPssTx.equals(TransaccionalLDAP.PSS_SIN_ASIGNAR)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD TRANSACCIONAL SE ENCUENTRA PENDIENTE DE ASIGNACION", "Asigne un password desde el submenú Gestionar cuenta - Crear contraseña transaccional"));
-        }
-        return estadoPssActivo;
+        }*/
+        //return estadoPssActivo;
+        return estadoPssTx;
     }
 
     /**
-     * Este método valida si el password transaccional se debe bloquear
-     * @param usuario Es el usuario cuyo password será validado
+     * Este método valida si el password transaccional se debe bloquear.
+     * @param usuario Es el usuario cuyo password será validado.
+     * @return Retorna true si se bloquea la contraseña, de otro modo, false.
      */
-    public void validarBloqueoPss(String usuario) {
+    public boolean validarBloqueoPss(String usuario) {
         int numIntentosTx;
         TransaccionalLDAP ldap = new TransaccionalLDAP();
         numIntentosTx = Integer.parseInt(ldap.getNumIntentosTx(usuario));
@@ -93,9 +96,11 @@ public class OperacionTransaccional {
         if (numIntentosTx >= TransaccionalLDAP.NUM_INTENTOS_TX_MAX) {
             //BLOQUEAR PASSWORD
             System.out.println("BLOQUEANDO PASSWORD TX");
-            ldap.modificarEstadoTx(usuario, TransaccionalLDAP.CUENTA_BLOQUEDA);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "Ha superado el número de intentos erróneos de clave transaccional"));
+            ldap.modificarEstadoTx(usuario, TransaccionalLDAP.PSS_BLOQUEADA);
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "PASSWORD BLOQUEADA", "Ha superado el número de intentos erróneos de clave transaccional"));
+            return true;
         }
+        return false;
     }
 
     /**

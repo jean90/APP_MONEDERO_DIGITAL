@@ -21,6 +21,7 @@ public interface PagoCompras {
     
     String pagarCompra(@WebParam(name = "codMonedero") String codMonedero,
             @WebParam(name = "codTienda") String codTienda, @WebParam(name = "codCompra") String codCompra,
-            @WebParam(name = "valorCompra") String valorCompra, @WebParam(name = "nickCliente") String nickCliente);
+            @WebParam(name = "valorCompra") String valorCompra, @WebParam(name = "nickCliente") String nickCliente,
+            @WebParam(name = "pssTx") String pssTx);
     
 }

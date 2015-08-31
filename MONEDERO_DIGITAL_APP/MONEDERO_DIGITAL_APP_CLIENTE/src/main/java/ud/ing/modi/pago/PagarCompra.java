@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="codCompra" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="valorCompra" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="nickCliente" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="pssTx" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
     "codTienda",
     "codCompra",
     "valorCompra",
-    "nickCliente"
+    "nickCliente",
+    "pssTx"
 })
 public class PagarCompra {
 
@@ -44,6 +46,7 @@ public class PagarCompra {
     protected String codCompra;
     protected String valorCompra;
     protected String nickCliente;
+    protected String pssTx;
 
     /**
      * Gets the value of the codMonedero property.
@@ -163,6 +166,30 @@ public class PagarCompra {
      */
     public void setNickCliente(String value) {
         this.nickCliente = value;
+    }
+
+    /**
+     * Gets the value of the pssTx property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPssTx() {
+        return pssTx;
+    }
+
+    /**
+     * Sets the value of the pssTx property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPssTx(String value) {
+        this.pssTx = value;
     }
 
 }

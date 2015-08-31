@@ -38,6 +38,24 @@ public class PagoOnlineMapper extends Mapper{
         return pagos;
     }
     
+    /**
+     * Este método trae la lista de los pagos realizados al monedero de la tienda.
+     * @param monedDestino Es el monedero al cual desembolsó el/los pago(s).
+     * @return Retorna como resultado la lista de pagos realizados.
+     * @throws HibernateException 
+     */
+    public List<PagoOnline> obtenerPagosATienda(Monedero monedDestino) throws HibernateException {
+        List<PagoOnline> pagos = null;
+        System.out.println("MONEDERO: "+monedDestino);
+        try {
+            iniciaOperacion();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monDestino",monedDestino)).list();
+            System.out.println("Movimientos hallados: "+pagos);
+        } finally {
+            getSesion().close();
+        }
+        return pagos;
+    }
     
     public void registrarPago(PagoOnline pago) throws Exception{
         try {

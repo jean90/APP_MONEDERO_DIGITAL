@@ -37,22 +37,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ValidarDatosCompra }
-     * 
-     */
-    public ValidarDatosCompra createValidarDatosCompra() {
-        return new ValidarDatosCompra();
-    }
-
-    /**
-     * Create an instance of {@link ValidarDatosCompraResponse }
-     * 
-     */
-    public ValidarDatosCompraResponse createValidarDatosCompraResponse() {
-        return new ValidarDatosCompraResponse();
-    }
-
-    /**
      * Create an instance of {@link PagarCompra }
      * 
      */
@@ -61,11 +45,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ValidarDatosCompra }
+     * 
+     */
+    public ValidarDatosCompra createValidarDatosCompra() {
+        return new ValidarDatosCompra();
+    }
+
+    /**
      * Create an instance of {@link PagarCompraResponse }
      * 
      */
     public PagarCompraResponse createPagarCompraResponse() {
         return new PagarCompraResponse();
+    }
+
+    /**
+     * Create an instance of {@link ValidarDatosCompraResponse }
+     * 
+     */
+    public ValidarDatosCompraResponse createValidarDatosCompraResponse() {
+        return new ValidarDatosCompraResponse();
     }
 
     /**
