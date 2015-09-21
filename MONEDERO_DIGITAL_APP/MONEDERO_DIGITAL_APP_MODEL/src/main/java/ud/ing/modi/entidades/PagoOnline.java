@@ -45,6 +45,9 @@ public class PagoOnline implements Serializable{
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_MON_DESTINO")
     private Monedero monDestino;
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="COD_ESTADO_PAGO")
+    private EstadoPago estadoPago;
 
     public PagoOnline() {
         this.monOrigen=new Monedero();
@@ -97,6 +100,14 @@ public class PagoOnline implements Serializable{
 
     public void setMonDestino(Monedero monDestino) {
         this.monDestino = monDestino;
+    }
+
+    public EstadoPago getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(EstadoPago estadoPago) {
+        this.estadoPago = estadoPago;
     }
     
     

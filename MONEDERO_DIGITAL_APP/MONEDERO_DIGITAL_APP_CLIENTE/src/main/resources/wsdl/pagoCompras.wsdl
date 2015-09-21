@@ -7,28 +7,27 @@
 <xs:element name="validarDatosCompraResponse" type="tns:validarDatosCompraResponse"/>
 <xs:complexType name="pagarCompra">
     <xs:sequence>
-      <xs:element minOccurs="0" name="codMonedero" type="xs:string"/>
-      <xs:element minOccurs="0" name="codTienda" type="xs:string"/>
       <xs:element minOccurs="0" name="codCompra" type="xs:string"/>
-      <xs:element minOccurs="0" name="valorCompra" type="xs:string"/>
-      <xs:element minOccurs="0" name="nickCliente" type="xs:string"/>
-      <xs:element minOccurs="0" name="pssTx" type="xs:string"/>
+      <xs:element minOccurs="0" name="token" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 <xs:complexType name="pagarCompraResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 <xs:complexType name="validarDatosCompra">
     <xs:sequence>
       <xs:element minOccurs="0" name="codMonedero" type="xs:string"/>
       <xs:element minOccurs="0" name="nickCliente" type="xs:string"/>
+      <xs:element minOccurs="0" name="codTienda" type="xs:string"/>
+      <xs:element minOccurs="0" name="codCompra" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorCompra" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 <xs:complexType name="validarDatosCompraResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

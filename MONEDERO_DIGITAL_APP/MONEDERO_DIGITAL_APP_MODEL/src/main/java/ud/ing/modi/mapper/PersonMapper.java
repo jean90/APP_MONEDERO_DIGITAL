@@ -6,10 +6,6 @@
 package ud.ing.modi.mapper;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
 import ud.ing.modi.entidades.Persona;
 
 /**

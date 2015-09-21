@@ -1,0 +1,11 @@
+
+Estimado(a) ${nombre} ${apellido},
+
+Hemos recibido la petición de un pago que deseas realizar hacia la tienda ${nombreTienda} por un valor de $${valorCompra}.
+Para proceder con el pago mediante el monedero digital ${codMonedero} ingresa el siguiente token de pago como contraseña una vez te lo solicite la tienda:
+
+${token}
+
+Recuerda que este token sólo tiene una duración de 5 minutos a partir de este momento. Una vez transcurra este tiempo deberás solicitar un token nuevo para proceder con tu pago.
+
+Gracias.

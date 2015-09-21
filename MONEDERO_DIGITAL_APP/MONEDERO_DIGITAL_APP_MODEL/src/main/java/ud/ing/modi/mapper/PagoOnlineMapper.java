@@ -9,6 +9,7 @@ package ud.ing.modi.mapper;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
+import ud.ing.modi.entidades.EstadoPago;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PagoOnline;
 
@@ -25,12 +26,12 @@ public class PagoOnlineMapper extends Mapper{
      * @return Retorna como resultado la lista de pagos realizados.
      * @throws HibernateException 
      */
-    public List<PagoOnline> obtenerPagos(Monedero monedOrigen) throws HibernateException {
+    public List<PagoOnline> obtenerPagos(Monedero monedOrigen, EstadoPago estadoPago) throws HibernateException {
         List<PagoOnline> pagos = null;
         System.out.println("MONEDERO: "+monedOrigen);
         try {
             iniciaOperacion();
-            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monOrigen",monedOrigen)).list();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monOrigen",monedOrigen)).add(Restrictions.eq("estadoPago",estadoPago)).list();
             System.out.println("Movimientos hallados: "+pagos);
         } finally {
             getSesion().close();
@@ -44,12 +45,12 @@ public class PagoOnlineMapper extends Mapper{
      * @return Retorna como resultado la lista de pagos realizados.
      * @throws HibernateException 
      */
-    public List<PagoOnline> obtenerPagosATienda(Monedero monedDestino) throws HibernateException {
+    public List<PagoOnline> obtenerPagosATienda(Monedero monedDestino, EstadoPago estadoPago) throws HibernateException {
         List<PagoOnline> pagos = null;
         System.out.println("MONEDERO: "+monedDestino);
         try {
             iniciaOperacion();
-            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monDestino",monedDestino)).list();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("monDestino",monedDestino)).add(Restrictions.eq("estadoPago",estadoPago)).list();
             System.out.println("Movimientos hallados: "+pagos);
         } finally {
             getSesion().close();
@@ -57,6 +58,11 @@ public class PagoOnlineMapper extends Mapper{
         return pagos;
     }
     
+    /**
+     * Este método registra en la base de datos un pago.
+     * @param pago Es el pago a guardar en la base de datos.
+     * @throws Exception 
+     */
     public void registrarPago(PagoOnline pago) throws Exception{
         try {
             iniciaOperacion();
@@ -71,4 +77,42 @@ public class PagoOnlineMapper extends Mapper{
             getSesion().close();
         }
     }
+    
+    /**
+     * Este método actualiza en la base de datos un pago.
+     * @param pago Es el pago a actualizar en la base de datos.
+     * @throws Exception 
+     */
+    public void actualizarPago(PagoOnline pago) throws Exception{
+        try {
+            iniciaOperacion();
+            getSesion().update(pago);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
+        }
+    }
+    
+    /**
+     * Busca la información de un pago online asociado a un código de compra.
+     * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
+     * @return Retorna como resultado el pago asociado al código de la compra.
+     */
+    public PagoOnline buscarPagoDeCompra(String codCompra){
+        PagoOnline pago=null;
+        try {
+            iniciaOperacion();
+            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).uniqueResult();
+            System.out.println("Pago hallado: "+pago);
+        } finally {
+            getSesion().close();
+        }
+        return pago;
+    }
+    
 }

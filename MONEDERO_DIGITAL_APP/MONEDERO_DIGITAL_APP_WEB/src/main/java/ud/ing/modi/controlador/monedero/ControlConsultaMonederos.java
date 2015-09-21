@@ -23,6 +23,7 @@ import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteJuridico;
 import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.EstadoMonedero;
+import ud.ing.modi.entidades.EstadoPago;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PagoOnline;
 import ud.ing.modi.entidades.Recarga;
@@ -185,7 +186,8 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     public void cargarHistorico(){
         System.out.println("Cargando histórico ....");
         PagoOnlineMapper mapPagos= new PagoOnlineMapper();
-        this.pagos=mapPagos.obtenerPagos(selectedMon);
+        EstadoPago estadoPago=new EstadoPago(2,"APROBADO");
+        this.pagos=mapPagos.obtenerPagos(selectedMon, estadoPago);
         
         for (int i = 0; i < pagos.size(); i++) {
             PagoOnline pago=pagos.get(i);
@@ -211,7 +213,8 @@ public class ControlConsultaMonederos extends OperacionTransaccional implements 
     public void cargarPagos(){
         System.out.println("Cargando histórico de pagos ....");
         PagoOnlineMapper mapPagos= new PagoOnlineMapper();
-        this.pagos=mapPagos.obtenerPagosATienda(selectedMon);
+        EstadoPago estadoPago=new EstadoPago(2,"APROBADO");
+        this.pagos=mapPagos.obtenerPagosATienda(selectedMon,estadoPago);
         
         this.ordenarPagos();
     }
