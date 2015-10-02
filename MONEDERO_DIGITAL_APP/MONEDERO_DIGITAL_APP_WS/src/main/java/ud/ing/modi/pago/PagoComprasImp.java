@@ -76,11 +76,13 @@ public class PagoComprasImp implements PagoCompras {
 
                                         generadorToken.generarToken();
                                         generadorToken.encriptarToken();
-                                        generadorToken.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(),valorCompra, codMonedero);
 
                                         //8. Guardar datos token en tabla
                                         generadorToken.guardarRegistroToken(codCompra, valorCompra, monederoComprador, monederoTienda);
 
+                                        //9. Enviar token a correo
+                                        generadorToken.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(),valorCompra, codMonedero);
+                                        
                                         codRta = "OK01";
                                         mensajeRta = "Datos para pago válidos.";
                                         System.out.println("TODO BIEEEN");
@@ -116,7 +118,8 @@ public class PagoComprasImp implements PagoCompras {
 
         }catch(Exception e){
             codRta="EP00";
-            mensajeRta="Ha ocurrido un error de comunicación durante el proceso de pago - "+e.toString();
+            mensajeRta="Datos para pago inválidos";
+            System.out.println("Ha ocurrido un error de comunicación durante el proceso de pago - "+e.toString());
         }
         
         rta[0]=codRta;

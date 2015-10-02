@@ -116,7 +116,7 @@ public class GeneradorTokenPagos {
         pago.setCodCompra(codCompra);
         pago.setMonDestino(monDestino);
         pago.setMonOrigen(monOrigen);
-        pago.setValorPago(Integer.parseInt(valorPago));
+        pago.setValorPago(Float.parseFloat(valorPago));
         pago.setEstadoPago(new EstadoPago(1, "PENDIENTE"));
         PagoOnlineMapper mapeador = new PagoOnlineMapper();
         try {
