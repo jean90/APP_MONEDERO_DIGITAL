@@ -36,7 +36,7 @@ public class ClientePagosMonedero
     }
     }   
     
-    public List<String> pagoCompra(String codCompra, String token){
+    public List<String> pagoCompra(String codCompra, String token, String codMonTienda){
         try{
             System.out.println( "Vamos 1 **" );
             PagoComprasImpService insPago= new PagoComprasImpService();
@@ -45,7 +45,7 @@ public class ClientePagosMonedero
             System.out.println( "Listo! Creada la instancia del servicio de pagos del Monedero!!" );
 
 
-            List<String> rta=pago.pagarCompra(codCompra, token);
+            List<String> rta=pago.pagarCompra(codCompra, token, codMonTienda);
             System.out.println("Respuesta Compra: "+rta);
 
             return rta;

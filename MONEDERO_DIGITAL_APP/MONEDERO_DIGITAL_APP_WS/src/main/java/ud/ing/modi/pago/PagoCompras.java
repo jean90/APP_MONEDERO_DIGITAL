@@ -20,6 +20,6 @@ public interface PagoCompras {
             @WebParam(name = "valorCompra") String valorCompra);
     
     
-    String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token);
+    String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token, @WebParam(name = "codMonTienda") String codMonTienda);
     
 }

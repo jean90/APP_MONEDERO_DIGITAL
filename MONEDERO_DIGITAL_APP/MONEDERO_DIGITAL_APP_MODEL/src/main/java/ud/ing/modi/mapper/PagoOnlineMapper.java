@@ -103,16 +103,78 @@ public class PagoOnlineMapper extends Mapper{
      * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
      * @return Retorna como resultado el pago asociado al código de la compra.
      */
-    public PagoOnline buscarPagoDeCompra(String codCompra){
+    public PagoOnline buscarPagoDeCompra(String codCompra, Monedero monederoTienda){
         PagoOnline pago=null;
         try {
             iniciaOperacion();
-            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).uniqueResult();
+            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.eq("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("monDestino",monederoTienda)).uniqueResult();
             System.out.println("Pago hallado: "+pago);
         } finally {
             getSesion().close();
         }
         return pago;
+    }
+    
+    /**
+     * Busca si existen pagos online asociados a un código de compra.
+     * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
+     * @return Retorna como resultado la lista de pagos asociados al código de compra.
+     */
+    public List<PagoOnline> listarPagosPtesdeCompra(String codCompra, Monedero monederoTienda){
+        
+        List<PagoOnline> pagos=null;
+        try {
+            iniciaOperacion();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.eq("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("monDestino",monederoTienda)).list();
+            /*if (!pagos.isEmpty()) {
+                existe=true;
+            }*/
+            System.out.println("Pagos activos hallados: "+pagos);
+        } finally {
+            getSesion().close();
+        }
+        return pagos;
+    }
+    
+    /**
+     * Busca si existen pagos online asociados a un código de compra que ya estén en estado aprobado o rechazado.
+     * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
+     * @return Retorna como resultado la lista de pagos asociados al código de compra.
+     */
+    public List<PagoOnline> listarPagosFinalizadosdeCompra(String codCompra, Monedero monederoTienda){
+        
+        List<PagoOnline> pagos=null;
+        try {
+            iniciaOperacion();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.ne("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("monDestino",monederoTienda)).list();
+            /*if (!pagos.isEmpty()) {
+                existe=true;
+            }*/
+            System.out.println("Pagos finalizados hallados: "+pagos);
+        } finally {
+            getSesion().close();
+        }
+        return pagos;
+    }
+    
+    /**
+     * Este método cancela los pagos indicados.
+     * @param pagos Es la lista de pagos a cancelar
+     */
+    public void cancelarPagos(List<PagoOnline> pagos){
+
+        try {
+            iniciaOperacion();
+            for (int i = 0; i < pagos.size(); i++) {
+                PagoOnline pago=pagos.get(i);
+                pago.setEstadoPago(new EstadoPago(4,"CANCELADO"));
+                getSesion().update(pago);
+            }
+            getTx().commit();
+            System.out.println("Pagos borrados");
+        } finally {
+            getSesion().close();
+        }
     }
     
 }

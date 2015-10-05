@@ -128,7 +128,7 @@ public class PagoComprasImp implements PagoCompras {
 
     }
 
-    public String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token){
+    public String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token,@WebParam(name = "codMonTienda") String codMonTienda){
         String mensajeRta="none";
         String codRta="000";
         String codPago="none";
@@ -137,9 +137,10 @@ public class PagoComprasImp implements PagoCompras {
         TransaccionalLDAP ldap = new TransaccionalLDAP();
         
         PagoOnlineMapper mapPago=new PagoOnlineMapper();
-        PagoOnline pago=mapPago.buscarPagoDeCompra(codCompra);
-        
         MonederoMapper mapMonedero=new MonederoMapper();
+        
+        Monedero monTienda=mapMonedero.buscarMonedero(codMonTienda);
+        PagoOnline pago=mapPago.buscarPagoDeCompra(codCompra,monTienda);
         
         TokenMapper mapToken = new TokenMapper();
         if (pago!=null) {

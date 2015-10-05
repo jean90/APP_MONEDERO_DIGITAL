@@ -36,6 +36,28 @@ public class TokenMapper extends Mapper{
     }
     
     /**
+     * Este método actualiza un registro de token para pagos.
+     * @param token Es el token que será almacenado en la base de datos.
+     * @throws Exception 
+     */
+    public void actualizarToken(TokenPago token) throws Exception{
+         try {
+            iniciaOperacion();
+            getSesion().update(token);
+            getTx().commit();
+        } catch (Exception e) {
+            if (getTx() != null) {
+                getTx().rollback();
+            }
+            throw e;
+        } finally {
+            getSesion().close();
+        }
+    }
+    
+    
+    
+    /**
      * Este método buscar y trae el token asociado a un pago.
      * @param codPago Es el código del pago del cual se buscará el token.
      * @return Retorna como resultado el token asociado al pago buscado.
@@ -50,24 +72,5 @@ public class TokenMapper extends Mapper{
             getSesion().close();
         }
         return token;
-    }
-    
-    /**
-     * Este método actualiza el registro de un token.
-     * @param token 
-     */
-    public void actualizarToken(TokenPago token) throws Exception{
-        try {
-            iniciaOperacion();
-            getSesion().update(token);
-            getTx().commit();
-        } catch (Exception e) {
-            if (getTx() != null) {
-                getTx().rollback();
-            }
-            throw e;
-        } finally {
-            getSesion().close();
-        }
-    }
+    }  
 }

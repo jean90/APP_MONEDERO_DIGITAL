@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ud.ing.modi.config.Config;
@@ -104,7 +105,7 @@ public class GeneradorTokenPagos {
     }
     
     /**
-     * Este método crea el registro del pago iniciado en la operatoria de validación para pagos con el monedero digital.
+     * Este método crea el registro del pago iniciado en la operatoria de validación para pagosPtes con el monedero digital.
      * @param codCompra Es el código de la compra que se desea pagar.
      * @param valorPago ES el valor del pago que será cancelado.
      * @param monOrigen Es el monedero del comprador desde el cual se realizará el pago.
@@ -120,14 +121,48 @@ public class GeneradorTokenPagos {
         pago.setEstadoPago(new EstadoPago(1, "PENDIENTE"));
         PagoOnlineMapper mapeador = new PagoOnlineMapper();
         try {
+            this.validarExistenciaPago(codCompra, monDestino);
             mapeador.registrarPago(pago);
             System.out.println("Pago registrado en la bd.");
             this.guardarToken(Integer.toString(pago.getCodPago()));
         } catch (Exception ex) {
             Logger.getLogger(GeneradorTokenPagos.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Ha ocurrido un error al crear el registro del pago en la bd.");
+            System.out.println("Ha ocurrido un error al validar o crear el registro del pago en la bd.");
             throw ex;
         }
+    }
+    
+    /**
+     * Este método valida la existencia de un pago que se va a ingresar de nuevo. Si ya existe lo cancela, así como cancela el token previamente generado.
+     * @param codCompra Es el código de la compra de la cual se validará la existencia del pago.
+     * @param monTienda Es el monedero de la tienda a la cual se realizará el pago a validar.
+     * @throws Exception 
+     */
+    public void validarExistenciaPago(String codCompra, Monedero monTienda) throws Exception{
+        PagoOnlineMapper mapPagos = new PagoOnlineMapper();
+        TokenMapper mapToken = new TokenMapper();
+        try{
+            List<PagoOnline> pagosFinal=mapPagos.listarPagosFinalizadosdeCompra(codCompra,monTienda);
+            List<PagoOnline> pagosPtes=mapPagos.listarPagosPtesdeCompra(codCompra,monTienda);
+            if (pagosPtes!=null && !pagosPtes.isEmpty()) {
+                mapPagos.cancelarPagos(pagosPtes);
+                for (int i = 0; i < pagosPtes.size(); i++) {
+                    TokenPago token = mapToken.cargarToken(pagosPtes.get(i).getCodPago());
+                    token.setEstadoToken(new EstadoToken(4,"ANULADO"));
+                    mapToken.actualizarToken(token);
+                }
+            }
+            if (pagosFinal!=null && !pagosFinal.isEmpty()) {
+                //Hay algún registro de pago con ese código de compra que está RECHAZADO o APROBADO
+                System.out.println("Hay algún registro de pago con ese código de compra que está RECHAZADO o APROBADO");
+                throw new Exception();
+            }
+        }catch(Exception ex){
+            Logger.getLogger(GeneradorTokenPagos.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha ocurrido un error al validar el registro del pago en la bd.");
+            throw ex;
+        }
+        
     }
     
     /**
