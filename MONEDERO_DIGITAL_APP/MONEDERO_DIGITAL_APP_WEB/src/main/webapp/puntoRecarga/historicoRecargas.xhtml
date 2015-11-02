@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <f:view id="PtoRecargaMonederoRecarga" contentType="text/html">
+        <h:head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Modenero Digital - Historico de Recargas</title>
+            <link rel="stylesheet" type="text/css" href="estilos/css.css"></link>
+        </h:head>
+        <h:body>
+            <h:form id="consultaHistoricoRecargasForm">                
+                <p:messages id="messagesForm" showDetail="true" autoUpdate="true" closable="true" />
+                <p:dataTable id="recHistoricoTable" var="recarga" value="#{consultaHistoricoRecargas.listaRecargas}" 
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="15" emptyMessage="No se encontraron recargas para este punto de recarga.">
+                    <p:column headerText="Código Recarga" style="text-align: center">
+                        <h:outputText value="#{recarga.codRecarga}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Fecha" style="text-align: center">
+                        <h:outputText value="#{recarga.fechaRecarga}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Código Monedero" style="text-align: center">
+                        <h:outputText value="#{recarga.monedero.codMonedero}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Valor" style="text-align: right">
+                        <h:outputText value="#{recarga.valorRecarga}" ></h:outputText>                        
+                    </p:column>
+                </p:dataTable>                
+            </h:form>
+        </h:body>
+    </f:view>
+</ui:composition>

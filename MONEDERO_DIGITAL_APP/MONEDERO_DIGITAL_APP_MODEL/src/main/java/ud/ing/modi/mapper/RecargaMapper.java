@@ -9,6 +9,7 @@ package ud.ing.modi.mapper;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Monedero;
+import ud.ing.modi.entidades.PuntoRecarga;
 import ud.ing.modi.entidades.Recarga;
 
 /**
@@ -50,6 +51,17 @@ public class RecargaMapper extends Mapper{
         return recargas;
     }
     
-    
+    public List<Recarga> buscarRecargaPorPtoRecarga (PuntoRecarga puntoRecarga){
+        List<Recarga> recargas = null;
+        System.out.println("Punto de recarga: "+puntoRecarga);
+        try {
+            iniciaOperacion();
+            recargas= getSesion().createCriteria(Recarga.class).add(Restrictions.eq("puntoRecarga",puntoRecarga)).list();
+            System.out.println("Movimientos hallados: "+recargas);
+        } finally {
+            getSesion().close();
+        }
+        return recargas;
+    }
     
 }

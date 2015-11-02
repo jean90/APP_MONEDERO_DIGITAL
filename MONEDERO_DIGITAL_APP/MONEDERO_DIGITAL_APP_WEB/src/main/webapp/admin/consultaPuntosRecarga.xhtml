@@ -15,7 +15,7 @@ and open the template in the editor.
 
     <f:view id="TiendaOnlinePendientesAlta" contentType="text/html">
         <h:head>
-             <script>
+            <script>
                 function denegarPeticion() {
                     PF('DetalleTiendaDialog').hide();
                     PF('denegarDialog').hide();
@@ -24,35 +24,31 @@ and open the template in the editor.
         </h:head>
         <h:body>
             <h:form id="form">
-                <!--p:layout style="margin: 0 auto">
-                    <p:layoutUnit position="center"-->
-                        <p:dataTable id="puntoRecargaTable" var="puntoRecarga" value="#{consultaRegistrosPendientesPuntosRecarga.puntoRecargaList}" style="text-align: center;" 
-                                     selectionMode="single" 
-                                     selection="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada}" 
-                                     rowKey="#{puntoRecarga.idCliente}">
-                            <f:facet name="header">
-                                Lista de Puntos de Recarga Pendietes de Alta
-                            </f:facet>
-                            <p:column headerText="Código de Cliente" >
-                                <h:outputText value="#{puntoRecarga.idCliente}" ></h:outputText>
-                            </p:column>
-                            <p:column headerText="Nit" >
-                                <h:outputText value="#{puntoRecarga.nit}" ></h:outputText>
-                            </p:column>
-                            <p:column headerText="Razon Social" >
-                                <h:outputText value="#{puntoRecarga.razonSocial}" ></h:outputText>
-                            </p:column>
-                            <p:column headerText="Representante legal" >
-                                <h:outputText value="#{puntoRecarga.representante.nombre}" ></h:outputText>
-                                <h:outputText value="#{puntoRecarga.representante.apellido}" ></h:outputText>
-                            </p:column>
-                            <f:facet name="footer">
-                                <p:commandButton process="puntoRecargaTable"  value="Ver Detalle" update=":form:DetallePtoRecarga" icon="ui-icon-search" oncomplete="PF('DetallePtoRecargaDialog').show()" />
-                            </f:facet>
-                        </p:dataTable>                        
-                    <!--/p:layoutUnit>                    
-                </p:layout-->
-                
+                <p:dataTable id="puntoRecargaTable" var="puntoRecarga" value="#{consultaRegistrosPendientesPuntosRecarga.puntoRecargaList}" style="text-align: center;" 
+                             selectionMode="single" 
+                             selection="#{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada}" 
+                             rowKey="#{puntoRecarga.idCliente}">
+                    <f:facet name="header">
+                        Lista de Puntos de Recarga Pendietes de Alta
+                    </f:facet>
+                    <p:column headerText="Código de Cliente" >
+                        <h:outputText value="#{puntoRecarga.idCliente}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Nit" >
+                        <h:outputText value="#{puntoRecarga.nit}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Razon Social" >
+                        <h:outputText value="#{puntoRecarga.razonSocial}" ></h:outputText>
+                    </p:column>
+                    <p:column headerText="Representante legal" >
+                        <h:outputText value="#{puntoRecarga.representante.nombre}" ></h:outputText>
+                        <h:outputText value="#{puntoRecarga.representante.apellido}" ></h:outputText>
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton process="puntoRecargaTable"  value="Ver Detalle" update=":form:DetallePtoRecarga" icon="ui-icon-search" oncomplete="PF('DetallePtoRecargaDialog').show()" />
+                    </f:facet>
+                </p:dataTable>   
+
                 <p:dialog header="Detalle de la selección" widgetVar="DetallePtoRecargaDialog"
                           modal="true" showEffect="fade" hideEffect="fade"  resizable="false" width="50%">
                     <p:outputPanel id="DetallePtoRecarga" style="text-align:center;">
@@ -119,13 +115,13 @@ and open the template in the editor.
                         </p:panel>
                     </p:outputPanel>
                 </p:dialog>              
-                
+
                 <p:confirmDialog message="¿confirma que desea rechazar la petición?" header="Denegar Petición" severity="info"
                                  widgetVar="denegarDialog">
                     <center>
-                    <p:commandButton value="No" onclick="PF('denegarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
-                    <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.denegarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
-                                     update=":form:puntoRecargaTable" oncomplete="PF('denegarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
+                        <p:commandButton value="No" onclick="PF('denegarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.denegarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                         update=":form:puntoRecargaTable" oncomplete="PF('denegarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
                     </center>
                 </p:confirmDialog>
 
@@ -133,12 +129,12 @@ and open the template in the editor.
                                  #{consultaRegistrosPendientesPuntosRecarga.ptoRecargaSeleccionada.razonSocial}?" 
                                  header="Aceptar Petición" severity="info" widgetVar="activarDialog">
                     <center>
-                    <p:commandButton value="No" onclick="PF('activarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
-                    <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.activarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
-                                     update=":form:puntoRecargaTable" oncomplete="PF('activarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
+                        <p:commandButton value="No" onclick="PF('activarDialog').hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        <p:commandButton value="Si" actionListener="#{consultaRegistrosPendientesPuntosRecarga.activarCuenta()}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                         update=":form:puntoRecargaTable" oncomplete="PF('activarDialog').hide(); PF('DetallePtoRecargaDialog').hide()" />                    
                     </center>
                 </p:confirmDialog>
-                
+
             </h:form>
         </h:body>
     </f:view>

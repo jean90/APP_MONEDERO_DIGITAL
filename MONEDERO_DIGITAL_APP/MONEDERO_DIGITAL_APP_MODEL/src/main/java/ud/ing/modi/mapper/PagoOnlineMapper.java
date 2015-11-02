@@ -98,16 +98,30 @@ public class PagoOnlineMapper extends Mapper{
         }
     }
     
-    /**
-     * Busca la información de un pago online asociado a un código de compra.
-     * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
-     * @return Retorna como resultado el pago asociado al código de la compra.
-     */
-    public PagoOnline buscarPagoDeCompra(String codCompra, Monedero monederoTienda){
+    
+    public PagoOnline buscarPagoOnlinePendienteById(int codPago){
         PagoOnline pago=null;
         try {
             iniciaOperacion();
-            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.eq("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("monDestino",monederoTienda)).uniqueResult();
+            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("codPago",codPago)).uniqueResult();
+            System.out.println("Pago hallado: "+pago);
+        } finally {
+            getSesion().close();
+        }
+        return pago;
+    }
+    
+    /**
+     * Busca la información de un pago online asociado a un código de compra.
+     * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
+     * @param codPago 
+     * @return Retorna como resultado el pago asociado al código de la compra.
+     */
+    public PagoOnline buscarPagoDeCompra(String codCompra, int codPago){
+        PagoOnline pago=null;
+        try {
+            iniciaOperacion();
+            pago= (PagoOnline) getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.eq("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("codPago",codPago)).uniqueResult();
             System.out.println("Pago hallado: "+pago);
         } finally {
             getSesion().close();
@@ -137,7 +151,7 @@ public class PagoOnlineMapper extends Mapper{
     }
     
     /**
-     * Busca si existen pagos online asociados a un código de compra que ya estén en estado aprobado o rechazado.
+     * Busca si existen pagos online asociados a un código de compra que ya estén en estado aprobado.
      * @param codCompra Es el código de la compra que la tienda asignó en el proceso de pago.
      * @return Retorna como resultado la lista de pagos asociados al código de compra.
      */
@@ -146,7 +160,7 @@ public class PagoOnlineMapper extends Mapper{
         List<PagoOnline> pagos=null;
         try {
             iniciaOperacion();
-            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.ne("estadoPago",new EstadoPago(1,"PENDIENTE"))).add(Restrictions.eq("monDestino",monederoTienda)).list();
+            pagos= getSesion().createCriteria(PagoOnline.class).add(Restrictions.eq("codCompra",codCompra)).add(Restrictions.eq("estadoPago",new EstadoPago(2,"APROBADO"))).add(Restrictions.eq("monDestino",monederoTienda)).list();
             /*if (!pagos.isEmpty()) {
                 existe=true;
             }*/

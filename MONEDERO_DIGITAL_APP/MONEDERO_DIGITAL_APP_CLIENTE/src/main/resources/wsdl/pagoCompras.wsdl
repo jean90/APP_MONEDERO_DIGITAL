@@ -5,18 +5,6 @@
 <xs:element name="pagarCompraResponse" type="tns:pagarCompraResponse"/>
 <xs:element name="validarDatosCompra" type="tns:validarDatosCompra"/>
 <xs:element name="validarDatosCompraResponse" type="tns:validarDatosCompraResponse"/>
-<xs:complexType name="pagarCompra">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codCompra" type="xs:string"/>
-      <xs:element minOccurs="0" name="token" type="xs:string"/>
-      <xs:element minOccurs="0" name="codMonTienda" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-<xs:complexType name="pagarCompraResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
 <xs:complexType name="validarDatosCompra">
     <xs:sequence>
       <xs:element minOccurs="0" name="codMonedero" type="xs:string"/>
@@ -31,14 +19,22 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+<xs:complexType name="pagarCompra">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codCompra" type="xs:string"/>
+      <xs:element minOccurs="0" name="token" type="xs:string"/>
+      <xs:element minOccurs="0" name="codPago" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="pagarCompraResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="validarDatosCompra">
     <wsdl:part element="tns:validarDatosCompra" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="pagarCompra">
-    <wsdl:part element="tns:pagarCompra" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="validarDatosCompraResponse">
@@ -49,31 +45,26 @@
     <wsdl:part element="tns:pagarCompraResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="pagarCompra">
+    <wsdl:part element="tns:pagarCompra" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="PagoCompras">
-    <wsdl:operation name="pagarCompra">
-      <wsdl:input message="tns:pagarCompra" name="pagarCompra">
-    </wsdl:input>
-      <wsdl:output message="tns:pagarCompraResponse" name="pagarCompraResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="validarDatosCompra">
       <wsdl:input message="tns:validarDatosCompra" name="validarDatosCompra">
     </wsdl:input>
       <wsdl:output message="tns:validarDatosCompraResponse" name="validarDatosCompraResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="pagarCompra">
+      <wsdl:input message="tns:pagarCompra" name="pagarCompra">
+    </wsdl:input>
+      <wsdl:output message="tns:pagarCompraResponse" name="pagarCompraResponse">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="PagoComprasImpServiceSoapBinding" type="tns:PagoCompras">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="pagarCompra">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="pagarCompra">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="pagarCompraResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="validarDatosCompra">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="validarDatosCompra">
@@ -83,10 +74,19 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="pagarCompra">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="pagarCompra">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pagarCompraResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="PagoComprasImpService">
     <wsdl:port binding="tns:PagoComprasImpServiceSoapBinding" name="PagoComprasImpPort">
-      <soap:address location="http://monedero-ws:8080/MONEDERO_DIGITAL_APP_WS/pagoCompras"/>
+      <soap:address location="http://localhost:31713/MONEDERO_DIGITAL_APP_WS/pagoCompras"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

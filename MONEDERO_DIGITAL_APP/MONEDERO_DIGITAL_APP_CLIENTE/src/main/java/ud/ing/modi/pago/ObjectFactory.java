@@ -25,31 +25,15 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _ValidarDatosCompra_QNAME = new QName("http://pago.modi.ing.ud/", "validarDatosCompra");
-    private final static QName _PagarCompra_QNAME = new QName("http://pago.modi.ing.ud/", "pagarCompra");
     private final static QName _ValidarDatosCompraResponse_QNAME = new QName("http://pago.modi.ing.ud/", "validarDatosCompraResponse");
     private final static QName _PagarCompraResponse_QNAME = new QName("http://pago.modi.ing.ud/", "pagarCompraResponse");
+    private final static QName _PagarCompra_QNAME = new QName("http://pago.modi.ing.ud/", "pagarCompra");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: ud.ing.modi.pago
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link PagarCompraResponse }
-     * 
-     */
-    public PagarCompraResponse createPagarCompraResponse() {
-        return new PagarCompraResponse();
-    }
-
-    /**
-     * Create an instance of {@link ValidarDatosCompra }
-     * 
-     */
-    public ValidarDatosCompra createValidarDatosCompra() {
-        return new ValidarDatosCompra();
     }
 
     /**
@@ -61,11 +45,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link PagarCompraResponse }
+     * 
+     */
+    public PagarCompraResponse createPagarCompraResponse() {
+        return new PagarCompraResponse();
+    }
+
+    /**
      * Create an instance of {@link ValidarDatosCompraResponse }
      * 
      */
     public ValidarDatosCompraResponse createValidarDatosCompraResponse() {
         return new ValidarDatosCompraResponse();
+    }
+
+    /**
+     * Create an instance of {@link ValidarDatosCompra }
+     * 
+     */
+    public ValidarDatosCompra createValidarDatosCompra() {
+        return new ValidarDatosCompra();
     }
 
     /**
@@ -75,15 +75,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://pago.modi.ing.ud/", name = "validarDatosCompra")
     public JAXBElement<ValidarDatosCompra> createValidarDatosCompra(ValidarDatosCompra value) {
         return new JAXBElement<ValidarDatosCompra>(_ValidarDatosCompra_QNAME, ValidarDatosCompra.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link PagarCompra }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://pago.modi.ing.ud/", name = "pagarCompra")
-    public JAXBElement<PagarCompra> createPagarCompra(PagarCompra value) {
-        return new JAXBElement<PagarCompra>(_PagarCompra_QNAME, PagarCompra.class, null, value);
     }
 
     /**
@@ -102,6 +93,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://pago.modi.ing.ud/", name = "pagarCompraResponse")
     public JAXBElement<PagarCompraResponse> createPagarCompraResponse(PagarCompraResponse value) {
         return new JAXBElement<PagarCompraResponse>(_PagarCompraResponse_QNAME, PagarCompraResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link PagarCompra }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://pago.modi.ing.ud/", name = "pagarCompra")
+    public JAXBElement<PagarCompra> createPagarCompra(PagarCompra value) {
+        return new JAXBElement<PagarCompra>(_PagarCompra_QNAME, PagarCompra.class, null, value);
     }
 
 }

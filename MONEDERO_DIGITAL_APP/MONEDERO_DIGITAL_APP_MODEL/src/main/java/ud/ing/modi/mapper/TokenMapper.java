@@ -73,4 +73,17 @@ public class TokenMapper extends Mapper{
         }
         return token;
     }  
+    
+    public TokenPago obtenerTokenPagoById(int codToken){
+        TokenPago token=null;
+        try{
+            iniciaOperacion();
+            token= (TokenPago) getSesion().createCriteria(TokenPago.class).add(Restrictions.eq("codToken",codToken)).uniqueResult();
+            System.out.println("Token hallado: "+token);
+        } finally {
+            getSesion().close();
+        }
+        return token;
+    }
+    
 }

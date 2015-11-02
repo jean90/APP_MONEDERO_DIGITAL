@@ -6,6 +6,8 @@
 package ud.ing.modi.pago;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import ud.ing.modi.entidades.Cliente;
@@ -22,8 +24,10 @@ import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.MonederoMapper;
 import ud.ing.modi.mapper.PagoOnlineMapper;
 import ud.ing.modi.mapper.TokenMapper;
+import ud.ing.modi.pagos.GestorPagoOnline;
 import ud.ing.modi.seguridad.GeneradorTokenPagos;
-import ud.ing.modi.tx.OperacionTransaccional;
+import ud.ing.modi.token.GestorToken;
+
 
 /**
  *
@@ -36,13 +40,16 @@ public class PagoComprasImp implements PagoCompras {
     Monedero monederoTienda;
     ClienteNatural clienteComprador;
     GeneradorTokenPagos generadorToken= new GeneradorTokenPagos();
+    GestorPagoOnline gestorPagoOnline;
+    GestorToken gestorToken;
 
     public String[] validarDatosCompra(@WebParam(name = "codMonedero") String codMonedero, @WebParam(name = "nickCliente") String nickCliente,
             @WebParam(name = "codTienda") String codTienda, @WebParam(name = "codCompra") String codCompra,
             @WebParam(name = "valorCompra") String valorCompra) {
-        String rta[]=new String [2];
+        String rta[]=new String [3];
         String mensajeRta = "none";
         String codRta = "000";
+        String codPago = "none";
         
         AccesoLDAP ldap=new AccesoLDAP();
         MonederoMapper mapMonedero = new MonederoMapper();
@@ -74,17 +81,29 @@ public class PagoComprasImp implements PagoCompras {
                                     if (monederoTienda.getDivisa().equals(monederoComprador.getDivisa())) {
                                         //7. Crear token para pago
 
-                                        generadorToken.generarToken();
+                                        gestorPagoOnline = new GestorPagoOnline();
+                                        PagoOnline pagoOnline = gestorPagoOnline.crearPagoOnline(codCompra, valorCompra, monederoComprador, monederoTienda);
+                                        
+                                        
+                                        //8.crear token para pago online
+                                        gestorToken = GestorToken.getInstancia();
+                                        TokenPago tokenPago = gestorToken.emitirToken(pagoOnline.getCodPago());
+                                        
+                                        //9. Enviar token a correo
+                                        gestorPagoOnline.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(), pagoOnline, tokenPago);
+                                        
+                                        /*generadorToken.generarToken();
                                         generadorToken.encriptarToken();
 
                                         //8. Guardar datos token en tabla
                                         generadorToken.guardarRegistroToken(codCompra, valorCompra, monederoComprador, monederoTienda);
 
                                         //9. Enviar token a correo
-                                        generadorToken.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(),valorCompra, codMonedero);
+                                        generadorToken.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(),valorCompra, codMonedero);*/
                                         
                                         codRta = "OK01";
                                         mensajeRta = "Datos para pago válidos.";
+                                        codPago=Integer.toString(pagoOnline.getCodPago());
                                         System.out.println("TODO BIEEEN");
                                     }else{
                                         codRta= "EP06";
@@ -124,78 +143,59 @@ public class PagoComprasImp implements PagoCompras {
         
         rta[0]=codRta;
         rta[1]=mensajeRta;
+        rta[2]=codPago;
         return rta;
 
     }
 
-    public String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token,@WebParam(name = "codMonTienda") String codMonTienda){
+    public String[] pagarCompra(@WebParam(name = "codCompra") String codCompra,@WebParam(name = "token") String token,@WebParam(name = "codPago") String codPago){
         String mensajeRta="none";
         String codRta="000";
-        String codPago="none";
         
         String rta[]=new String [3];
-        TransaccionalLDAP ldap = new TransaccionalLDAP();
         
         PagoOnlineMapper mapPago=new PagoOnlineMapper();
         MonederoMapper mapMonedero=new MonederoMapper();
         
-        Monedero monTienda=mapMonedero.buscarMonedero(codMonTienda);
-        PagoOnline pago=mapPago.buscarPagoDeCompra(codCompra,monTienda);
+        //Monedero monTienda=mapMonedero.buscarMonedero(codMonTienda);
+        PagoOnline pago=mapPago.buscarPagoDeCompra(codCompra,Integer.parseInt(codPago));        
+        gestorPagoOnline = new GestorPagoOnline();
         
-        TokenMapper mapToken = new TokenMapper();
-        if (pago!=null) {
-            TokenPago tokenPago = mapToken.cargarToken(pago.getCodPago());
-
-            try{
-                String tokenIngresado = this.generadorToken.desencriptarToken(token);
-                String tokenBD = this.generadorToken.desencriptarToken(tokenPago.getToken());
-                //1. Validar estado del token
-                if (tokenPago.getEstadoToken().getCodEstadoToken()==1) {
-                    //2. Validar el token ingresado vs el asociado a la compra
-                    if (tokenIngresado.equals(tokenBD)) {
-                        //3. Realizar abono en el monedero de la tienda
-                        mapMonedero.abonarPago(pago.getValorPago(),pago.getMonDestino());
-                        System.out.println("Pago abonado");
-                        //4. Debitar el monedero del cliente comprador
-                        mapMonedero.debitarPago(pago.getValorPago(),pago.getMonOrigen());
-                        System.out.println("Pago debitado");
-                        //5. Registrar pago en tabla
-                        pago.setFechaPago(new Date());
-                        pago.setEstadoPago(new EstadoPago(2,"APROBADO"));
-                        mapPago.actualizarPago(pago);
-                        System.out.println("Pago registrado");
-                        //6. Marcar token como validado
-                        tokenPago.setEstadoToken(new EstadoToken(3, "VALIDADO"));
-                        mapToken.actualizarToken(tokenPago);
-                        codRta="OK02";
-                        mensajeRta="Pago realizado correctamente.";
-                        codPago=Integer.toString(pago.getCodPago());
-                    }else{
-                        codRta="EP03";
-                        mensajeRta="Token incorrecto.";
-                    } 
+        if (pago!=null) {            
+            gestorToken = GestorToken.getInstancia();
+            try{                
+                boolean isTokenValido = gestorToken.validarToken(pago.getCodPago(), token);
+                if(isTokenValido){
+                    gestorPagoOnline.finalizarPagoOnline(pago);
+                    codPago = Integer.toString(pago.getCodPago());
+                    codRta="OK02";
+                    mensajeRta="Pago realizado correctamente.";
                 }else{
+                    gestorPagoOnline.rechazarPagoOnline(pago);
                     codRta="EP01";
-                    mensajeRta="Token ha caducado.";
+                    mensajeRta="Token incorrecto o ha caducado.";
                 }
-
             }catch(Exception e)
             {
-                codRta="EP00";
-                mensajeRta="Ha ocurrido un error durante el proceso de pago - "+e.toString();
+                try {
+                    gestorPagoOnline.rechazarPagoOnline(pago);
+                    codRta="EP00";
+                    mensajeRta="Ha ocurrido un error durante el proceso de pago - "+e.toString();
+                } catch (Exception ex) {
+                    Logger.getLogger(PagoComprasImp.class.getName()).log(Level.SEVERE, null, ex);
+                }finally{
+                    codRta="EP00";
+                    mensajeRta="Ha ocurrido un error durante el proceso de pago - "+e.toString();
+                }
             }
-            //6. Notificar vía email
-            
-        }else{
+        }else{            
             codRta="EP07";
             mensajeRta="No se ha registrado intento de pago con el código de compra indicado.";
         }
         
-        
         rta[0]=codRta;
         rta[1]=mensajeRta;
-        rta[2]=codPago;
-                
+        rta[2]=codPago;                
         return rta;
     }
     

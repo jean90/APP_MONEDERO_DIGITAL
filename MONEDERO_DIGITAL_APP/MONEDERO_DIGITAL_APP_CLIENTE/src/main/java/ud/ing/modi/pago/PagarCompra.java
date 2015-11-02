@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="codCompra" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="token" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="codMonTienda" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="codPago" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,13 +31,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "pagarCompra", propOrder = {
     "codCompra",
     "token",
-    "codMonTienda"
+    "codPago"
 })
 public class PagarCompra {
 
     protected String codCompra;
     protected String token;
-    protected String codMonTienda;
+    protected String codPago;
 
     /**
      * Gets the value of the codCompra property.
@@ -88,27 +88,27 @@ public class PagarCompra {
     }
 
     /**
-     * Gets the value of the codMonTienda property.
+     * Gets the value of the codPago property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getCodMonTienda() {
-        return codMonTienda;
+    public String getCodPago() {
+        return codPago;
     }
 
     /**
-     * Sets the value of the codMonTienda property.
+     * Sets the value of the codPago property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setCodMonTienda(String value) {
-        this.codMonTienda = value;
+    public void setCodPago(String value) {
+        this.codPago = value;
     }
 
 }
