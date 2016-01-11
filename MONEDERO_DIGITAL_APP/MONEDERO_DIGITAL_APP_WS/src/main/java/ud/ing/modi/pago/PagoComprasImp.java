@@ -155,7 +155,6 @@ public class PagoComprasImp implements PagoCompras {
         String rta[]=new String [3];
         
         PagoOnlineMapper mapPago=new PagoOnlineMapper();
-        MonederoMapper mapMonedero=new MonederoMapper();
         
         //Monedero monTienda=mapMonedero.buscarMonedero(codMonTienda);
         PagoOnline pago=mapPago.buscarPagoDeCompra(codCompra,Integer.parseInt(codPago));        

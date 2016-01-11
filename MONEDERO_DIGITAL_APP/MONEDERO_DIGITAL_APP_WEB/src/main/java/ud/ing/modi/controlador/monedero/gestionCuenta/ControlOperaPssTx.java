@@ -13,6 +13,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import ud.ing.modi.ldap.TransaccionalLDAP;
+import ud.ing.modi.tx.OperacionTransaccional;
 
 /**
  *
@@ -20,7 +21,7 @@ import ud.ing.modi.ldap.TransaccionalLDAP;
  */
 @ManagedBean(name = "operaPssTx")
 @ViewScoped
-public class ControlOperaPssTx implements Serializable {
+public class ControlOperaPssTx extends OperacionTransaccional implements Serializable {
 
     private String passNueva;
     private String passActual = "none";
@@ -82,17 +83,6 @@ public class ControlOperaPssTx implements Serializable {
         }
     }
 
-    /**
-     * Este método devuelve el usuario cuya sesión ha sido iniciada
-     *
-     * @return Retorna como resultado el nick del usuario loggeado
-     */
-    public String traerUsu() {
-        FacesContext contexto = FacesContext.getCurrentInstance();
-        ExternalContext contextoExterno = contexto.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
-        return request.getUserPrincipal().getName();
-    }
 
     /**
      * Este método almacena en el ldap la nueva contraseña ingresada por el
@@ -103,19 +93,6 @@ public class ControlOperaPssTx implements Serializable {
         ldap.modificarPssTx(usuario, this.passNueva);
     }
 
-    /**
-     * Este método valida que la contraseña transaccional corresponda con la
-     * comparada
-     *
-     * @param password Es la contraseña con la cual se comparará la que el
-     * usuario tenga registrado en el ldap
-     * @return Retorna como resultado el booleano que indica si las contraseñas
-     * correspondieron
-     */
-    public boolean validaPss(TransaccionalLDAP ldap, String usuario) {
-        System.out.println("Validando password " + passActual);
-        return ldap.validarPssTx(usuario, passActual);
-    }
 
     /**
      * Este método valida que el cliente tenga un password transaccional asignado

@@ -46,7 +46,7 @@ public class ActivacionCuentaServlet extends HttpServlet {
             throws ServletException, IOException {
         try{//Puse el try catch porque si el registro en BD no tenía nick botaba error en código de la página, más no direccionaba a página de ErrorLogin
             System.out.println("ID ANTES DE: "+req.getParameter("id"));
-            String id=req.getParameter("id");
+            String codActivacion=req.getParameter("id");
             PendientesMapper mapeadorPend=new PendientesMapper();
             ClienteMapper mapeadorClien=new ClienteMapper();
             PersonMapper mapeadorPers=new PersonMapper();
@@ -54,19 +54,19 @@ public class ActivacionCuentaServlet extends HttpServlet {
             Cifrado cifra=new Cifrado();
             cifra.addKey(Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
             System.out.println("CLAVE PRIVADA: "+Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
-            id=cifra.desencriptar(id);
-            System.out.println("ID DESPUÉS DE: "+id);
-            //System.out.println("ENCONTRADO: "+mapeadorPend.buscarSolicitud(id));
+            codActivacion=cifra.desencriptar(codActivacion);
+            System.out.println("ID DESPUÉS DE: "+codActivacion);
+            //System.out.println("ENCONTRADO: "+mapeadorPend.buscarSolicitud(codActivacion));
             AccesoLDAP ldap=new AccesoLDAP();
             
-            PendienteRegis pendiente=mapeadorPend.buscarSolicitud(id);
+            PendienteRegis pendiente=mapeadorPend.buscarSolicitud(codActivacion);
             //System.out.println("ESTADOOOOOOO "+ldap.getEstadoCuenta(pendiente.getNickname()));
             if (pendiente!=null&&ldap.getEstadoCuenta(pendiente.getNickname()).equals(AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION)) {//Se puso tmbn la validación de si el estado actual es pendiente de activación. Si no, va a la pantalla de error.
                 System.out.println("ACTIVANDO CUENTA ...");
                 //Se activa la cuenta
                 ldap.modificarEstadoCuenta(pendiente.getNickname(), AccesoLDAP.CUENTA_ACTIVA);
                 //A continuación se borra de la tabla de pendientes
-                mapeadorPend.borrarPendiente(id);
+                mapeadorPend.borrarPendiente(codActivacion);
                 //Posterior se agrega a la tabla de Cliente y ClienteNatural
                 Persona persona=mapeadorPers.obtenerUsuario(Integer.toString(pendiente.getPersona().getIdPersona()));
                 cliente=new ClienteNatural(persona, new Date(), new EstadoCliente(2, "ACTIVO"), pendiente.getNickname());

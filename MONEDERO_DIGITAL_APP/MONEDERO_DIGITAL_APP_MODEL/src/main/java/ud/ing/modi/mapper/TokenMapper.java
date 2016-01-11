@@ -58,7 +58,7 @@ public class TokenMapper extends Mapper{
     
     
     /**
-     * Este método buscar y trae el token asociado a un pago.
+     * Este método busca y trae el token asociado a un pago.
      * @param codPago Es el código del pago del cual se buscará el token.
      * @return Retorna como resultado el token asociado al pago buscado.
      */

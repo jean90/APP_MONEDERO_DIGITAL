@@ -96,7 +96,7 @@ public class ControlOperaPssAcceso implements Serializable {
     }
 
     /**
-     * Este método valida que la contraseña transaccional corresponda con la
+     * Este método valida que la contraseña de acceso corresponda con la
      * comparada
      *
      * @param password Es la contraseña con la cual se comparará la que el

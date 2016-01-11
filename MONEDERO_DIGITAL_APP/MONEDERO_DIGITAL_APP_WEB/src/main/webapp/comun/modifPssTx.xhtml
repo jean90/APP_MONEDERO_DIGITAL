@@ -30,7 +30,7 @@
                         <p:messages id="m3" for="pwd2" />
                         <h:panelGrid columns="2" columnClasses="label, value" >
                             <h:outputLabel for="pwd0" value="Password Actual: "/>
-                            <p:password autocomplete="false" id="pwd0" value="#{operaPssTx.passActual}" label="password0" required="true" requiredMessage="Debe ingresar el password actual" />
+                            <p:password autocomplete="false" id="pwd0" value="#{operaPssTx.passTx}" label="password0" required="true" requiredMessage="Debe ingresar el password actual" />
 
                             <h:outputLabel for="pwd1" value="Nuevo Password: "/>
                             <p:password autocomplete="false" id="pwd1" value="#{operaPssTx.passNueva}" match="pwd2" label="password1" required="true" requiredMessage="Debe ingresar un nuevo password" validatorMessage="El nuevo password debe coincidir con su confirmación"/>
