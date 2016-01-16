@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Portal Banco YYY</title>
+            <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+            
+        </h:head>
+        <h:body>
+            <div class="ui-grid ui-grid-responsive">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"></div>
+                    <div class="ui-grid-col-4 ">
+                        <p:panel header="Monedero Digital" >
+                            <h:form id="formLogin" prependId="false">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                <p:panelGrid columns="2" >
+                                    <f:facet name="header">
+                                        Log-in
+                                    </f:facet>
+                                    <h:outputLabel  value="Username: "/>
+                                    <p:inputText id="userName" required="true" />
+
+                                    <h:outputLabel  value="Password: "/>
+                                    <p:password  id="password" required="true" />
+                                    <f:facet name="footer">
+                                        <p:commandButton value="Login" type="submit" action="#{loginBanco.login()}" styleClass="pull-right"/>   
+                                    </f:facet>
+                                </p:panelGrid>
+                            </h:form>
+                            <br></br>
+                            
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </f:view>
+</ui:composition>
+

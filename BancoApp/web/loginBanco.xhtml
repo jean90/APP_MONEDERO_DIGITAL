@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>Portal Banco YYY</title>
+        
+        <style type="text/css">
+            .centeredPanel{
+                position: absolute;
+		top:50%;
+		left:50%;
+		width:400px;
+		margin-left:-200px;
+		height:300px;
+		margin-top:-180px;
+		border:4px ridge #BDBDBD;
+		padding:5px;
+                font-family: "Homer Simpson",cursive;
+            }
+          </style>
+          <link rel="stylesheet" href="css/style.css"/>
+          <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    </h:head>
+    <h:body>
+        <section class="container">
+            <div class="login">
+              <h1>Login - Banco YYY Portal</h1>
+              <h:form > 
+                <p><p:inputText id="userName" value="#{loginBanco.userName}" required="true" placeholder="Username or Email"/></p>
+                <p><p:password  id="password" value="#{loginBanco.password}" required="true" placeholder="Password"/></p>
+                <p class="remember_me">
+                  <label>
+                    <input type="checkbox" name="remember_me" id="remember_me"/>
+                    Remember me on this computer
+                  </label>
+                </p>
+                <p class="submit"><p:commandButton id="submit" value="Submit" action="#{loginBanco.login()}" /></p>
+              </h:form>
+            </div>
+            <div class="login">
+              <h1>Login - Banco YYY Portal</h1>
+              <ui:define name="title">#{msg['menu.sandbox.fileUpload']}</ui:define>
+              <h:form  enctype="multipart/form-data"> 
+                  
+                  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                  <p:fileUpload value="#{cargaArchivo.file}" mode="simple" valueChangeListener="#{cargaArchivo.modifTel}" auto="true" />
+                  
+                  <p class="submit"><p:commandButton value="Submit" ajax="false" actionListener="#{cargaArchivo.cargar}" /></p>
+              </h:form>
+            </div>
+            <div class="login-help">
+              <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
+            </div>
+          </section>
+        <!--div class="centeredPanel">
+            
+            
+            <form method="post" action="accion.php" enctype="multipart/form-data">
+                Ingresa el archivo plano: <br><br>
+                <input name="archivo" type="file" />
+            </form>
+        </div-->
+    </h:body>
+</f:view>
+</ui:composition>
