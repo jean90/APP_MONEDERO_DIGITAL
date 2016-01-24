@@ -10,30 +10,24 @@
         </session-timeout>
     </session-config>
     <welcome-file-list> 
-        <welcome-file>cargaArchivo.xhtml</welcome-file> 
+        <welcome-file>loginBanco.xhtml</welcome-file> 
     </welcome-file-list>
-    <context-param>
-        <param-name>primefaces.UPLOADER</param-name>
-        <param-value>auto|native|commons</param-value>
+    <context-param> 
+        <description>Location to store uploaded file</description> 
+        <param-name>file-upload</param-name> 
+        <param-value>
+             C:\Users\Administrador\GlassFish_Server\glassfish\domains\domain2\docs\
+         </param-value> 
     </context-param>
-    <filter>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <filter-class>
-                   org.primefaces.webapp.filter.FileUploadFilter
-        </filter-class>
-            <init-param>
-                <param-name>thresholdSize</param-name>
-                <param-value>501200</param-value>
-            </init-param>
-            <init-param>
-                <param-name>uploadDirectory</param-name>
-                <param-value>C:/Users/Administrador/Downloads/files</param-value>
-            </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>UploadServlet</servlet-class>
+     </servlet>
+
+     <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/UploadServlet</url-pattern>
+     </servlet-mapping>
     <servlet> 
         <description>Servlet de operaciones JSF</description>
         <servlet-name>Faces Servlet</servlet-name> 

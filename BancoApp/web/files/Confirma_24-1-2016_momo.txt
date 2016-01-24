@@ -1,0 +1,4 @@
+01         90023471625                                Tienda online no 399990100130076000200674827COP000000199399698      Abono Mon Digital 000001 - Traspaso Banco Propio ERROR Saldo insuficiente para el traspaso. 
+01         90023471626                                Tienda online no 399990100130076000200674829COP000000001000000      Abono Mon Digital 000001 - Traspaso Banco Propio EXITOSO 
+01         90023471627                                Tienda online no 399990100130076000200674830COP000000000010000      Abono Mon Digital 000001 - Traspaso Banco Propio EXITOSO 
+01         90023000000                                Tienda online no 310000100130076000200111111COP000000000010000      Abono Mon Digital 000001 - Traspaso Otro Banco EXITOSO 

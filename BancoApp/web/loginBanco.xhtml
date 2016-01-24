@@ -33,6 +33,7 @@
             <div class="login">
               <h1>Login - Banco YYY Portal</h1>
               <h:form > 
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                 <p><p:inputText id="userName" value="#{loginBanco.userName}" required="true" placeholder="Username or Email"/></p>
                 <p><p:password  id="password" value="#{loginBanco.password}" required="true" placeholder="Password"/></p>
                 <p class="remember_me">
@@ -44,17 +45,7 @@
                 <p class="submit"><p:commandButton id="submit" value="Submit" action="#{loginBanco.login()}" /></p>
               </h:form>
             </div>
-            <div class="login">
-              <h1>Login - Banco YYY Portal</h1>
-              <ui:define name="title">#{msg['menu.sandbox.fileUpload']}</ui:define>
-              <h:form  enctype="multipart/form-data"> 
-                  
-                  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                  <p:fileUpload value="#{cargaArchivo.file}" mode="simple" valueChangeListener="#{cargaArchivo.modifTel}" auto="true" />
-                  
-                  <p class="submit"><p:commandButton value="Submit" ajax="false" actionListener="#{cargaArchivo.cargar}" /></p>
-              </h:form>
-            </div>
+
             <div class="login-help">
               <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
             </div>

@@ -16,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.Part;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -26,7 +27,8 @@ import org.primefaces.model.UploadedFile;
  * @author Administrador
  */
 @ManagedBean(name = "cargaArchivo")
-@SessionScoped
+@ViewScoped
+@MultipartConfig
 public class CargaArchivo implements Serializable{
     //private Part file;
     private UploadedFile file;
@@ -70,6 +72,7 @@ public class CargaArchivo implements Serializable{
    }
    
    public void handleFileUpload(FileUploadEvent event){
+       System.out.println("accuión");
        UploadedFile archivo=event.getFile();
        System.out.println(archivo.getFileName());
    }
