@@ -84,12 +84,12 @@ public class GeneradorTokenPagos {
     
     /**
      * Este método guarda en la base de datos el registro con el token que se ha generado para el pago.
-     * @param codPago Es el código del pago asociado al token generado.
+     * @param pagoOnline Es el código del pago asociado al token generado.
      * @throws Exception 
      */
-    public void guardarToken(String codPago) throws Exception{
+    public void guardarToken(PagoOnline pagoOnline) throws Exception{
         TokenPago token = new TokenPago();
-        token.setCodPago(Integer.parseInt(codPago));
+        token.setPagoOnline(pagoOnline);
         token.setEstadoToken(new EstadoToken(1, "EMITIDO"));
         token.setFechaCreacion(new Timestamp(new Date().getTime()));
         token.setToken(this.token);
@@ -124,7 +124,7 @@ public class GeneradorTokenPagos {
             this.validarExistenciaPago(codCompra, monDestino);
             mapeador.registrarPago(pago);
             System.out.println("Pago registrado en la bd.");
-            this.guardarToken(Integer.toString(pago.getCodPago()));
+            this.guardarToken(pago);
         } catch (Exception ex) {
             Logger.getLogger(GeneradorTokenPagos.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Ha ocurrido un error al validar o crear el registro del pago en la bd.");

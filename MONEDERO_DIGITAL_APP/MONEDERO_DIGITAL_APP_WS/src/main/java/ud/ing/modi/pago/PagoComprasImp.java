@@ -87,7 +87,7 @@ public class PagoComprasImp implements PagoCompras {
                                         
                                         //8.crear token para pago online
                                         gestorToken = GestorToken.getInstancia();
-                                        TokenPago tokenPago = gestorToken.emitirToken(pagoOnline.getCodPago());
+                                        TokenPago tokenPago = gestorToken.emitirToken(pagoOnline);
                                         
                                         //9. Enviar token a correo
                                         gestorPagoOnline.enviarCorreoToken(clienteComprador.getPersona(), ((ClienteJuridico)tienda).getRazonSocial(), pagoOnline, tokenPago);
