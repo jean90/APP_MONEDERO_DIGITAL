@@ -33,18 +33,26 @@ public class Recarga implements Serializable{
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator ="RECARGA_SEQ")
     @Column (name="COD_RECARGA")
     private int codRecarga;
+    
     @Column (name="VALOR")
     private double valorRecarga;
+    
     @Column (name="FECHA_RECARGA")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaRecarga;
+    
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_CLI_PTORECARGA")
     private PuntoRecarga puntoRecarga;
+    
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="COD_MON_REC")
     private Monedero monedero;
-
+        
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="COD_FACTURA")
+    private FacturaRecargas factura;
+    
     public Recarga() {
     }
     
@@ -87,4 +95,13 @@ public class Recarga implements Serializable{
     public void setMonedero(Monedero monedero) {
         this.monedero = monedero;
     }
+
+    public FacturaRecargas getFactura() {
+        return factura;
+    }
+
+    public void setFactura(FacturaRecargas factura) {
+        this.factura = factura;
+    }
+    
 }

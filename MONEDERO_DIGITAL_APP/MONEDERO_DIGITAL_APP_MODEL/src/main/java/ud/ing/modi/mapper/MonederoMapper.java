@@ -8,6 +8,7 @@ package ud.ing.modi.mapper;
 
 import java.util.List;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.Monedero;
@@ -160,5 +161,17 @@ public class MonederoMapper extends Mapper{
         } finally {
             getSesion().close();
         }
+    }
+    
+    public List<Monedero> obtenerMonederosPorAbonar(){
+        List<Monedero> listaMonederos = null;
+        iniciaOperacion();
+        String hqlQueryStr = "select mo"
+                + " from Monedero as mo, TiendaOnLine as td"
+                + " where mo.saldo > 0"
+                + " and mo.clienteDueno = td.idCliente";
+        Query hqlQuery = getSesion().createQuery(hqlQueryStr);
+        listaMonederos = hqlQuery.list();
+        return listaMonederos;
     }
 }

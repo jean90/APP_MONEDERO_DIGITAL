@@ -35,7 +35,7 @@ public class TokenPago implements Serializable {
     @Column(name="COD_TOKEN")
     private int codToken;
     @Column(name="COD_PAGO")
-    private int codPago;
+    private PagoOnline pagoOnline;
     @Column(name="TIME_CREACION")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaCreacion;
@@ -48,9 +48,9 @@ public class TokenPago implements Serializable {
     public TokenPago() {
     }
 
-    public TokenPago(int codToken, int codPago, Date fechaCreacion, String token, EstadoToken estadoToken) {
+    public TokenPago(int codToken, PagoOnline pagoOnline, Date fechaCreacion, String token, EstadoToken estadoToken) {
         this.codToken = codToken;
-        this.codPago = codPago;
+        this.pagoOnline = pagoOnline;
         this.fechaCreacion = fechaCreacion;
         this.token = token;
         this.estadoToken = estadoToken;
@@ -64,12 +64,12 @@ public class TokenPago implements Serializable {
         this.codToken = codToken;
     }
 
-    public int getCodPago() {
-        return codPago;
+    public PagoOnline getPagoOnline() {
+        return pagoOnline;
     }
 
-    public void setCodPago(int codPago) {
-        this.codPago = codPago;
+    public void setPagoOnline(PagoOnline pagoOnline) {
+        this.pagoOnline = pagoOnline;
     }
 
     public Date getFechaCreacion() {

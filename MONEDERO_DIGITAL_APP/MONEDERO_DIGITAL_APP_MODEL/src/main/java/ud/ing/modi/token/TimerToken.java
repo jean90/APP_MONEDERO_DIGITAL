@@ -50,7 +50,7 @@ public class TimerToken extends Thread{
             if(tokenPago.getEstadoToken().getCodEstadoToken()==Constantes.TOKEN_EMITIDO){
                 tokenPago.setEstadoToken(this.gestorToken.obtenerEstadoTokenCaducado());
                 tm.actualizarToken(tokenPago);
-                cancelarPagoOnline(tokenPago.getCodPago());
+                cancelarPagoOnline(tokenPago.getPagoOnline().getCodPago());
                 System.out.println("tiempo de vida del token se agotó, el token será invalidado.");
                 this.gestorToken.eliminarTimerToken(this);
             }

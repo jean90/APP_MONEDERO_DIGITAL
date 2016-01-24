@@ -6,7 +6,9 @@
 
 package ud.ing.modi.mapper;
 
+import java.util.Date;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import ud.ing.modi.entidades.Monedero;
 import ud.ing.modi.entidades.PuntoRecarga;
@@ -57,6 +59,25 @@ public class RecargaMapper extends Mapper{
         try {
             iniciaOperacion();
             recargas= getSesion().createCriteria(Recarga.class).add(Restrictions.eq("puntoRecarga",puntoRecarga)).list();
+            System.out.println("Movimientos hallados: "+recargas);
+        } finally {
+            getSesion().close();
+        }
+        return recargas;
+    }
+    
+    public List<Recarga> buscarRecargaPorPtoRecargaPorFacturar (PuntoRecarga puntoRecarga, Date fechaInicial, Date fechaFinal){
+        List<Recarga> recargas = null;
+        System.out.println("Punto de recarga: "+puntoRecarga);
+        try {
+            iniciaOperacion();
+            String hqlQuerystr = "from Recarga r where r.puntoRecarga = ? and r.fechaRecarga between ? and ? and factura is null";
+            Query hqlquery = getSesion().createQuery(hqlQuerystr);
+            hqlquery.setInteger(0, puntoRecarga.getIdCliente());
+            hqlquery.setDate(1, fechaInicial);
+            hqlquery.setDate(2, fechaFinal);
+            //recargas= getSesion().createCriteria(Recarga.class).add(Restrictions.eq("puntoRecarga",puntoRecarga)).list();
+            recargas = hqlquery.list();
             System.out.println("Movimientos hallados: "+recargas);
         } finally {
             getSesion().close();

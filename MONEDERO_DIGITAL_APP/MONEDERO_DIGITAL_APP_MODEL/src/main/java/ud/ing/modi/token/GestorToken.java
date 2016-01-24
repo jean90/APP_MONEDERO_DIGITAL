@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import ud.ing.modi.config.Config;
 import ud.ing.modi.constantes.Constantes;
 import ud.ing.modi.entidades.EstadoToken;
+import ud.ing.modi.entidades.PagoOnline;
 import ud.ing.modi.entidades.TokenPago;
 import ud.ing.modi.mapper.EstadoTokenMapper;
 import ud.ing.modi.mapper.TokenMapper;
@@ -44,13 +45,13 @@ public class GestorToken {
     /**
      * Este método se encarga de la creación de un token relacionado a un pago online creado, además,
      * se encarga de persistir en BBDD el token creado en estado EMITIDO.
-     * @param codPago código de pago online al cual se le relacionará el token a crear.
+     * @param pagoOnline pago online al cual se le relacionará el token a crear.
      * @return TokenPago relacionado al código de pago en cuestion.
      * @throws Exception error al momento de persistir en BBDD.
      */
-    public synchronized TokenPago emitirToken(int codPago) throws Exception{
+    public synchronized TokenPago emitirToken(PagoOnline pagoOnline) throws Exception{
         TokenPago token = new TokenPago();
-        token.setCodPago(codPago);
+        token.setPagoOnline(pagoOnline);
         token.setEstadoToken(obtenerEstadoTokenEmitido());
         token.setFechaCreacion(new Timestamp(new Date().getTime()));
         token.setToken(generarToken());

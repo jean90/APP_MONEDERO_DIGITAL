@@ -1,10 +1,6 @@
 package ud.ing.modi.mapper;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
 import ud.ing.modi.entidades.PendienteRegis;
 
 
@@ -66,7 +62,7 @@ public class PendientesMapper extends Mapper{
     
     /**
      * Este método borra el registro de la solicitud pendiente de la base de datos
-     * @param pendiente Es el código de la solicitud a borrar de la base de datos
+     * @param codPendiente Es el código de la solicitud a borrar de la base de datos
      */
     public void borrarPendiente(String codPendiente) throws Exception{
         try {

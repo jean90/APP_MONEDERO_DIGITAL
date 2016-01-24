@@ -27,5 +27,10 @@
     <mapping class="ud.ing.modi.entidades.EstadoPago"/>
     <mapping class="ud.ing.modi.entidades.EstadoToken"/>
     <mapping class="ud.ing.modi.entidades.TokenPago"/>
+    <mapping class="ud.ing.modi.entidades.Comision"/>
+    <mapping class="ud.ing.modi.entidades.EstadoFactura"/>
+    <mapping class="ud.ing.modi.entidades.FacturaRecargas"/>
+    <mapping class="ud.ing.modi.entidades.EstadoAbono"/>
+    <mapping class="ud.ing.modi.entidades.AbonoCuenta"/>
   </session-factory>
 </hibernate-configuration>
