@@ -13,16 +13,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Administrador
  */
 @ManagedBean(name = "loginBanco")
-@RequestScoped
+@SessionScoped
 public class LoginBanco implements Serializable{
     private String userName;
     private String password;    
@@ -49,20 +53,39 @@ public class LoginBanco implements Serializable{
         this.password = password;
     }
 
-    public String login() throws ServletException {
+    public String login()  {
         System.out.println("PRUEBA BANCO!!");
-        conectar();
-        try {
-            validarUsu();
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginBanco.class.getName()).log(Level.SEVERE, null, ex);
+        try{
+            conectar();
+            if (validarUsu()) {
+                //FacesMessage message = new FacesMessage("OK", "Usuario existe.");
+                //FacesContext.getCurrentInstance().addMessage(null, message);
+                System.out.println("ASignar: "+userName);
+                HttpServletRequest req=
+                (HttpServletRequest)(FacesContext.getCurrentInstance().getExternalContext().getRequest());
+                req.getSession().setAttribute("usuario", userName);
+                this.conexion.close();
+                return "ok";
+            }else{
+                FacesMessage message = new FacesMessage("ERROR", "Los datos ingresados son incorrectos.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                this.conexion.close();
+                return "nok";
+            }
+
+            
+        }catch(SQLException ex){
+            FacesMessage message = new FacesMessage("ERROR", "Error en la comunicación con la base de datos.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }catch(Exception e){
+            FacesMessage message = new FacesMessage("ERROR", "Error en el proceso.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
         }
-        return "as";
+            return null;
     }
     
-    public void conectar(){
+    public void conectar() throws Exception{
         
-        try { 
             Class.forName("oracle.jdbc.OracleDriver"); 
             String BaseDeDatos = "jdbc:oracle:thin:@monedero-server:1521:XE";  
 
@@ -71,36 +94,35 @@ public class LoginBanco implements Serializable{
                 System.out.println("Conexion exitosa!"); 
             } else { 
                 System.out.println("Conexion fallida!"); 
+                Exception e=new Exception();
+                throw e;
             } 
-        } catch (Exception e) { 
-            e.printStackTrace(); 
-        }
+
     }
     
-    public ResultSet consultaBD(String sql){
+    public ResultSet consultaBD(String sql) throws SQLException{
         System.out.println("Consultando en BD.... "+sql); 
         
         ResultSet resultado = null;
         try {
             Statement sentencia;
-            sentencia = this.conexion.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            resultado = sentencia.executeQuery(sql);
+            sentencia = this.conexion.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); 
+            resultado = sentencia.executeQuery(sql); 
             this.conexion.commit();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }        return resultado;
     
     }
     
     public boolean validarUsu() throws SQLException{
         //String query="SELECT * FROM USER_MONEDERO.DIVISA WHERE COD_DIVISA=1";
-        String query="SELECT * FROM USER_MONEDERO.CLIENTE_BANCO WHERE NICK_CLIENTE='"+this.userName+"';";
+        String query="SELECT * FROM CLIENTE_BANCO WHERE NICK_CLIENTE='"+this.userName+"'";
         ResultSet usuarios=consultaBD(query);
-        if (usuarios.equals(null)) {
+        if (!usuarios.next()) {
             return false;
         }else{
-            usuarios.next();
             //System.out.println("Resultado.... "+usuarios.getString("DES_DIVISA")); 
             System.out.println("Resultado.... "+usuarios.getString("PSS_CLIENTE")); 
             if (usuarios.getString("PSS_CLIENTE").equals(this.password)) {
