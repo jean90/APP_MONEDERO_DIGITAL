@@ -48,7 +48,7 @@
                                     </p:submenu>
                                     <p:submenu label="Consultas">
                                         <p:menuitem value="Historico de Recargas" icon="ui-icon-cart" url="javascript:cambioPagina('faces/puntoRecarga/historicoRecargas.xhtml')"/>
-                                        <p:menuitem value="Factura de Pago" icon="ui-icon-cart" url="javascript:cambioPagina('faces/puntoRecarga/historicoRecargas.xhtml')"/>
+                                        <p:menuitem value="Factura de Pago" icon="ui-icon-cart" onclick="#{generacionFactura.generacionFacturaPDF()}" url="javascript:cambioPagina('faces/puntoRecarga/pdfFactura.xhtml')"/>
                                     </p:submenu>
                                 </p:panelMenu>                                
                             </p:panel> 

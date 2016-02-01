@@ -5,6 +5,7 @@ package ud.ing.modi.controlador.login;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -89,6 +90,9 @@ public class MonederoLogIn {
                     System.out.println("SIN ROL -------------");
                     request.logout();
                 }
+                String nombreFact="D:\\REPOSITORIO TESIS2\\REPO\\MONEDERO_DIGITAL_APP\\MONEDERO_DIGITAL_APP_WEB\\src\\main\\webapp\\docs\\FACTURA_"+this.userName+".pdf";
+                File file=new File(nombreFact);
+                file.delete();
             } 
         } catch (ServletException ex) {
             System.out.println("ERROR DE LOGGEO ");
@@ -135,6 +139,7 @@ public class MonederoLogIn {
 
     public String logOut() throws ServletException {
         System.out.println("CERRAR SESION");
+        
         FacesContext contexto = FacesContext.getCurrentInstance();
         ExternalContext contextoExterno = contexto.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
